@@ -23,7 +23,7 @@ library(later)
 breast_cancer_study_chars = openxlsx::read.xlsx("Study_characteristics.xlsx", sheet = 1)
 breast_cancer_study_chars$Dataset = c("C1", "C2", "C3", "E1_1", "E1_2", "E1_3",
                                       "E2", "E3", "E4_1", "E4_2", "XVC1", "XVC2",
-                                      "XVE", "SJS")
+                                      "XVE", "XVC3")
 breast_cancer_Pheno = openxlsx::read.xlsx("Pheno.xlsx", sheet = 1)
 breast_cancer_DGEA = openxlsx::read.xlsx("DGEA.xlsx")
 breast_cancer_extval = openxlsx::read.xlsx("Ext_val.xlsx")
@@ -91,6 +91,10 @@ Pheno_exprs = breast_cancer_full_pheno[breast_cancer_full_pheno$Sample.ID %in%
 z_exprs = z_exprs[breast_cancer_DGEA$EntrezGene.ID,]
 rownames(z_exprs) = breast_cancer_DGEA$Gene.Symbol
 
+train_samples = train$Sample.ID; validation_samples = validation$Sample.ID
+test_samples = test$Sample.ID; extval_samples = extval$Sample.ID
+trainval_samples = c(train_samples, validation_samples)
+
 rm(breast_cancer_Pheno, breast_cancer_extval, breast_cancer_study_chars,
    RegLogR, BackLogR, DT, SVM, LogR, ml_set, train, validation, test, extval,
    exprs_samples); gc()
@@ -123,7 +127,9 @@ body <- dashboardBody(tabItems(
                 shinyjs::useShinyjs(),
                 
                 # Select variable to plot
-                div(style="display:inline-block",
+                div(id = "div_histvar_select_breast", 
+                style="display:inline-block; width: 32%; margin-left: 7.5%;
+                    margin-right: 5%",
                     selectInput("histvar_select_breast", "Select variable", 
                             choices = sort(c("pam50", "scmod1",
                                         "ClaudinLow", "IC10", 
@@ -133,47 +139,76 @@ body <- dashboardBody(tabItems(
                                         "ER.status", "Year", "Platform",
                                         "Platform_comp", "Treatment", "Response"
                                         )),
-                            selected = "pam50", width = "200px")),
+                            selected = "pam50")),
                 
                 # Select type of histogram (probability, percentage, classic)
-                div(style="display:inline-block",
+                div(id = "div_hist_type_breast", 
+                style="display:inline-block; width: 38%; margin-left: 5%;
+                    margin-right: 5%",
                     selectInput("hist_type_breast", "Select type of histogram",
                             choices = list(classic = "classic", probability = "probability",
                                         percent = "percentage"), 
-                            selected = "classic", width = "200px")),
+                            selected = "classic")),
                 
-                # add "select all" button for the datasets to choose from
-                actionButton("select_all_hist_breast", "Select/De-select All"),
-                
+                # div for checkbox input and select-all button
+                div(id = "div_checkbox_selectall_group_breast_hist", 
+                    style = "width: 100%;",
                 # Select the datasets that you want to include in the plot
-                checkboxGroupInput("hist_dataset_checkbox", "Select studies",
+                div(id = "div_hist_dataset_checkbox",
+                    style = "display: inline-block; width: 55%; margin-left: 7.5%;",
+                    checkboxGroupInput("hist_dataset_checkbox", "Select studies",
                               selected = unique(breast_cancer_full_pheno$Dataset), 
                               choices = unique(breast_cancer_full_pheno$Dataset),
-                              inline = TRUE),
+                              inline = TRUE)),
+                
+                # add "select all" button for the datasets to choose from
+                div(id = "div_select_all_hist_breast",
+                style = "display: inline-block; margin: 5% 5% 0% 5%; width: 25%; position: absolute;",
+                    actionButton("select_all_hist_breast", "Select/De-select All",
+                                 style = "background-color: #F8ECBB; font-weight: bold;"))),
                 
                 # Select colors for fill and outline of the bins
-                div(style="display:inline-block; border: 1px; padding: 3px; width: 150px;",
+                div(id = "div_hist_fill_breast",
+                style="display:inline-block; margin-top: 0%; margin-left: 7.5%; 
+                    margin-right: 2.5%; width: 25%;",
                     colourpicker::colourInput("hist_fill_breast", "Bin fill color", 
                                           value = "#1194B1", allowTransparent = TRUE)),
-                div(style="display:inline-block; border: 1px; padding: 3px; width: 150px;",
+                div(id = "div_hist_color_breast",
+                    style="display:inline-block; margin-left: 2.5%; margin-right: 2.5%; width: 25%",
                     colourpicker::colourInput("hist_color_breast", "Bin outline color", 
                                           value = "#000000", allowTransparent = TRUE)),
                 
                 # Select number of bins
-                div(style="display:inline-block",
+                div(id = "div_hist_breast_bins",
+                    style="display:inline-block; margin-left: 2.5%; margin-right: 5%; width: 25%",
                     numericInput("hist_breast_bins", "Select # of bins",
                                  value = 10, min = 0, max = Inf, width = "150px")),
                 
+                # div for action buttons
+                div(id = "div_action_buttons_hist_breast", style = "display: flex;
+                width: 100%; align-content: center; justify-content: center",
                 # Button to trigger plot generation/update
-                actionButton(inputId = "draw_breast_hist", label = "Draw!"),
+                div(id = "div_draw_breast_hist",
+                    # style = "display: flex; margin-right: 3%; margin-top: 3%;",
+                    tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                        href = "rgb_button_css.css")),
+                    actionButton(inputId = "draw_breast_hist", label = "Draw!") %>% 
+                      tagAppendAttributes(class = 'rgb-button')),
                 
                 # Button to reset inputs to default
-                actionButton(inputId = "reset_input_breast_hist", 
-                             label = "Default parameters"),
+                div(id = "div_default_breast_hist",
+                    # style = "display: flex; margin-right: 3%; margin-left: 3%; margin-top: 3%;",
+                    tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                        href = "default_button.css")),
+                    actionButton(inputId = "reset_input_breast_hist", 
+                             label = "Default parameters") %>%
+                      tagAppendAttributes(class = 'default-button')),
                 
                 # Add an info button (pop up with shinyalert())
+                div(id = "div_info_breast_hist",
+                    style = "display: inline-flex; margin-left: 3%; margin-top: 3%;",
                 actionButton(inputId = "hist_breast_info",
-                             label = "Info")),
+                             label = "Info")))),
             
             bsModal("histogram_breast_info", "Information", "hist_breast_info",
                     fluidRow(
