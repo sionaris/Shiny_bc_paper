@@ -163,9 +163,11 @@ body <- dashboardBody(tabItems(
                 
                 # add "select all" button for the datasets to choose from
                 div(id = "div_select_all_hist_breast",
-                style = "display: inline-block; margin: 5% 5% 0% 5%; width: 25%; position: absolute;",
+                style = "display: inline-block; margin: 5% 5% 0% 5%; width: 25%; 
+                position: absolute;",
                     actionButton("select_all_hist_breast", "Select/De-select All",
-                                 style = "background-color: #F8ECBB; font-weight: bold;"))),
+                                 style = "background-color: #F8ECBB; font-weight: bold;
+                                 border-radius: 10px;"))),
                 
                 # Select colors for fill and outline of the bins
                 div(id = "div_hist_fill_breast",
@@ -206,9 +208,12 @@ body <- dashboardBody(tabItems(
                 
                 # Add an info button (pop up with shinyalert())
                 div(id = "div_info_breast_hist",
-                    style = "display: inline-flex; margin-left: 3%; margin-top: 3%;",
+                    # style = "display: inline-flex; margin-left: 3%; margin-top: 3%;",
+                    tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                        href = "info_button.css")),
                 actionButton(inputId = "hist_breast_info",
-                             label = "Info")))),
+                             label = "Info") %>%
+                  tagAppendAttributes(class = 'info-button')))),
             
             bsModal("histogram_breast_info", "Information", "hist_breast_info",
                     fluidRow(
