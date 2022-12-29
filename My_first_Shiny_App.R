@@ -231,7 +231,9 @@ body <- dashboardBody(tabItems(
                 shinyjs::useShinyjs(),
                 
                 # Select main variable to plot
-                div(style="display:inline-block",
+                div(id = "div_barchart_varmain_select_breast", 
+                    style="display:inline-block; width: 27.5%; margin-left: 3%;
+                    margin-right: 2.5%",
                     selectInput("barchart_varmain_select_breast", "Main variable", 
                                 choices = sort(c("pam50", "scmod1",
                                                  "ClaudinLow", "IC10", 
@@ -241,10 +243,12 @@ body <- dashboardBody(tabItems(
                                                  "ER.status", "Year", "Platform",
                                                  "Platform_comp", "Treatment", "Response"
                                 )),
-                                selected = "pam50", width = "120px")),
+                                selected = "pam50")),
                 
                 # Select clustering variable (optional)
-                div(style="display:inline-block",
+                div(id = "div_barchart_varclust_select_breast", 
+                    style="display:inline-block; width: 27.5%; margin-left: 2.5%;
+                    margin-right: 2.5%",
                     selectInput("barchart_varclust_select_breast", "Second variable (optional)", 
                                 choices = c("None", sort(c("pam50", "scmod1",
                                                            "ClaudinLow", "IC10", 
@@ -254,41 +258,77 @@ body <- dashboardBody(tabItems(
                                                            "ER.status", "Year", "Platform",
                                                            "Platform_comp", "Treatment", "Response"
                                 ))),
-                                selected = "None", width = "190px")),
+                                selected = "None")),
                 
                 # Select type of bar chart (clustered, stacked) - if a second variable is selected
-                div(style="display:inline-block",
+                div(id = "div_barchart_type_breast", 
+                    style="display:inline-block; width: 27.5%; margin-left: 2.5%;
+                    margin-right: 3%",
                     selectInput("barchart_type_breast", "Select type of bar chart",
                                 choices = c("group", "stack"), 
-                                selected = "group", width = "150px")),
+                                selected = "group")),
                 
-                # add "select all" button for the datasets to choose from
-                actionButton("select_all_barchart_breast", "Select/De-select All"),
+                # div for checkbox input and select-all button
+                div(id = "div_checkbox_selectall_group_breast_barchart", 
+                    style = "width: 100%;",
+                    # Select the datasets that you want to include in the plot
+                    div(id = "div_barchart_dataset_checkbox",
+                        style = "display: inline-block; width: 55%; margin-left: 3%;",
+                        checkboxGroupInput("barchart_dataset_checkbox", "Select studies",
+                                           selected = unique(breast_cancer_full_pheno$Dataset), 
+                                           choices = unique(breast_cancer_full_pheno$Dataset),
+                                           inline = TRUE)),
+                    
+                    # add "select all" button for the datasets to choose from
+                    div(id = "div_select_all_barchart_breast",
+                        style = "display: inline-block; margin: 5% 3% 0% 7%; width: 25%; 
+                position: absolute;",
+                        actionButton("select_all_barchart_breast", "Select/De-select All",
+                                     style = "background-color: #F8ECBB; font-weight: bold;
+                                 border-radius: 10px;"))),
                 
-                # Select the datasets that you want to include in the plot
-                checkboxGroupInput("barchart_dataset_checkbox", "Select studies",
-                                   selected = unique(breast_cancer_full_pheno$Dataset), 
-                                   choices = unique(breast_cancer_full_pheno$Dataset),
-                                   inline = TRUE),
-                
+                # div for color and fill selections for barchart
+                div(id = "div_fill_color_group_barachart",
+                    style = "display: flex; justify-content: center; align-content:center;",
                 # Select colors for fill and outline of the bins
-                div(style="display:inline-block; border: 1px; padding: 3px; width: 150px;",
-                    colourpicker::colourInput("barchart_fill_breast", "Bar fill color", 
+                div(id = "div_barchart_fill_breast",
+                    style="display:inline-block; margin-top: 0%; margin-left: 3%; 
+                    margin-right: 7.5%; width: 35%;",
+                    colourpicker::colourInput("barchart_fill_breast", "Bin fill color", 
                                               value = "#9419B2", allowTransparent = TRUE)),
-                div(style="display:inline-block; border: 1px; padding: 3px; width: 150px;",
-                    colourpicker::colourInput("barchart_color_breast", "Bar outline color", 
-                                              value = "#000000", allowTransparent = TRUE)),
+                div(id = "div_barchart_color_breast",
+                    style="display:inline-block; margin-left: 7.5%; margin-right: 3%; width: 35%",
+                    colourpicker::colourInput("barchart_color_breast", "Bin outline color", 
+                                              value = "#000000", allowTransparent = TRUE))),
                 
-                # Button to trigger plot generation/update
-                actionButton(inputId = "draw_breast_barchart", label = "Draw!"),
-                
-                # Button to reset inputs to default
-                actionButton(inputId = "reset_input_breast_barchart", 
-                             label = "Default parameters"),
-                
-                # Add an info button (pop up with shinyalert())
-                actionButton(inputId = "barchart_breast_info",
-                             label = "Info")),
+                # div for action buttons
+                div(id = "div_action_buttons_hist_breast", style = "display: flex;
+                width: 100%; align-content: center; justify-content: center",
+                    # Button to trigger plot generation/update
+                    div(id = "div_draw_breast_hist",
+                        # style = "display: flex; margin-right: 3%; margin-top: 3%;",
+                        tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                            href = "rgb_button_css.css")),
+                        actionButton(inputId = "draw_breast_barchart", label = "Draw!") %>% 
+                          tagAppendAttributes(class = 'rgb-button')),
+                    
+                    # Button to reset inputs to default
+                    div(id = "div_default_breast_hist",
+                        # style = "display: flex; margin-right: 3%; margin-left: 3%; margin-top: 3%;",
+                        tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                            href = "default_button.css")),
+                        actionButton(inputId = "reset_input_breast_barchart", 
+                                     label = "Default parameters") %>%
+                          tagAppendAttributes(class = 'default-button')),
+                    
+                    # Add an info button (pop up with shinyalert())
+                    div(id = "div_info_breast_hist",
+                        # style = "display: inline-flex; margin-left: 3%; margin-top: 3%;",
+                        tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                            href = "info_button.css")),
+                        actionButton(inputId = "barchart_breast_info",
+                                     label = "Info") %>%
+                          tagAppendAttributes(class = 'info-button')))),
             
             bsModal("barchart_breast_information", "Information", "barchart_breast_info",
                     fluidRow(
