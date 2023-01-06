@@ -128,57 +128,57 @@ body <- dashboardBody(tabItems(
                 
                 # Select variable to plot
                 div(id = "div_histvar_select_breast", 
-                style="display:inline-block; width: 32%; margin-left: 7.5%;
+                    style="display:inline-block; width: 32%; margin-left: 7.5%;
                     margin-right: 5%",
                     selectInput("histvar_select_breast", "Select variable", 
-                            choices = sort(c("pam50", "scmod1",
-                                        "ClaudinLow", "IC10", 
-                                        "Mammaprint_risk", "Mammaprint_score",
-                                        "rorS_risk", "rorS_score", "Location",
-                                        "Menopause.status",
-                                        "ER.status", "Year", "Platform",
-                                        "Platform_comp", "Treatment", "Response"
-                                        )),
-                            selected = "pam50")),
+                                choices = sort(c("pam50", "scmod1",
+                                                 "ClaudinLow", "IC10", 
+                                                 "Mammaprint_risk", "Mammaprint_score",
+                                                 "rorS_risk", "rorS_score", "Location",
+                                                 "Menopause.status",
+                                                 "ER.status", "Year", "Platform",
+                                                 "Platform_comp", "Treatment", "Response"
+                                )),
+                                selected = "pam50")),
                 
                 # Select type of histogram (probability, percentage, classic)
                 div(id = "div_hist_type_breast", 
-                style="display:inline-block; width: 38%; margin-left: 5%;
+                    style="display:inline-block; width: 38%; margin-left: 5%;
                     margin-right: 5%",
                     selectInput("hist_type_breast", "Select type of histogram",
-                            choices = list(classic = "classic", probability = "probability",
-                                        percent = "percentage"), 
-                            selected = "classic")),
+                                choices = list(classic = "classic", probability = "probability",
+                                               percent = "percentage"), 
+                                selected = "classic")),
                 
                 # div for checkbox input and select-all button
                 div(id = "div_checkbox_selectall_group_breast_hist", 
                     style = "width: 100%;",
-                # Select the datasets that you want to include in the plot
-                div(id = "div_hist_dataset_checkbox",
-                    style = "display: inline-block; width: 55%; margin-left: 7.5%;",
-                    checkboxGroupInput("hist_dataset_checkbox", "Select studies",
-                              selected = unique(breast_cancer_full_pheno$Dataset), 
-                              choices = unique(breast_cancer_full_pheno$Dataset),
-                              inline = TRUE)),
-                
-                # add "select all" button for the datasets to choose from
-                div(id = "div_select_all_hist_breast",
-                style = "display: inline-block; margin: 5% 5% 0% 5%; width: 25%; 
+                    # Select the datasets that you want to include in the plot
+                    div(id = "div_hist_dataset_checkbox",
+                        style = "display: inline-block; width: 55%; margin-left: 7.5%;",
+                        checkboxGroupInput("hist_dataset_checkbox", "Select studies",
+                                           selected = unique(breast_cancer_full_pheno$Dataset), 
+                                           choices = unique(breast_cancer_full_pheno$Dataset),
+                                           inline = TRUE)),
+                    
+                    # add "select all" button for the datasets to choose from
+                    div(id = "div_select_all_hist_breast",
+                        style = "display: inline-block; margin: 5% 5% 0% 5%; width: 25%; 
                 position: absolute;",
-                    actionButton("select_all_hist_breast", "Select/De-select All",
-                                 style = "background-color: #F8ECBB; font-weight: bold;
+                        actionButton("select_all_hist_breast", "Select/De-select All",
+                                     style = "background-color: #F8ECBB; font-weight: bold;
                                  border-radius: 10px;"))),
                 
                 # Select colors for fill and outline of the bins
                 div(id = "div_hist_fill_breast",
-                style="display:inline-block; margin-top: 0%; margin-left: 7.5%; 
+                    style="display:inline-block; margin-top: 0%; margin-left: 7.5%; 
                     margin-right: 2.5%; width: 25%;",
                     colourpicker::colourInput("hist_fill_breast", "Bin fill color", 
-                                          value = "#1194B1", allowTransparent = TRUE)),
+                                              value = "#1194B1", allowTransparent = TRUE)),
                 div(id = "div_hist_color_breast",
                     style="display:inline-block; margin-left: 2.5%; margin-right: 2.5%; width: 25%",
                     colourpicker::colourInput("hist_color_breast", "Bin outline color", 
-                                          value = "#000000", allowTransparent = TRUE)),
+                                              value = "#000000", allowTransparent = TRUE)),
                 
                 # Select number of bins
                 div(id = "div_hist_breast_bins",
@@ -189,31 +189,31 @@ body <- dashboardBody(tabItems(
                 # div for action buttons
                 div(id = "div_action_buttons_hist_breast", style = "display: flex;
                 width: 100%; align-content: center; justify-content: center",
-                # Button to trigger plot generation/update
-                div(id = "div_draw_breast_hist",
-                    # style = "display: flex; margin-right: 3%; margin-top: 3%;",
-                    tags$head(tags$link(rel = "stylesheet", type = "text/css",
-                                        href = "rgb_button_css.css")),
-                    actionButton(inputId = "draw_breast_hist", label = "Draw!") %>% 
-                      tagAppendAttributes(class = 'rgb-button')),
-                
-                # Button to reset inputs to default
-                div(id = "div_default_breast_hist",
-                    # style = "display: flex; margin-right: 3%; margin-left: 3%; margin-top: 3%;",
-                    tags$head(tags$link(rel = "stylesheet", type = "text/css",
-                                        href = "default_button.css")),
-                    actionButton(inputId = "reset_input_breast_hist", 
-                             label = "Default parameters") %>%
-                      tagAppendAttributes(class = 'default-button')),
-                
-                # Add an info button (pop up with shinyalert())
-                div(id = "div_info_breast_hist",
-                    # style = "display: inline-flex; margin-left: 3%; margin-top: 3%;",
-                    tags$head(tags$link(rel = "stylesheet", type = "text/css",
-                                        href = "info_button.css")),
-                actionButton(inputId = "hist_breast_info",
-                             label = "Info") %>%
-                  tagAppendAttributes(class = 'info-button')))),
+                    # Button to trigger plot generation/update
+                    div(id = "div_draw_breast_hist",
+                        # style = "display: flex; margin-right: 3%; margin-top: 3%;",
+                        tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                            href = "rgb_button_css.css")),
+                        actionButton(inputId = "draw_breast_hist", label = "Draw!") %>% 
+                          tagAppendAttributes(class = 'rgb-button')),
+                    
+                    # Button to reset inputs to default
+                    div(id = "div_default_breast_hist",
+                        # style = "display: flex; margin-right: 3%; margin-left: 3%; margin-top: 3%;",
+                        tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                            href = "default_button.css")),
+                        actionButton(inputId = "reset_input_breast_hist", 
+                                     label = "Default parameters") %>%
+                          tagAppendAttributes(class = 'default-button')),
+                    
+                    # Add an info button (pop up with shinyalert())
+                    div(id = "div_info_breast_hist",
+                        # style = "display: inline-flex; margin-left: 3%; margin-top: 3%;",
+                        tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                            href = "info_button.css")),
+                        actionButton(inputId = "hist_breast_info",
+                                     label = "Info") %>%
+                          tagAppendAttributes(class = 'info-button')))),
             
             bsModal("histogram_breast_info", "Information", "hist_breast_info",
                     fluidRow(
@@ -290,16 +290,16 @@ body <- dashboardBody(tabItems(
                 # div for color and fill selections for barchart
                 div(id = "div_fill_color_group_barachart",
                     style = "display: flex; justify-content: center; align-content:center;",
-                # Select colors for fill and outline of the bins
-                div(id = "div_barchart_fill_breast",
-                    style="display:inline-block; margin-top: 0%; margin-left: 3%; 
+                    # Select colors for fill and outline of the bins
+                    div(id = "div_barchart_fill_breast",
+                        style="display:inline-block; margin-top: 0%; margin-left: 3%; 
                     margin-right: 7.5%; width: 35%;",
-                    colourpicker::colourInput("barchart_fill_breast", "Bin fill color", 
-                                              value = "#9419B2", allowTransparent = TRUE)),
-                div(id = "div_barchart_color_breast",
-                    style="display:inline-block; margin-left: 7.5%; margin-right: 3%; width: 35%",
-                    colourpicker::colourInput("barchart_color_breast", "Bin outline color", 
-                                              value = "#000000", allowTransparent = TRUE))),
+                        colourpicker::colourInput("barchart_fill_breast", "Bin fill color", 
+                                                  value = "#9419B2", allowTransparent = TRUE)),
+                    div(id = "div_barchart_color_breast",
+                        style="display:inline-block; margin-left: 7.5%; margin-right: 3%; width: 35%",
+                        colourpicker::colourInput("barchart_color_breast", "Bin outline color", 
+                                                  value = "#000000", allowTransparent = TRUE))),
                 
                 # div for action buttons
                 div(id = "div_action_buttons_hist_breast", style = "display: flex;
@@ -338,193 +338,193 @@ body <- dashboardBody(tabItems(
   
   # Breast Cancer - sunburst tab #####
   tabItem(tabName = "breast_cancer_sunburst",
-    h2("Sunburst plots: analytical dataset and consensus subtypes"),
-    fluidRow(
-      # tabBox of plotting sunbursts
-      tabBox(
-        title = "Sunburst plots", id = "sunburst_tabs_breast", height = 700,
-        width = 7, selected = "Analytical data sunburst plot",
-        
-        # Panel for analytical set
-        tabPanel("Analytical data sunburst plot", title = "Analytical dataset",
-                 plotlyOutput("analytical_sunburst_breast")),
-        
-        # Panel for consensus set
-        tabPanel("Consensus data sunburst plot", title = "Consensus subtypes",
-                 plotlyOutput("consensus_sunburst_breast"))
-      ),
-      
-      # tabBox of tuning sunbursts
-      tabBox(
-        title = "Sunburst tuning", id = "sunburst_tuning_breast", height = 700,
-        width = 5, selected = "Analytical tuning",
-        
-        # Panel for analytical set
-        tabPanel("Analytical tuning", title = "Analytical dataset",
-                 shinyjs::useShinyjs(),
-                 
-                 # Select variable 1 for analytical set
-                 selectInput("sunburst_var1_select_breast", "Select root variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", Timepoint = "Timepoint_coded", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response"
-                             )),
-                             selected = "Treatment"),
-                 
-                 # Select variable 2 for analytical set
-                 selectInput("sunburst_var2_select_breast", "Select second variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", Timepoint = "Timepoint_coded", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response"
-                             )),
-                             selected = "Dataset"),
-                 
-                 # Select variable 3 for analytical set
-                 selectInput("sunburst_var3_select_breast", "Select third variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", Timepoint = "Timepoint_coded", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response"
-                             )),
-                             selected = "Response"),
-                 
-                 # Select variable 4 for analytical set
-                 selectInput("sunburst_var4_select_breast", "Select fourth variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", Timepoint = "Timepoint_coded", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response"
-                             )),
-                             selected = "pam50"),
-                 
-                 # add "select all" button for the datasets to choose from
-                 actionButton("select_all_sunburst_analytical_breast", "Select/De-select All"),
-                 
-                 # Select the datasets that you want to include in the plot
-                 checkboxGroupInput("sunburst_analytical_dataset_checkbox", "Select studies",
-                                    selected = unique(breast_cancer_full_pheno$Dataset), 
-                                    choices = unique(breast_cancer_full_pheno$Dataset),
-                                    inline = TRUE),
-                 
-                 # Select opacity of data points
-                 sliderInput("alpha_breast_sunburst_analytical", "Opacity (alpha)",
-                             min = 0, max = 1, value = 0.9),
-                 
-                 # Button to trigger plot generation/update
-                 actionButton(inputId = "draw_breast_sunburst_analytical", 
-                              label = "Draw!"),
-                 
-                 # Button to reset inputs to default
-                 actionButton(inputId = "reset_input_breast_sunburst_analytical", 
-                              label = "Default parameters"),
-                 
-                 # Add an info button (pop up with shinyalert())
-                 actionButton(inputId = "sunburst_analytical_breast_info",
-                              label = "Info"),
-                 
-                 bsModal("analytical_sunburst_breast_info", "Information", "sunburst_analytical_breast_info",
-                         fluidRow(
-                           htmlOutput("analytical_sunburst_breast_info_text")
-                         ))),
-      
-        # Panel for consensus set
-        tabPanel(id = "Consensus tuning", title = "Consensus subtypes",
-                 shinyjs::useShinyjs(),
-                 
-                 # Select variable 1 for consensus set
-                 selectInput("sunburst_var1_select_breast_consensus", 
-                             "Select root variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", "Timepoint", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response",
-                                              "Cluster"
-                             )),
-                             selected = "Cluster"),
-                 
-                 # Select variable 2 for consensus set
-                 selectInput("sunburst_var2_select_breast_consensus", 
-                             "Select second variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", "Timepoint", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response",
-                                              "Cluster"
-                             )),
-                             selected = "Dataset"),
-                 
-                 # Select variable 3 for consensus set
-                 selectInput("sunburst_var3_select_breast_consensus", 
-                             "Select third variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", "Timepoint", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response",
-                                              "Cluster"
-                             )),
-                             selected = "Response"),
-                 
-                 # Select variable 4 for consensus set
-                 selectInput("sunburst_var4_select_breast_consensus", 
-                             "Select fourth variable", 
-                             choices = sort(c("pam50", "scmod1",
-                                              "ClaudinLow", "Timepoint", 
-                                              "Mammaprint_risk",
-                                              "rorS_risk", "Location",
-                                              "Menopause.status", "Dataset", "None",
-                                              "ER.status", "Treatment", "Response",
-                                              "Cluster"
-                             )),
-                             selected = "Mammaprint_risk"),
-                 
-                 # add "select all" button for the datasets to choose from
-                 actionButton("select_all_sunburst_consensus_breast", "Select/De-select All"),
-                 
-                 # Select the datasets that you want to include in the plot
-                 checkboxGroupInput("sunburst_consensus_dataset_checkbox", "Select studies",
-                                    selected = unique(breast_cancer_consensus_set$Dataset), 
-                                    choices = unique(breast_cancer_consensus_set$Dataset),
-                                    inline = TRUE),
-                 
-                 # Select opacity of data points
-                 sliderInput("alpha_breast_sunburst_consensus", "Opacity (alpha)",
-                             min = 0, max = 1, value = 0.9),
-                 
-                 # Button to trigger plot generation/update
-                 actionButton(inputId = "draw_breast_sunburst_consensus", 
-                              label = "Draw!"),
-                 
-                 # Button to reset inputs to default
-                 actionButton(inputId = "reset_input_breast_sunburst_consensus", 
-                              label = "Default parameters"),
-                 
-                 # Add an info button (pop up with shinyalert())
-                 actionButton(inputId = "sunburst_consensus_breast_info",
-                              label = "Info"),
-                 bsModal("consensus_sunburst_breast_info", "Information", "sunburst_consensus_breast_info",
-                         fluidRow(
-                           htmlOutput("consensus_sunburst_breast_info_text")
-                         )))
-        
-        
-      )
-    )
+          h2("Sunburst plots: analytical dataset and consensus subtypes"),
+          fluidRow(
+            # tabBox of plotting sunbursts
+            tabBox(
+              title = "Sunburst plots", id = "sunburst_tabs_breast", height = 700,
+              width = 7, selected = "Analytical data sunburst plot",
+              
+              # Panel for analytical set
+              tabPanel("Analytical data sunburst plot", title = "Analytical dataset",
+                       plotlyOutput("analytical_sunburst_breast")),
+              
+              # Panel for consensus set
+              tabPanel("Consensus data sunburst plot", title = "Consensus subtypes",
+                       plotlyOutput("consensus_sunburst_breast"))
+            ),
+            
+            # tabBox of tuning sunbursts
+            tabBox(
+              title = "Sunburst tuning", id = "sunburst_tuning_breast", height = 700,
+              width = 5, selected = "Analytical tuning",
+              
+              # Panel for analytical set
+              tabPanel("Analytical tuning", title = "Analytical dataset",
+                       shinyjs::useShinyjs(),
+                       
+                       # Select variable 1 for analytical set
+                       selectInput("sunburst_var1_select_breast", "Select root variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", Timepoint = "Timepoint_coded", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response"
+                                   )),
+                                   selected = "Treatment"),
+                       
+                       # Select variable 2 for analytical set
+                       selectInput("sunburst_var2_select_breast", "Select second variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", Timepoint = "Timepoint_coded", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response"
+                                   )),
+                                   selected = "Dataset"),
+                       
+                       # Select variable 3 for analytical set
+                       selectInput("sunburst_var3_select_breast", "Select third variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", Timepoint = "Timepoint_coded", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response"
+                                   )),
+                                   selected = "Response"),
+                       
+                       # Select variable 4 for analytical set
+                       selectInput("sunburst_var4_select_breast", "Select fourth variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", Timepoint = "Timepoint_coded", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response"
+                                   )),
+                                   selected = "pam50"),
+                       
+                       # add "select all" button for the datasets to choose from
+                       actionButton("select_all_sunburst_analytical_breast", "Select/De-select All"),
+                       
+                       # Select the datasets that you want to include in the plot
+                       checkboxGroupInput("sunburst_analytical_dataset_checkbox", "Select studies",
+                                          selected = unique(breast_cancer_full_pheno$Dataset), 
+                                          choices = unique(breast_cancer_full_pheno$Dataset),
+                                          inline = TRUE),
+                       
+                       # Select opacity of data points
+                       sliderInput("alpha_breast_sunburst_analytical", "Opacity (alpha)",
+                                   min = 0, max = 1, value = 0.9),
+                       
+                       # Button to trigger plot generation/update
+                       actionButton(inputId = "draw_breast_sunburst_analytical", 
+                                    label = "Draw!"),
+                       
+                       # Button to reset inputs to default
+                       actionButton(inputId = "reset_input_breast_sunburst_analytical", 
+                                    label = "Default parameters"),
+                       
+                       # Add an info button (pop up with shinyalert())
+                       actionButton(inputId = "sunburst_analytical_breast_info",
+                                    label = "Info"),
+                       
+                       bsModal("analytical_sunburst_breast_info", "Information", "sunburst_analytical_breast_info",
+                               fluidRow(
+                                 htmlOutput("analytical_sunburst_breast_info_text")
+                               ))),
+              
+              # Panel for consensus set
+              tabPanel(id = "Consensus tuning", title = "Consensus subtypes",
+                       shinyjs::useShinyjs(),
+                       
+                       # Select variable 1 for consensus set
+                       selectInput("sunburst_var1_select_breast_consensus", 
+                                   "Select root variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", "Timepoint", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response",
+                                                    "Cluster"
+                                   )),
+                                   selected = "Cluster"),
+                       
+                       # Select variable 2 for consensus set
+                       selectInput("sunburst_var2_select_breast_consensus", 
+                                   "Select second variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", "Timepoint", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response",
+                                                    "Cluster"
+                                   )),
+                                   selected = "Dataset"),
+                       
+                       # Select variable 3 for consensus set
+                       selectInput("sunburst_var3_select_breast_consensus", 
+                                   "Select third variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", "Timepoint", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response",
+                                                    "Cluster"
+                                   )),
+                                   selected = "Response"),
+                       
+                       # Select variable 4 for consensus set
+                       selectInput("sunburst_var4_select_breast_consensus", 
+                                   "Select fourth variable", 
+                                   choices = sort(c("pam50", "scmod1",
+                                                    "ClaudinLow", "Timepoint", 
+                                                    "Mammaprint_risk",
+                                                    "rorS_risk", "Location",
+                                                    "Menopause.status", "Dataset", "None",
+                                                    "ER.status", "Treatment", "Response",
+                                                    "Cluster"
+                                   )),
+                                   selected = "Mammaprint_risk"),
+                       
+                       # add "select all" button for the datasets to choose from
+                       actionButton("select_all_sunburst_consensus_breast", "Select/De-select All"),
+                       
+                       # Select the datasets that you want to include in the plot
+                       checkboxGroupInput("sunburst_consensus_dataset_checkbox", "Select studies",
+                                          selected = unique(breast_cancer_consensus_set$Dataset), 
+                                          choices = unique(breast_cancer_consensus_set$Dataset),
+                                          inline = TRUE),
+                       
+                       # Select opacity of data points
+                       sliderInput("alpha_breast_sunburst_consensus", "Opacity (alpha)",
+                                   min = 0, max = 1, value = 0.9),
+                       
+                       # Button to trigger plot generation/update
+                       actionButton(inputId = "draw_breast_sunburst_consensus", 
+                                    label = "Draw!"),
+                       
+                       # Button to reset inputs to default
+                       actionButton(inputId = "reset_input_breast_sunburst_consensus", 
+                                    label = "Default parameters"),
+                       
+                       # Add an info button (pop up with shinyalert())
+                       actionButton(inputId = "sunburst_consensus_breast_info",
+                                    label = "Info"),
+                       bsModal("consensus_sunburst_breast_info", "Information", "sunburst_consensus_breast_info",
+                               fluidRow(
+                                 htmlOutput("consensus_sunburst_breast_info_text")
+                               )))
+              
+              
+            )
+          )
   ),
   
   # Breast Cancer - volcano #####
@@ -548,8 +548,8 @@ body <- dashboardBody(tabItems(
                 
                 # Select x-coordinate for vertical logFC lines
                 numericInput("logFC_breast", 
-                "DET: Diff. Exp. Threshold - vertical lines", value = 0.25, min = 0,
-                max = Inf),
+                             "DET: Diff. Exp. Threshold - vertical lines", value = 0.25, min = 0,
+                             max = Inf),
                 
                 # Select y-coordinate for p-value threshold
                 numericInput("pval_breast", 
@@ -558,13 +558,13 @@ body <- dashboardBody(tabItems(
                 
                 # Select colors for scatter points
                 colourpicker::colourInput("scatter_color_breast_NS", "Color for p>PVT (n.s. results)", 
-                          value = "#BEBEBE"),
+                                          value = "#BEBEBE"),
                 colourpicker::colourInput("scatter_color_breast_DE_only", "Color for DE>DET (p>PVT)", 
-                      value = "#FFC0CB"),
+                                          value = "#FFC0CB"),
                 colourpicker::colourInput("scatter_color_breast_p_only", "Color for p<PVT (DE<DET)", 
-                          value = "#551A8B"),
+                                          value = "#551A8B"),
                 colourpicker::colourInput("scatter_color_breast_DE_p", "Color for DE>DET & p<PVT", 
-                          value = "#8B0000"),
+                                          value = "#8B0000"),
                 
                 # Select opacity of data points
                 sliderInput("alpha_breast_volcano", "Opacity (alpha)",
@@ -637,92 +637,92 @@ body <- dashboardBody(tabItems(
                             actionButton("select_all_ml_model1_breast", "Select/De-select All")
                 )
             ),
-          # Filtering the subset of the data based on variables for more specific prediction
+            # Filtering the subset of the data based on variables for more specific prediction
             
-          # A wide box with checkboxes
-          box(id = "ML_breast_cancer_variable_filtering", title = "Variable filtering", 
-              status = "primary", solidHeader = TRUE,
-              width = 12, height = 300, shinyjs::useShinyjs(), 
-              
-              splitLayout(cellWidths = c("180px", "100px", "90px", "90px",
-                                         "130px", "130px", "150px", "120px", "200px",
-                                         "80px", "80px", "150px", "80px"),
-                          style = "border:1px;padding:10px;white-space:normal;",
-                          
-                          # Filter for treatment
-                          checkboxGroupInput("breast_cancer_ml_treatment_filter", "Treatment",
-                                             selected = unique(full_ml_set$Treatment),
-                                             choices = unique(full_ml_set$Treatment),
-                                             inline = FALSE, width = "200px"),
-                          
-                          # Filter for timepoint
-                          checkboxGroupInput("breast_cancer_ml_timepoint_filter", "Timepoint",
-                                             selected = unique(full_ml_set$Timepoint),
-                                             choices = unique(full_ml_set$Timepoint),
-                                             inline = FALSE, width = "180px"),
-                          
-                          # Filter for location
-                          checkboxGroupInput("breast_cancer_ml_location_filter", "Location",
-                                             selected = unique(full_ml_set$Location),
-                                             choices = unique(full_ml_set$Location),
-                                             inline = FALSE, width = "150px"),
-                          
-                          # Filter for pam50
-                          checkboxGroupInput("breast_cancer_ml_pam50_filter", "pam50",
-                                             selected = unique(full_ml_set$pam50),
-                                             choices = unique(full_ml_set$pam50),
-                                             inline = FALSE, width = "150px"),
-                          
-                          # Filter for rorS risk
-                          checkboxGroupInput("breast_cancer_ml_rorS_filter", "Risk of recurrence",
-                                             selected = unique(full_ml_set$rorS_risk),
-                                             choices = unique(full_ml_set$rorS_risk),
-                                             inline = FALSE, width = "200px"),
-                          
-                          # Filter for Mammaprint risk
-                          checkboxGroupInput("breast_cancer_ml_Mammaprint_filter", "Mammaprint risk",
-                                             selected = unique(full_ml_set$Mammaprint_risk),
-                                             choices = unique(full_ml_set$Mammaprint_risk),
-                                             inline = FALSE, width = "200px"),
-                          
-                          # Filter for Menopause status
-                          checkboxGroupInput("breast_cancer_ml_Meno_filter", "Menopause",
-                                             selected = unique(full_ml_set$Menopause.status),
-                                             choices = unique(full_ml_set$Menopause.status),
-                                             inline = FALSE, width = "200px"),
-                          
-                          # Filter for ER status
-                          checkboxGroupInput("breast_cancer_ml_ER_filter", "ER status",
-                                             selected = unique(full_ml_set$ER.status),
-                                             choices = unique(full_ml_set$ER.status),
-                                             inline = FALSE, width = "100px"),
-                          
-                          # legend title input
-                          textInput(inputId = "breast_cancer_ml_legend_entry_1",
-                                    "Name for legend", value = "Model 1"),
-                          
-                          # add "Predict" - button that triggers the prediction model on the selected data
-                          actionButton("predict_ml_breast_cancer", "Predict!",
-                                       style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"),
-                          
-                          # Button to reset inputs to default
-                          actionButton(inputId = "reset_input_breast_ml_model1", 
-                                       label = "Reset",
-                                       style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"),
-                          
-                          # add "Comparison" button
-                          actionButton("multiple_rocs_breast", "Add comparison"),
-                          
-                          # add "Info" button
-                          actionButton("info_ml_breast_cancer", "Info"),
-                          
-                          bsModal("ml_breast_info", "Information", "info_ml_breast_cancer",
-                                  fluidRow(
-                                    htmlOutput("ml_breast_info_text")
-                                  ))
-                          
-              )
-          ),
+            # A wide box with checkboxes
+            box(id = "ML_breast_cancer_variable_filtering", title = "Variable filtering", 
+                status = "primary", solidHeader = TRUE,
+                width = 12, height = 300, shinyjs::useShinyjs(), 
+                
+                splitLayout(cellWidths = c("180px", "100px", "90px", "90px",
+                                           "130px", "130px", "150px", "120px", "200px",
+                                           "80px", "80px", "150px", "80px"),
+                            style = "border:1px;padding:10px;white-space:normal;",
+                            
+                            # Filter for treatment
+                            checkboxGroupInput("breast_cancer_ml_treatment_filter", "Treatment",
+                                               selected = unique(full_ml_set$Treatment),
+                                               choices = unique(full_ml_set$Treatment),
+                                               inline = FALSE, width = "200px"),
+                            
+                            # Filter for timepoint
+                            checkboxGroupInput("breast_cancer_ml_timepoint_filter", "Timepoint",
+                                               selected = unique(full_ml_set$Timepoint),
+                                               choices = unique(full_ml_set$Timepoint),
+                                               inline = FALSE, width = "180px"),
+                            
+                            # Filter for location
+                            checkboxGroupInput("breast_cancer_ml_location_filter", "Location",
+                                               selected = unique(full_ml_set$Location),
+                                               choices = unique(full_ml_set$Location),
+                                               inline = FALSE, width = "150px"),
+                            
+                            # Filter for pam50
+                            checkboxGroupInput("breast_cancer_ml_pam50_filter", "pam50",
+                                               selected = unique(full_ml_set$pam50),
+                                               choices = unique(full_ml_set$pam50),
+                                               inline = FALSE, width = "150px"),
+                            
+                            # Filter for rorS risk
+                            checkboxGroupInput("breast_cancer_ml_rorS_filter", "Risk of recurrence",
+                                               selected = unique(full_ml_set$rorS_risk),
+                                               choices = unique(full_ml_set$rorS_risk),
+                                               inline = FALSE, width = "200px"),
+                            
+                            # Filter for Mammaprint risk
+                            checkboxGroupInput("breast_cancer_ml_Mammaprint_filter", "Mammaprint risk",
+                                               selected = unique(full_ml_set$Mammaprint_risk),
+                                               choices = unique(full_ml_set$Mammaprint_risk),
+                                               inline = FALSE, width = "200px"),
+                            
+                            # Filter for Menopause status
+                            checkboxGroupInput("breast_cancer_ml_Meno_filter", "Menopause",
+                                               selected = unique(full_ml_set$Menopause.status),
+                                               choices = unique(full_ml_set$Menopause.status),
+                                               inline = FALSE, width = "200px"),
+                            
+                            # Filter for ER status
+                            checkboxGroupInput("breast_cancer_ml_ER_filter", "ER status",
+                                               selected = unique(full_ml_set$ER.status),
+                                               choices = unique(full_ml_set$ER.status),
+                                               inline = FALSE, width = "100px"),
+                            
+                            # legend title input
+                            textInput(inputId = "breast_cancer_ml_legend_entry_1",
+                                      "Name for legend", value = "Model 1"),
+                            
+                            # add "Predict" - button that triggers the prediction model on the selected data
+                            actionButton("predict_ml_breast_cancer", "Predict!",
+                                         style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"),
+                            
+                            # Button to reset inputs to default
+                            actionButton(inputId = "reset_input_breast_ml_model1", 
+                                         label = "Reset",
+                                         style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"),
+                            
+                            # add "Comparison" button
+                            actionButton("multiple_rocs_breast", "Add comparison"),
+                            
+                            # add "Info" button
+                            actionButton("info_ml_breast_cancer", "Info"),
+                            
+                            bsModal("ml_breast_info", "Information", "info_ml_breast_cancer",
+                                    fluidRow(
+                                      htmlOutput("ml_breast_info_text")
+                                    ))
+                            
+                )
+            ),
             # Model selection box for comparison #2
             hidden(div(id = "model_select_breast_2",
                        box(id = "ML_control_breast_2", title = "Select model and data #2", 
@@ -821,128 +821,128 @@ body <- dashboardBody(tabItems(
                                        
                            )
                        ))),
-          
-          # Model selection box for comparison #3
-          hidden(div(id = "model_select_breast_3",
-                     box(id = "ML_control_breast_3", title = "Select model and data #3", 
-                         status = "primary", solidHeader = TRUE,
-                         width = 12, height = 500, shinyjs::useShinyjs(), 
-                         
-                         splitLayout(cellWidths = c("200px", "250px", "350px", "350px",
-                                                    "180px", "100px", "90px", "90px",
-                                                    "130px", "130px", "150px", "120px", "200px", 
-                                                    "80px", "80px"),
-                                     style = "border:1px;padding:10px;white-space:normal;",
-                                     # Select ML model category
-                                     radioButtons(inputId = "breast_cancer_ml_model_category_3",
-                                                  label = "Select model category",
-                                                  choices = names(ML), selected = "Decision Trees",
-                                                  width = "150px"),
-                                     
-                                     # Updatable radioButtons for model subcategory
-                                     radioButtons("breast_cancer_ml_model_subcategory_3",
-                                                  "Select model subcategory",
-                                                  choices = sort(names(ML[["Decision Trees"]])),
-                                                  selected = "C5.0 - ROC", width = "250px"),
-                                     
-                                     # Select the datasets that you want to include in the plot
-                                     checkboxGroupInput("ml_breast_dataset_checkbox_3", "Select studies",
-                                                        selected = unique(full_ml_set$Dataset), 
-                                                        choices = unique(full_ml_set$Dataset),
-                                                        inline = TRUE, width = "300px"),
-                                     
-                                     # add "select all" button for the datasets to choose from
-                                     actionButton("select_all_ml_model3_breast", "Select/De-select All"),
-                                     
-                                     # Filter for treatment
-                                     checkboxGroupInput("breast_cancer_ml_treatment_filter_3", "Treatment",
-                                                        selected = unique(full_ml_set$Treatment),
-                                                        choices = unique(full_ml_set$Treatment),
-                                                        inline = FALSE, width = "200px"),
-                                     
-                                     # Filter for timepoint
-                                     checkboxGroupInput("breast_cancer_ml_timepoint_filter_3", "Timepoint",
-                                                        selected = unique(full_ml_set$Timepoint),
-                                                        choices = unique(full_ml_set$Timepoint),
-                                                        inline = FALSE, width = "180px"),
-                                     
-                                     # Filter for location
-                                     checkboxGroupInput("breast_cancer_ml_location_filter_3", "Location",
-                                                        selected = unique(full_ml_set$Location),
-                                                        choices = unique(full_ml_set$Location),
-                                                        inline = FALSE, width = "150px"),
-                                     
-                                     # Filter for pam50
-                                     checkboxGroupInput("breast_cancer_ml_pam50_filter_3", "pam50",
-                                                        selected = unique(full_ml_set$pam50),
-                                                        choices = unique(full_ml_set$pam50),
-                                                        inline = FALSE, width = "150px"),
-                                     
-                                     # Filter for rorS risk
-                                     checkboxGroupInput("breast_cancer_ml_rorS_filter_3", "Risk of recurrence",
-                                                        selected = unique(full_ml_set$rorS_risk),
-                                                        choices = unique(full_ml_set$rorS_risk),
-                                                        inline = FALSE, width = "200px"),
-                                     
-                                     # Filter for Mammaprint risk
-                                     checkboxGroupInput("breast_cancer_ml_Mammaprint_filter_3", "Mammaprint risk",
-                                                        selected = unique(full_ml_set$Mammaprint_risk),
-                                                        choices = unique(full_ml_set$Mammaprint_risk),
-                                                        inline = FALSE, width = "200px"),
-                                     
-                                     # Filter for Menopause status
-                                     checkboxGroupInput("breast_cancer_ml_Meno_filter_3", "Menopause",
-                                                        selected = unique(full_ml_set$Menopause.status),
-                                                        choices = unique(full_ml_set$Menopause.status),
-                                                        inline = FALSE, width = "200px"),
-                                     
-                                     # Filter for ER status
-                                     checkboxGroupInput("breast_cancer_ml_ER_filter_3", "ER status",
-                                                        selected = unique(full_ml_set$ER.status),
-                                                        choices = unique(full_ml_set$ER.status),
-                                                        inline = FALSE, width = "100px"),
-                                     
-                                     # legend title input
-                                     textInput(inputId = "breast_cancer_ml_legend_entry_3",
-                                               "Name for legend", value = "Model 3"),
-                                     
-                                     # add "Apply" trigger button
-                                     actionButton("apply_comparison_breast_3", "Apply",
-                                                  style = "color: #FFFFFF; background-color: #7A0799; border-color: #2e6da4"),
-                                     
-                                     # Button to reset inputs to default
-                                     actionButton(inputId = "reset_input_breast_ml_model3", 
-                                                  label = "Reset",
-                                                  style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4")
-                                     
-                         )
-                     )))
+            
+            # Model selection box for comparison #3
+            hidden(div(id = "model_select_breast_3",
+                       box(id = "ML_control_breast_3", title = "Select model and data #3", 
+                           status = "primary", solidHeader = TRUE,
+                           width = 12, height = 500, shinyjs::useShinyjs(), 
+                           
+                           splitLayout(cellWidths = c("200px", "250px", "350px", "350px",
+                                                      "180px", "100px", "90px", "90px",
+                                                      "130px", "130px", "150px", "120px", "200px", 
+                                                      "80px", "80px"),
+                                       style = "border:1px;padding:10px;white-space:normal;",
+                                       # Select ML model category
+                                       radioButtons(inputId = "breast_cancer_ml_model_category_3",
+                                                    label = "Select model category",
+                                                    choices = names(ML), selected = "Decision Trees",
+                                                    width = "150px"),
+                                       
+                                       # Updatable radioButtons for model subcategory
+                                       radioButtons("breast_cancer_ml_model_subcategory_3",
+                                                    "Select model subcategory",
+                                                    choices = sort(names(ML[["Decision Trees"]])),
+                                                    selected = "C5.0 - ROC", width = "250px"),
+                                       
+                                       # Select the datasets that you want to include in the plot
+                                       checkboxGroupInput("ml_breast_dataset_checkbox_3", "Select studies",
+                                                          selected = unique(full_ml_set$Dataset), 
+                                                          choices = unique(full_ml_set$Dataset),
+                                                          inline = TRUE, width = "300px"),
+                                       
+                                       # add "select all" button for the datasets to choose from
+                                       actionButton("select_all_ml_model3_breast", "Select/De-select All"),
+                                       
+                                       # Filter for treatment
+                                       checkboxGroupInput("breast_cancer_ml_treatment_filter_3", "Treatment",
+                                                          selected = unique(full_ml_set$Treatment),
+                                                          choices = unique(full_ml_set$Treatment),
+                                                          inline = FALSE, width = "200px"),
+                                       
+                                       # Filter for timepoint
+                                       checkboxGroupInput("breast_cancer_ml_timepoint_filter_3", "Timepoint",
+                                                          selected = unique(full_ml_set$Timepoint),
+                                                          choices = unique(full_ml_set$Timepoint),
+                                                          inline = FALSE, width = "180px"),
+                                       
+                                       # Filter for location
+                                       checkboxGroupInput("breast_cancer_ml_location_filter_3", "Location",
+                                                          selected = unique(full_ml_set$Location),
+                                                          choices = unique(full_ml_set$Location),
+                                                          inline = FALSE, width = "150px"),
+                                       
+                                       # Filter for pam50
+                                       checkboxGroupInput("breast_cancer_ml_pam50_filter_3", "pam50",
+                                                          selected = unique(full_ml_set$pam50),
+                                                          choices = unique(full_ml_set$pam50),
+                                                          inline = FALSE, width = "150px"),
+                                       
+                                       # Filter for rorS risk
+                                       checkboxGroupInput("breast_cancer_ml_rorS_filter_3", "Risk of recurrence",
+                                                          selected = unique(full_ml_set$rorS_risk),
+                                                          choices = unique(full_ml_set$rorS_risk),
+                                                          inline = FALSE, width = "200px"),
+                                       
+                                       # Filter for Mammaprint risk
+                                       checkboxGroupInput("breast_cancer_ml_Mammaprint_filter_3", "Mammaprint risk",
+                                                          selected = unique(full_ml_set$Mammaprint_risk),
+                                                          choices = unique(full_ml_set$Mammaprint_risk),
+                                                          inline = FALSE, width = "200px"),
+                                       
+                                       # Filter for Menopause status
+                                       checkboxGroupInput("breast_cancer_ml_Meno_filter_3", "Menopause",
+                                                          selected = unique(full_ml_set$Menopause.status),
+                                                          choices = unique(full_ml_set$Menopause.status),
+                                                          inline = FALSE, width = "200px"),
+                                       
+                                       # Filter for ER status
+                                       checkboxGroupInput("breast_cancer_ml_ER_filter_3", "ER status",
+                                                          selected = unique(full_ml_set$ER.status),
+                                                          choices = unique(full_ml_set$ER.status),
+                                                          inline = FALSE, width = "100px"),
+                                       
+                                       # legend title input
+                                       textInput(inputId = "breast_cancer_ml_legend_entry_3",
+                                                 "Name for legend", value = "Model 3"),
+                                       
+                                       # add "Apply" trigger button
+                                       actionButton("apply_comparison_breast_3", "Apply",
+                                                    style = "color: #FFFFFF; background-color: #7A0799; border-color: #2e6da4"),
+                                       
+                                       # Button to reset inputs to default
+                                       actionButton(inputId = "reset_input_breast_ml_model3", 
+                                                    label = "Reset",
+                                                    style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4")
+                                       
+                           )
+                       )))
           ),
           # ROC plot, confusion matrix and error metrics section
           bsModal("ML_output_breast", "Output", "predict_ml_breast_cancer",
                   size = "large", fluidRow(
-            column(
-              width = 12,
-              
-              # A box to plot the ROC curve
-              box(
-                title = "Model performance", id = "breast_cancer_roc_box",
-                status = "warning", width = 12, height = 600, solidHeader = TRUE, align = "center",
-                plotOutput("breast_cancer_ROC_plot", width = 500, height = 500)
-              )
-            ),
-            
-            column(
-              width = 12,
-              
-              # Error metrics
-              box(
-                title = "Error Metrics", width = 12, solidHeader = TRUE,
-                status = "warning", id = "breast_cancer_error_metrics",
-                DT::dataTableOutput("breast_cancer_error_table")
-              )
-            )
-          ))
+                    column(
+                      width = 12,
+                      
+                      # A box to plot the ROC curve
+                      box(
+                        title = "Model performance", id = "breast_cancer_roc_box",
+                        status = "warning", width = 12, height = 600, solidHeader = TRUE, align = "center",
+                        plotOutput("breast_cancer_ROC_plot", width = 500, height = 500)
+                      )
+                    ),
+                    
+                    column(
+                      width = 12,
+                      
+                      # Error metrics
+                      box(
+                        title = "Error Metrics", width = 12, solidHeader = TRUE,
+                        status = "warning", id = "breast_cancer_error_metrics",
+                        DT::dataTableOutput("breast_cancer_error_table")
+                      )
+                    )
+                  ))
   ),
   
   # Breast Cancer - Custom DGEA #####
@@ -1034,7 +1034,7 @@ body <- dashboardBody(tabItems(
                                                                 "ER.status", "Menopause.status", 
                                                                 Timepoint = "Timepoint_coded")),
                                                inline = TRUE, width = "300px"),
-                          
+                            
                             # Updatable panel for contrast level 1
                             div(id = "div_1_breast_custom_volcano", 
                                 tags$head(tags$style(HTML(".shiny-split-layout > div {overflow: visible;}"))),
@@ -1138,7 +1138,7 @@ body <- dashboardBody(tabItems(
                       )
                     ))
           )
-          ),
+  ),
   # PDAC #####
   tabItem(tabName = "PDAC_project",
           h2("Stage-specific diagnostic biomarkers in PDAC")),
@@ -1146,7 +1146,7 @@ body <- dashboardBody(tabItems(
   # OSCC #####
   tabItem(tabName = "OSCC_project",
           h2("Recurrence in OSCC"))
-  )
+)
 )
 
 # Sidebar #####
@@ -1154,36 +1154,36 @@ body <- dashboardBody(tabItems(
 # subItems are introduced here - NOT IN THE BODY
 sidebar <- dashboardSidebar(
   sidebarMenu(style = "white-space: normal;", # wraps text to fit in sidebar
-    menuItem(tabName = "breast_cancer_project",
-             text = "Breast Cancer",
-             startExpanded = TRUE, # use this to enable subItems
-             
-             # Exploratory analysis
-             menuSubItem(tabName = "breast_cancer_exploratory",
-                         text = "Exploratory analysis"),
-             
-             # Sunburst
-             menuSubItem(tabName = "breast_cancer_sunburst",
-                         text = "Sunburst plots"),
-             
-             # Volcano
-             menuSubItem(tabName = "breast_cancer_subItem_volcano",
-                         text = "Volcano"),
-             
-             # Custom DGEA
-             menuSubItem(tabName = "breast_cancer_subItem_DGEA",
-                         text = "Custom DGEA"),
-             
-             # Machine Learning
-             menuSubItem(tabName = "breast_cancer_subItem_ml",
-                         text = "Machine Learning")
-    ), 
-    menuItem(tabName = "PDAC_project", 
-             text = "Pancreatic Ductal Adenocarcinoma (PDAC)"
-    ),
-    menuItem(tabName = "OSCC_project", 
-             text = "Oral Squamous Cell Carcinoma"
-    )
+              menuItem(tabName = "breast_cancer_project",
+                       text = "Breast Cancer",
+                       startExpanded = TRUE, # use this to enable subItems
+                       
+                       # Exploratory analysis
+                       menuSubItem(tabName = "breast_cancer_exploratory",
+                                   text = "Exploratory analysis"),
+                       
+                       # Sunburst
+                       menuSubItem(tabName = "breast_cancer_sunburst",
+                                   text = "Sunburst plots"),
+                       
+                       # Volcano
+                       menuSubItem(tabName = "breast_cancer_subItem_volcano",
+                                   text = "Volcano"),
+                       
+                       # Custom DGEA
+                       menuSubItem(tabName = "breast_cancer_subItem_DGEA",
+                                   text = "Custom DGEA"),
+                       
+                       # Machine Learning
+                       menuSubItem(tabName = "breast_cancer_subItem_ml",
+                                   text = "Machine Learning")
+              ), 
+              menuItem(tabName = "PDAC_project", 
+                       text = "Pancreatic Ductal Adenocarcinoma (PDAC)"
+              ),
+              menuItem(tabName = "OSCC_project", 
+                       text = "Oral Squamous Cell Carcinoma"
+              )
   )
 )
 
@@ -1217,9 +1217,9 @@ server <- function(input, output, session) {
   prepare_histogram <- reactive({
     # Dynamic control of histogram types
     hist_types_breast = list(classic = "classic", probability = "probability",
-                      percent = "percentage")
+                             percent = "percentage")
     y_axis_titles_breast = list(classic = "Counts", probability = "Probability",
-                                 percentage = "Percentage")
+                                percentage = "Percentage")
     subset_breast_hist = breast_cancer_full_pheno$Dataset %in%
       input$hist_dataset_checkbox
     
@@ -1245,7 +1245,7 @@ server <- function(input, output, session) {
                           linecolor = '#000000',
                           linewidth = 2))
   })
-    
+  
   
   # Plot the breast cancer histogram after the user pressed the "Draw!" button
   output$breast_histogram <- renderPlotly({
@@ -1261,8 +1261,8 @@ server <- function(input, output, session) {
   # Pop-up info message, triggered when the user presses the Info button
   output$hist_breast_info_text <- renderText({
     paste0("<br> &#8226 Select variables and parameters to plot in a histogram.",
-    "<br> &#8226You can toggle the histogram variable, type, color, studies etc.", 
-    "<br> &#8226Number of bins is only for continuous variables.")})
+           "<br> &#8226You can toggle the histogram variable, type, color, studies etc.", 
+           "<br> &#8226Number of bins is only for continuous variables.")})
   
   
   # Breast Cancer: bar chart #####
@@ -1291,7 +1291,7 @@ server <- function(input, output, session) {
     
     # Prepare data for plotly bar chart
     data_breast_bar = as.data.frame(breast_cancer_full_pheno[subset_breast_barchart,
-                                               c(cols)])
+                                                             c(cols)])
     colnames(data_breast_bar) = cols
     
     if(length(cols) == 1){
@@ -1327,35 +1327,35 @@ server <- function(input, output, session) {
       
       # Add layout
       p <- p %>%
-          layout(title = list(text = paste0("<b>Bar chart of ", input$barchart_varmain_select_breast),
-                              x = 0, y = 0.99, font = list(size  = 10)),
-                 annotations = list(x = -0.098, y = 1.065, xref = "paper", yref = "paper",
-                                    showarrow = F,
-                                    text = paste0("Studies: ",
-                                                  c(list(input$hist_dataset_checkbox))),
-                                    font = list(size = 8)),
-                 xaxis = list(title = list(text = paste0("<b>", input$barchart_varmain_select_breast)),
-                              linecolor = '#000000',
-                              linewidth = 2),
-                 yaxis = list(title = list(text = "Counts"),
-                              linecolor = '#000000',
-                              linewidth = 2),
-                 barmode = input$barchart_type_breast)
+        layout(title = list(text = paste0("<b>Bar chart of ", input$barchart_varmain_select_breast),
+                            x = 0, y = 0.99, font = list(size  = 10)),
+               annotations = list(x = -0.098, y = 1.065, xref = "paper", yref = "paper",
+                                  showarrow = F,
+                                  text = paste0("Studies: ",
+                                                c(list(input$hist_dataset_checkbox))),
+                                  font = list(size = 8)),
+               xaxis = list(title = list(text = paste0("<b>", input$barchart_varmain_select_breast)),
+                            linecolor = '#000000',
+                            linewidth = 2),
+               yaxis = list(title = list(text = "Counts"),
+                            linecolor = '#000000',
+                            linewidth = 2),
+               barmode = input$barchart_type_breast)
     } else {
       p <- p %>%
-      layout(title = list(text = paste0("<b>Bar chart of ", input$barchart_varmain_select_breast),
-                          x = 0, y = 0.99, font = list(size  = 10)),
-             annotations = list(x = -0.098, y = 1.065, xref = "paper", yref = "paper",
-                                showarrow = F,
-                                text = paste0("Studies: ",
-                                              c(list(input$hist_dataset_checkbox))),
-                                font = list(size = 8)),
-             xaxis = list(title = list(text = paste0("<b>", input$barchart_varmain_select_breast)),
-                          linecolor = '#000000',
-                          linewidth = 2),
-             yaxis = list(title = list(text = "Counts"),
-                          linecolor = '#000000',
-                          linewidth = 2))
+        layout(title = list(text = paste0("<b>Bar chart of ", input$barchart_varmain_select_breast),
+                            x = 0, y = 0.99, font = list(size  = 10)),
+               annotations = list(x = -0.098, y = 1.065, xref = "paper", yref = "paper",
+                                  showarrow = F,
+                                  text = paste0("Studies: ",
+                                                c(list(input$hist_dataset_checkbox))),
+                                  font = list(size = 8)),
+               xaxis = list(title = list(text = paste0("<b>", input$barchart_varmain_select_breast)),
+                            linecolor = '#000000',
+                            linewidth = 2),
+               yaxis = list(title = list(text = "Counts"),
+                            linecolor = '#000000',
+                            linewidth = 2))
     }
     
     p
@@ -1456,37 +1456,37 @@ server <- function(input, output, session) {
   # Set up color palette for the sunburst (un-customisable by the user)
   coloring = data.frame(stringsAsFactors = FALSE,
                         colors = tolower(gplots::col2hex(c("paleturquoise3", "sienna2", 
-                                                           "paleturquoise1", "paleturquoise1", "paleturquoise1", 
-                                                           "sienna1", "sienna1", "sienna1", "sienna1",
-                                                           "sienna1", "sienna1", "sienna1", 
-                                                           "paleturquoise1", "paleturquoise1", "sienna1", "paleturquoise1",
-                                                           "deeppink4", "dodgerblue4", 
-                                                           "red4", "violet", "darkblue", "skyblue", "lightgreen",
-                                                           "goldenrod2", "firebrick2", 
-                                                           "red4", "orange", "chartreuse4",
-                                                           "red3", "green",
-                                                           "grey", "goldenrod2",
-                                                           "violet", "red4", "skyblue", "dodgerblue4",
-                                                           "dodgerblue4", "chartreuse4", "violet", 
-                                                           "orange", "dodgerblue3", # orange is used for ER/Meno mixed status
-                                                           "dodgerblue4",
-                                                           "orange", "skyblue"))),
-                        labels = c("Chemotherapy", "Endocrine_treatment", 
-                                   "C1", "C2", "C3", 
-                                   "E1_1", "E1_2", "E1_3", "E2", 
-                                   "E3", "E4_1", "E4_2",
-                                   "XVC1", "XVC2", "XVE", "SJS",
-                                   "Non_responder", "Responder", 
-                                   "Basal", "Her2", "LumA", "LumB", "Normal",
-                                   "T1", "T2",
-                                   "High", "Intermediate", "Low",
-                                   "Risk", "No risk",
-                                   "Others", "Claudin",
-                                   "HER2+", "ER-/HER2-", "ER+/HER2- High Prolif", "ER+/HER2- Low Prolif",
-                                   "UK", "USA", "Korea",
-                                   "Mixed", "PM", # Mixed is used for both ER and Meno status here
-                                   "ER+",
-                                   "Cluster 1", "Cluster 2"))
+                                                                           "paleturquoise1", "paleturquoise1", "paleturquoise1", 
+                                                                           "sienna1", "sienna1", "sienna1", "sienna1",
+                                                                           "sienna1", "sienna1", "sienna1", 
+                                                                           "paleturquoise1", "paleturquoise1", "sienna1", "paleturquoise1",
+                                                                           "deeppink4", "dodgerblue4", 
+                                                                           "red4", "violet", "darkblue", "skyblue", "lightgreen",
+                                                                           "goldenrod2", "firebrick2", 
+                                                                           "red4", "orange", "chartreuse4",
+                                                                           "red3", "green",
+                                                                           "grey", "goldenrod2",
+                                                                           "violet", "red4", "skyblue", "dodgerblue4",
+                                                                           "dodgerblue4", "chartreuse4", "violet", 
+                                                                           "orange", "dodgerblue3", # orange is used for ER/Meno mixed status
+                                                                           "dodgerblue4",
+                                                                           "orange", "skyblue"))),
+                                                                           labels = c("Chemotherapy", "Endocrine_treatment", 
+                                                                                      "C1", "C2", "C3", 
+                                                                                      "E1_1", "E1_2", "E1_3", "E2", 
+                                                                                      "E3", "E4_1", "E4_2",
+                                                                                      "XVC1", "XVC2", "XVE", "SJS",
+                                                                                      "Non_responder", "Responder", 
+                                                                                      "Basal", "Her2", "LumA", "LumB", "Normal",
+                                                                                      "T1", "T2",
+                                                                                      "High", "Intermediate", "Low",
+                                                                                      "Risk", "No risk",
+                                                                                      "Others", "Claudin",
+                                                                                      "HER2+", "ER-/HER2-", "ER+/HER2- High Prolif", "ER+/HER2- Low Prolif",
+                                                                                      "UK", "USA", "Korea",
+                                                                                      "Mixed", "PM", # Mixed is used for both ER and Meno status here
+                                                                                      "ER+",
+                                                                                      "Cluster 1", "Cluster 2"))
   
   # Plot sunburst function (analytical set)
   plot_analytical_sunburst <- reactive({
@@ -1560,7 +1560,7 @@ server <- function(input, output, session) {
     
     # Convert df to sunburst format
     Pheno_sunburst_new = as.sunburstDF(Pheno_sunburst, value_column = "Counts",
-                                     add_root = FALSE) %>% 
+                                       add_root = FALSE) %>% 
       inner_join(coloring, by = "labels")
     
     # Plotly
@@ -1651,7 +1651,7 @@ server <- function(input, output, session) {
     
     # Convert df to sunburst format
     Pheno_sunburst_new = as.sunburstDF(Pheno_sunburst, value_column = "Counts",
-                                     add_root = FALSE) %>% 
+                                       add_root = FALSE) %>% 
       inner_join(coloring, by = "labels")
     
     # Plotly
@@ -1674,7 +1674,7 @@ server <- function(input, output, session) {
   output$analytical_sunburst_breast <- renderPlotly({
     input$draw_breast_sunburst_analytical
     isolate({plot_analytical_sunburst()})
-    })
+  })
   
   # Select all button
   observe({
@@ -1851,12 +1851,12 @@ server <- function(input, output, session) {
                       clicktoshow = "onoff")
   })
   
-
+  
   # Plot the breast cancer volcano after the user pressed the "Draw!" button
   output$breast_volcano <- renderPlotly({
     input$draw_breast_volcano 
     isolate({prepare_volcano()})
-    })
+  })
   
   # Reset parameters after pressing the corresponding button
   observeEvent(input$reset_input_breast_volcano, {
@@ -2069,9 +2069,9 @@ server <- function(input, output, session) {
                         response = as.character(join$Response))
         auc_values[[1]] = round(auc(model_roc), 3)
         p = plot(model_roc, 
-             main = "ROC curve",
-             col = randomColor(), lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
-             asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
+                 main = "ROC curve",
+                 col = randomColor(), lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
+                 asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
       }
       
       return(list(plot = p, conf = confusion_matrix, 
@@ -2080,376 +2080,376 @@ server <- function(input, output, session) {
                   error_metrics = errs_1))
       
       
-      } else if(counter$counter == 2) {
-        # Plot legend
-        Legends = input$breast_cancer_ml_legend_entry_1
-        auc_values = list()
-        
-        # Variables for inputs
-        category = input$breast_cancer_ml_model_category
-        subcategory = input$breast_cancer_ml_model_subcategory
-        ml_study_subset = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox
-        
-        # Subset the data that the model will be assessed on
-        dataset = full_ml_set[ml_study_subset,] %>%
-          dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter) %>%
-          dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter) %>%
-          dplyr::filter(Location %in% input$breast_cancer_ml_location_filter) %>%
-          dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter) %>%
-          dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter) %>%
-          dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter) %>%
-          dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter) %>%
-          dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter)
-        
-        # Number of samples in the filtered dataset
-        nsamples = nrow(dataset)
-        
-        model = ML[[category]][[subcategory]]
-        
-        # Predict and create a confusion matrix
-        
-        # Make predictions according to model chosen
-        if(subcategory == "100X Bagging"){
-          predictions_frame = adabag::predict.bagging(model, dataset)
-          predictions = predictions_frame[["class"]]
-          confusion_matrix = table(predictions, dataset$Response)
-          model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
-            sum(confusion_matrix)
-          predicted_probabilities = predictions_frame[["prob"]]
-          errs_1 = err_metrics(confusion_matrix)
-          colnames(errs_1) = c("Metrics", Legends[[1]])
-        } else if(subcategory == "Boosting") {
-          predictions_frame = predict(model, dataset)
-          predictions = predictions_frame[["class"]]
-          confusion_matrix = predictions_frame[["confusion"]]
-          model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
-            sum(confusion_matrix)
-          predicted_probabilities = predictions_frame[["prob"]]
-          errs_1 = err_metrics(confusion_matrix)
-          colnames(errs_1) = c("Metrics", Legends[[1]])
-        } else {
-          predictions = predict(model, dataset)
-          confusion_matrix = table(predictions, dataset$Response)
-          model_accuracy = (confusion_matrix[1] + confusion_matrix[4])/
-            sum(confusion_matrix)
-          predicted_probabilities = predict(model, dataset, type = "prob")
-          errs_1 = err_metrics(confusion_matrix)
-          colnames(errs_1) = c("Metrics", Legends[[1]])
-        }
-        
-        # ROC plot generation
-        if(category == "Support Vector Machines"){
-          print("ROC plots not available for Support Vector Machines")
-        } else {
-          join = cbind(predictions, predicted_probabilities, dataset)
-          colnames(join)[c(2,3)] = c("Responder", "Non_responder")
-          join = join[order(join$Responder),]
-          model_roc = roc(predictor = join$Responder, 
-                          response = as.character(join$Response))
-          auc_values[[1]] = round(auc(model_roc), 3)
-          p = plot(model_roc, 
-               main = "ROC curve",
-               col = randomColor(), lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
-               asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
-        }
-        
-        # Plot legend
-        Legends = c(Legends, input$breast_cancer_ml_legend_entry_2)
-        
-        # Variables for inputs
-        category_2 = input$breast_cancer_ml_model_category_2
-        subcategory_2 = input$breast_cancer_ml_model_subcategory_2
-        ml_study_subset_2 = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox_2
-        
-        # Subset the data that the model will be assessed on
-        dataset_2 = full_ml_set[ml_study_subset_2,] %>%
-          dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter_2) %>%
-          dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter_2) %>%
-          dplyr::filter(Location %in% input$breast_cancer_ml_location_filter_2) %>%
-          dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter_2) %>%
-          dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter_2) %>%
-          dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter_2) %>%
-          dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter_2) %>%
-          dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter_2)
-        
-        # Number of samples in the filtered dataset
-        nsamples = c(nsamples, nrow(dataset_2))
-        
-        model_2 = ML[[category_2]][[subcategory_2]]
-        
-        # Predict and create a confusion matrix
-        
-        # Make predictions according to model chosen
-        if(subcategory_2 == "100X Bagging"){
-          predictions_frame_2 = adabag::predict.bagging(model_2, dataset_2)
-          predictions_2 = predictions_frame_2[["class"]]
-          confusion_matrix_2 = table(predictions_2, dataset_2$Response)
-          model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
-            sum(confusion_matrix_2)
-          predicted_probabilities_2 = predictions_frame_2[["prob"]]
-          errs_2 = err_metrics(confusion_matrix_2)
-          colnames(errs_2) = c("Metrics", Legends[[2]])
-        } else if(subcategory_2 == "Boosting") {
-          predictions_frame_2 = predict(model_2, dataset_2)
-          predictions_2 = predictions_frame_2[["class"]]
-          confusion_matrix_2 = predictions_frame_2[["confusion"]]
-          model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
-            sum(confusion_matrix_2)
-          predicted_probabilities_2 = predictions_frame_2[["prob"]]
-          errs_2 = err_metrics(confusion_matrix_2)
-          colnames(errs_2) = c("Metrics", Legends[[2]])
-        } else {
-          predictions_2 = predict(model_2, dataset_2)
-          confusion_matrix_2 = table(predictions_2, dataset_2$Response)
-          model_accuracy_2 = (confusion_matrix_2[1] + confusion_matrix_2[4])/
-            sum(confusion_matrix_2)
-          predicted_probabilities_2 = predict(model_2, dataset_2, type = "prob")
-          errs_2 = err_metrics(confusion_matrix_2)
-          colnames(errs_2) = c("Metrics", Legends[[2]])
-        }
-        
-        # ROC plot generation
-        if(category_2 == "Support Vector Machines"){
-          print("ROC plots not available for Support Vector Machines")
-        } else {
-          join_2 = cbind(predictions_2, predicted_probabilities_2, dataset_2)
-          colnames(join_2)[c(2,3)] = c("Responder", "Non_responder")
-          join_2 = join_2[order(join_2$Responder),]
-          model_roc_2 = roc(predictor = join_2$Responder, 
-                            response = as.character(join_2$Response))
-          auc_values[[2]] = round(auc(model_roc_2), 3)
-          p2 = plot(model_roc_2, col = randomColor(), lwd = 3, 
-               add = TRUE, cex = 4)
-        }
-        
-        return(list(plot = c(p, p2), conf = c(confusion_matrix,
-                                                  confusion_matrix_2), 
-                    acc = c(model_accuracy, model_accuracy_2),
-                    Legends = Legends, auc_values = auc_values, nsamples = nsamples,
-                    error_metrics = inner_join(errs_1, errs_2, by = "Metrics")))
-        
-        
-        } else if(counter$counter == 3) {
-          
-          # Plot legend
-          Legends = input$breast_cancer_ml_legend_entry_1
-          auc_values = list()
-          
-          # Variables for inputs
-          category = input$breast_cancer_ml_model_category
-          subcategory = input$breast_cancer_ml_model_subcategory
-          ml_study_subset = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox
-          
-          # Subset the data that the model will be assessed on
-          dataset = full_ml_set[ml_study_subset,] %>%
-            dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter) %>%
-            dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter) %>%
-            dplyr::filter(Location %in% input$breast_cancer_ml_location_filter) %>%
-            dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter) %>%
-            dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter) %>%
-            dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter) %>%
-            dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter) %>%
-            dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter)
-          
-          # Number of samples in the filtered dataset
-          nsamples = nrow(dataset)
-          
-          model = ML[[category]][[subcategory]]
-          
-          # Predict and create a confusion matrix
-          
-          # Make predictions according to model chosen
-          if(subcategory == "100X Bagging"){
-            predictions_frame = adabag::predict.bagging(model, dataset)
-            predictions = predictions_frame[["class"]]
-            confusion_matrix = table(predictions, dataset$Response)
-            model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
-              sum(confusion_matrix)
-            predicted_probabilities = predictions_frame[["prob"]]
-            errs_1 = err_metrics(confusion_matrix)
-            colnames(errs_1) = c("Metrics", Legends[[1]])
-          } else if(subcategory == "Boosting") {
-            predictions_frame = predict(model, dataset)
-            predictions = predictions_frame[["class"]]
-            confusion_matrix = predictions_frame[["confusion"]]
-            model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
-              sum(confusion_matrix)
-            predicted_probabilities = predictions_frame[["prob"]]
-            errs_1 = err_metrics(confusion_matrix)
-            colnames(errs_1) = c("Metrics", Legends[[1]])
-          } else {
-            predictions = predict(model, dataset)
-            confusion_matrix = table(predictions, dataset$Response)
-            model_accuracy = (confusion_matrix[1] + confusion_matrix[4])/
-              sum(confusion_matrix)
-            predicted_probabilities = predict(model, dataset, type = "prob")
-            errs_1 = err_metrics(confusion_matrix)
-            colnames(errs_1) = c("Metrics", Legends[[1]])
-          }
-          
-          # ROC plot generation
-          if(category == "Support Vector Machines"){
-            print("ROC plots not available for Support Vector Machines")
-          } else {
-            join = cbind(predictions, predicted_probabilities, dataset)
-            colnames(join)[c(2,3)] = c("Responder", "Non_responder")
-            join = join[order(join$Responder),]
-            model_roc = roc(predictor = join$Responder, 
-                            response = as.character(join$Response))
-            auc_values[[1]] = round(auc(model_roc), 3)
-            p = plot(model_roc, 
+    } else if(counter$counter == 2) {
+      # Plot legend
+      Legends = input$breast_cancer_ml_legend_entry_1
+      auc_values = list()
+      
+      # Variables for inputs
+      category = input$breast_cancer_ml_model_category
+      subcategory = input$breast_cancer_ml_model_subcategory
+      ml_study_subset = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox
+      
+      # Subset the data that the model will be assessed on
+      dataset = full_ml_set[ml_study_subset,] %>%
+        dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter) %>%
+        dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter) %>%
+        dplyr::filter(Location %in% input$breast_cancer_ml_location_filter) %>%
+        dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter) %>%
+        dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter) %>%
+        dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter) %>%
+        dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter) %>%
+        dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter)
+      
+      # Number of samples in the filtered dataset
+      nsamples = nrow(dataset)
+      
+      model = ML[[category]][[subcategory]]
+      
+      # Predict and create a confusion matrix
+      
+      # Make predictions according to model chosen
+      if(subcategory == "100X Bagging"){
+        predictions_frame = adabag::predict.bagging(model, dataset)
+        predictions = predictions_frame[["class"]]
+        confusion_matrix = table(predictions, dataset$Response)
+        model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
+          sum(confusion_matrix)
+        predicted_probabilities = predictions_frame[["prob"]]
+        errs_1 = err_metrics(confusion_matrix)
+        colnames(errs_1) = c("Metrics", Legends[[1]])
+      } else if(subcategory == "Boosting") {
+        predictions_frame = predict(model, dataset)
+        predictions = predictions_frame[["class"]]
+        confusion_matrix = predictions_frame[["confusion"]]
+        model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
+          sum(confusion_matrix)
+        predicted_probabilities = predictions_frame[["prob"]]
+        errs_1 = err_metrics(confusion_matrix)
+        colnames(errs_1) = c("Metrics", Legends[[1]])
+      } else {
+        predictions = predict(model, dataset)
+        confusion_matrix = table(predictions, dataset$Response)
+        model_accuracy = (confusion_matrix[1] + confusion_matrix[4])/
+          sum(confusion_matrix)
+        predicted_probabilities = predict(model, dataset, type = "prob")
+        errs_1 = err_metrics(confusion_matrix)
+        colnames(errs_1) = c("Metrics", Legends[[1]])
+      }
+      
+      # ROC plot generation
+      if(category == "Support Vector Machines"){
+        print("ROC plots not available for Support Vector Machines")
+      } else {
+        join = cbind(predictions, predicted_probabilities, dataset)
+        colnames(join)[c(2,3)] = c("Responder", "Non_responder")
+        join = join[order(join$Responder),]
+        model_roc = roc(predictor = join$Responder, 
+                        response = as.character(join$Response))
+        auc_values[[1]] = round(auc(model_roc), 3)
+        p = plot(model_roc, 
                  main = "ROC curve",
                  col = randomColor(), lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
                  asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
-          }
-          
-          # Plot legend
-          Legends = c(Legends, input$breast_cancer_ml_legend_entry_2)
-          
-          # Variables for inputs
-          category_2 = input$breast_cancer_ml_model_category_2
-          subcategory_2 = input$breast_cancer_ml_model_subcategory_2
-          ml_study_subset_2 = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox_2
-          
-          # Subset the data that the model will be assessed on
-          dataset_2 = full_ml_set[ml_study_subset_2,] %>%
-            dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter_2) %>%
-            dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter_2) %>%
-            dplyr::filter(Location %in% input$breast_cancer_ml_location_filter_2) %>%
-            dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter_2) %>%
-            dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter_2) %>%
-            dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter_2) %>%
-            dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter_2) %>%
-            dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter_2)
-          
-          # Number of samples in the filtered dataset
-          nsamples = c(nsamples, nrow(dataset_2))
-          
-          model_2 = ML[[category_2]][[subcategory_2]]
-          
-          # Predict and create a confusion matrix
-          
-          # Make predictions according to model chosen
-          if(subcategory_2 == "100X Bagging"){
-            predictions_frame_2 = adabag::predict.bagging(model_2, dataset_2)
-            predictions_2 = predictions_frame_2[["class"]]
-            confusion_matrix_2 = table(predictions_2, dataset_2$Response)
-            model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
-              sum(confusion_matrix_2)
-            predicted_probabilities_2 = predictions_frame_2[["prob"]]
-            errs_2 = err_metrics(confusion_matrix_2)
-            colnames(errs_2) = c("Metrics", Legends[[2]])
-          } else if(subcategory_2 == "Boosting") {
-            predictions_frame_2 = predict(model_2, dataset_2)
-            predictions_2 = predictions_frame_2[["class"]]
-            confusion_matrix_2 = predictions_frame_2[["confusion"]]
-            model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
-              sum(confusion_matrix_2)
-            predicted_probabilities_2 = predictions_frame_2[["prob"]]
-            errs_2 = err_metrics(confusion_matrix_2)
-            colnames(errs_2) = c("Metrics", Legends[[2]])
-          } else {
-            predictions_2 = predict(model_2, dataset_2)
-            confusion_matrix_2 = table(predictions_2, dataset_2$Response)
-            model_accuracy_2 = (confusion_matrix_2[1] + confusion_matrix_2[4])/
-              sum(confusion_matrix_2)
-            predicted_probabilities_2 = predict(model_2, dataset_2, type = "prob")
-            errs_2 = err_metrics(confusion_matrix_2)
-            colnames(errs_2) = c("Metrics", Legends[[2]])
-          }
-          
-          # ROC plot generation
-          if(category_2 == "Support Vector Machines"){
-            print("ROC plots not available for Support Vector Machines")
-          } else {
-            join_2 = cbind(predictions_2, predicted_probabilities_2, dataset_2)
-            colnames(join_2)[c(2,3)] = c("Responder", "Non_responder")
-            join_2 = join_2[order(join_2$Responder),]
-            model_roc_2 = roc(predictor = join_2$Responder, 
-                              response = as.character(join_2$Response))
-            auc_values[[2]] = round(auc(model_roc_2), 3)
-            p2 = plot(model_roc_2, col = randomColor(), lwd = 3, 
-                      add = TRUE, cex = 4)
-          }
-          
-          # Plot legend
-          Legends = c(Legends, input$breast_cancer_ml_legend_entry_3)
-          
-          # Variables for inputs
-          category_3 = input$breast_cancer_ml_model_category_3
-          subcategory_3 = input$breast_cancer_ml_model_subcategory_3
-          ml_study_subset_3 = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox_3
-          
-          # Subset the data that the model will be assessed on
-          dataset_3 = full_ml_set[ml_study_subset_3,] %>%
-            dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter_3) %>%
-            dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter_3) %>%
-            dplyr::filter(Location %in% input$breast_cancer_ml_location_filter_3) %>%
-            dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter_3) %>%
-            dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter_3) %>%
-            dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter_3) %>%
-            dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter_3) %>%
-            dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter_3)
-          
-          # Number of samples in the filtered dataset
-          nsamples = c(nsamples, nrow(dataset_3))
-          
-          model_3 = ML[[category_3]][[subcategory_3]]
-          
-          # Predict and create a confusion matrix
-          
-          # Make predictions according to model chosen
-          if(subcategory_3 == "100X Bagging"){
-            predictions_frame_3 = adabag::predict.bagging(model_3, dataset_3)
-            predictions_3 = predictions_frame_3[["class"]]
-            confusion_matrix_3 = table(predictions_3, dataset_3$Response)
-            model_accuracy_3 = 1 - (confusion_matrix_3[1] + confusion_matrix_3[4])/
-              sum(confusion_matrix_3)
-            predicted_probabilities_3 = predictions_frame_3[["prob"]]
-            errs_3 = err_metrics(confusion_matrix_3)
-            colnames(errs_3) = c("Metrics", Legends[[3]])
-          } else if(subcategory_3 == "Boosting") {
-            predictions_frame_3 = predict(model_3, dataset_3)
-            predictions_3 = predictions_frame_3[["class"]]
-            confusion_matrix_3 = predictions_frame_3[["confusion"]]
-            model_accuracy_3 = 1 - (confusion_matrix_3[1] + confusion_matrix_3[4])/
-              sum(confusion_matrix_3)
-            predicted_probabilities_3 = predictions_frame_3[["prob"]]
-            errs_3 = err_metrics(confusion_matrix_3)
-            colnames(errs_3) = c("Metrics", Legends[[3]])
-          } else {
-            predictions_3 = predict(model_3, dataset_3)
-            confusion_matrix_3 = table(predictions_3, dataset_3$Response)
-            model_accuracy_3 = (confusion_matrix_3[1] + confusion_matrix_3[4])/
-              sum(confusion_matrix_3)
-            predicted_probabilities_3 = predict(model_3, dataset_3, type = "prob")
-            errs_3 = err_metrics(confusion_matrix_3)
-            colnames(errs_3) = c("Metrics", Legends[[3]])
-          }
-          
-          # ROC plot generation
-          if(category_3 == "Support Vector Machines"){
-            print("ROC plots not available for Support Vector Machines")
-          } else {
-            join_3 = cbind(predictions_3, predicted_probabilities_3, dataset_3)
-            colnames(join_3)[c(2,3)] = c("Responder", "Non_responder")
-            join_3 = join_3[order(join_3$Responder),]
-            model_roc_3 = roc(predictor = join_3$Responder, 
-                              response = as.character(join_3$Response))
-            auc_values[[3]] = round(auc(model_roc_3), 3)
-            p3 = plot(model_roc_3, col = randomColor(), lwd = 3, 
-                 add = TRUE, cex = 4)
-          }
-          return(list(plot = c(p, p2, p3), conf = c(confusion_matrix,
-                      confusion_matrix_2, confusion_matrix_3), 
-                      acc = c(model_accuracy, model_accuracy_2, model_accuracy_3),
-                      Legends = Legends, auc_values = auc_values, nsamples = nsamples,
-                      error_metrics = inner_join(inner_join(errs_1, errs_2, by = "Metrics"),
-                                                 errs_3, by = "Metrics")))
-              }
+      }
+      
+      # Plot legend
+      Legends = c(Legends, input$breast_cancer_ml_legend_entry_2)
+      
+      # Variables for inputs
+      category_2 = input$breast_cancer_ml_model_category_2
+      subcategory_2 = input$breast_cancer_ml_model_subcategory_2
+      ml_study_subset_2 = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox_2
+      
+      # Subset the data that the model will be assessed on
+      dataset_2 = full_ml_set[ml_study_subset_2,] %>%
+        dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter_2) %>%
+        dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter_2) %>%
+        dplyr::filter(Location %in% input$breast_cancer_ml_location_filter_2) %>%
+        dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter_2) %>%
+        dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter_2) %>%
+        dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter_2) %>%
+        dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter_2) %>%
+        dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter_2)
+      
+      # Number of samples in the filtered dataset
+      nsamples = c(nsamples, nrow(dataset_2))
+      
+      model_2 = ML[[category_2]][[subcategory_2]]
+      
+      # Predict and create a confusion matrix
+      
+      # Make predictions according to model chosen
+      if(subcategory_2 == "100X Bagging"){
+        predictions_frame_2 = adabag::predict.bagging(model_2, dataset_2)
+        predictions_2 = predictions_frame_2[["class"]]
+        confusion_matrix_2 = table(predictions_2, dataset_2$Response)
+        model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
+          sum(confusion_matrix_2)
+        predicted_probabilities_2 = predictions_frame_2[["prob"]]
+        errs_2 = err_metrics(confusion_matrix_2)
+        colnames(errs_2) = c("Metrics", Legends[[2]])
+      } else if(subcategory_2 == "Boosting") {
+        predictions_frame_2 = predict(model_2, dataset_2)
+        predictions_2 = predictions_frame_2[["class"]]
+        confusion_matrix_2 = predictions_frame_2[["confusion"]]
+        model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
+          sum(confusion_matrix_2)
+        predicted_probabilities_2 = predictions_frame_2[["prob"]]
+        errs_2 = err_metrics(confusion_matrix_2)
+        colnames(errs_2) = c("Metrics", Legends[[2]])
+      } else {
+        predictions_2 = predict(model_2, dataset_2)
+        confusion_matrix_2 = table(predictions_2, dataset_2$Response)
+        model_accuracy_2 = (confusion_matrix_2[1] + confusion_matrix_2[4])/
+          sum(confusion_matrix_2)
+        predicted_probabilities_2 = predict(model_2, dataset_2, type = "prob")
+        errs_2 = err_metrics(confusion_matrix_2)
+        colnames(errs_2) = c("Metrics", Legends[[2]])
+      }
+      
+      # ROC plot generation
+      if(category_2 == "Support Vector Machines"){
+        print("ROC plots not available for Support Vector Machines")
+      } else {
+        join_2 = cbind(predictions_2, predicted_probabilities_2, dataset_2)
+        colnames(join_2)[c(2,3)] = c("Responder", "Non_responder")
+        join_2 = join_2[order(join_2$Responder),]
+        model_roc_2 = roc(predictor = join_2$Responder, 
+                          response = as.character(join_2$Response))
+        auc_values[[2]] = round(auc(model_roc_2), 3)
+        p2 = plot(model_roc_2, col = randomColor(), lwd = 3, 
+                  add = TRUE, cex = 4)
+      }
+      
+      return(list(plot = c(p, p2), conf = c(confusion_matrix,
+                                            confusion_matrix_2), 
+                  acc = c(model_accuracy, model_accuracy_2),
+                  Legends = Legends, auc_values = auc_values, nsamples = nsamples,
+                  error_metrics = inner_join(errs_1, errs_2, by = "Metrics")))
+      
+      
+    } else if(counter$counter == 3) {
+      
+      # Plot legend
+      Legends = input$breast_cancer_ml_legend_entry_1
+      auc_values = list()
+      
+      # Variables for inputs
+      category = input$breast_cancer_ml_model_category
+      subcategory = input$breast_cancer_ml_model_subcategory
+      ml_study_subset = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox
+      
+      # Subset the data that the model will be assessed on
+      dataset = full_ml_set[ml_study_subset,] %>%
+        dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter) %>%
+        dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter) %>%
+        dplyr::filter(Location %in% input$breast_cancer_ml_location_filter) %>%
+        dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter) %>%
+        dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter) %>%
+        dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter) %>%
+        dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter) %>%
+        dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter)
+      
+      # Number of samples in the filtered dataset
+      nsamples = nrow(dataset)
+      
+      model = ML[[category]][[subcategory]]
+      
+      # Predict and create a confusion matrix
+      
+      # Make predictions according to model chosen
+      if(subcategory == "100X Bagging"){
+        predictions_frame = adabag::predict.bagging(model, dataset)
+        predictions = predictions_frame[["class"]]
+        confusion_matrix = table(predictions, dataset$Response)
+        model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
+          sum(confusion_matrix)
+        predicted_probabilities = predictions_frame[["prob"]]
+        errs_1 = err_metrics(confusion_matrix)
+        colnames(errs_1) = c("Metrics", Legends[[1]])
+      } else if(subcategory == "Boosting") {
+        predictions_frame = predict(model, dataset)
+        predictions = predictions_frame[["class"]]
+        confusion_matrix = predictions_frame[["confusion"]]
+        model_accuracy = 1 - (confusion_matrix[1] + confusion_matrix[4])/
+          sum(confusion_matrix)
+        predicted_probabilities = predictions_frame[["prob"]]
+        errs_1 = err_metrics(confusion_matrix)
+        colnames(errs_1) = c("Metrics", Legends[[1]])
+      } else {
+        predictions = predict(model, dataset)
+        confusion_matrix = table(predictions, dataset$Response)
+        model_accuracy = (confusion_matrix[1] + confusion_matrix[4])/
+          sum(confusion_matrix)
+        predicted_probabilities = predict(model, dataset, type = "prob")
+        errs_1 = err_metrics(confusion_matrix)
+        colnames(errs_1) = c("Metrics", Legends[[1]])
+      }
+      
+      # ROC plot generation
+      if(category == "Support Vector Machines"){
+        print("ROC plots not available for Support Vector Machines")
+      } else {
+        join = cbind(predictions, predicted_probabilities, dataset)
+        colnames(join)[c(2,3)] = c("Responder", "Non_responder")
+        join = join[order(join$Responder),]
+        model_roc = roc(predictor = join$Responder, 
+                        response = as.character(join$Response))
+        auc_values[[1]] = round(auc(model_roc), 3)
+        p = plot(model_roc, 
+                 main = "ROC curve",
+                 col = randomColor(), lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
+                 asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
+      }
+      
+      # Plot legend
+      Legends = c(Legends, input$breast_cancer_ml_legend_entry_2)
+      
+      # Variables for inputs
+      category_2 = input$breast_cancer_ml_model_category_2
+      subcategory_2 = input$breast_cancer_ml_model_subcategory_2
+      ml_study_subset_2 = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox_2
+      
+      # Subset the data that the model will be assessed on
+      dataset_2 = full_ml_set[ml_study_subset_2,] %>%
+        dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter_2) %>%
+        dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter_2) %>%
+        dplyr::filter(Location %in% input$breast_cancer_ml_location_filter_2) %>%
+        dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter_2) %>%
+        dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter_2) %>%
+        dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter_2) %>%
+        dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter_2) %>%
+        dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter_2)
+      
+      # Number of samples in the filtered dataset
+      nsamples = c(nsamples, nrow(dataset_2))
+      
+      model_2 = ML[[category_2]][[subcategory_2]]
+      
+      # Predict and create a confusion matrix
+      
+      # Make predictions according to model chosen
+      if(subcategory_2 == "100X Bagging"){
+        predictions_frame_2 = adabag::predict.bagging(model_2, dataset_2)
+        predictions_2 = predictions_frame_2[["class"]]
+        confusion_matrix_2 = table(predictions_2, dataset_2$Response)
+        model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
+          sum(confusion_matrix_2)
+        predicted_probabilities_2 = predictions_frame_2[["prob"]]
+        errs_2 = err_metrics(confusion_matrix_2)
+        colnames(errs_2) = c("Metrics", Legends[[2]])
+      } else if(subcategory_2 == "Boosting") {
+        predictions_frame_2 = predict(model_2, dataset_2)
+        predictions_2 = predictions_frame_2[["class"]]
+        confusion_matrix_2 = predictions_frame_2[["confusion"]]
+        model_accuracy_2 = 1 - (confusion_matrix_2[1] + confusion_matrix_2[4])/
+          sum(confusion_matrix_2)
+        predicted_probabilities_2 = predictions_frame_2[["prob"]]
+        errs_2 = err_metrics(confusion_matrix_2)
+        colnames(errs_2) = c("Metrics", Legends[[2]])
+      } else {
+        predictions_2 = predict(model_2, dataset_2)
+        confusion_matrix_2 = table(predictions_2, dataset_2$Response)
+        model_accuracy_2 = (confusion_matrix_2[1] + confusion_matrix_2[4])/
+          sum(confusion_matrix_2)
+        predicted_probabilities_2 = predict(model_2, dataset_2, type = "prob")
+        errs_2 = err_metrics(confusion_matrix_2)
+        colnames(errs_2) = c("Metrics", Legends[[2]])
+      }
+      
+      # ROC plot generation
+      if(category_2 == "Support Vector Machines"){
+        print("ROC plots not available for Support Vector Machines")
+      } else {
+        join_2 = cbind(predictions_2, predicted_probabilities_2, dataset_2)
+        colnames(join_2)[c(2,3)] = c("Responder", "Non_responder")
+        join_2 = join_2[order(join_2$Responder),]
+        model_roc_2 = roc(predictor = join_2$Responder, 
+                          response = as.character(join_2$Response))
+        auc_values[[2]] = round(auc(model_roc_2), 3)
+        p2 = plot(model_roc_2, col = randomColor(), lwd = 3, 
+                  add = TRUE, cex = 4)
+      }
+      
+      # Plot legend
+      Legends = c(Legends, input$breast_cancer_ml_legend_entry_3)
+      
+      # Variables for inputs
+      category_3 = input$breast_cancer_ml_model_category_3
+      subcategory_3 = input$breast_cancer_ml_model_subcategory_3
+      ml_study_subset_3 = full_ml_set$Dataset %in% input$ml_breast_dataset_checkbox_3
+      
+      # Subset the data that the model will be assessed on
+      dataset_3 = full_ml_set[ml_study_subset_3,] %>%
+        dplyr::filter(Treatment %in% input$breast_cancer_ml_treatment_filter_3) %>%
+        dplyr::filter(Timepoint %in% input$breast_cancer_ml_timepoint_filter_3) %>%
+        dplyr::filter(Location %in% input$breast_cancer_ml_location_filter_3) %>%
+        dplyr::filter(pam50 %in% input$breast_cancer_ml_pam50_filter_3) %>%
+        dplyr::filter(rorS_risk %in% input$breast_cancer_ml_rorS_filter_3) %>%
+        dplyr::filter(Mammaprint_risk %in% input$breast_cancer_ml_Mammaprint_filter_3) %>%
+        dplyr::filter(Menopause.status %in% input$breast_cancer_ml_Meno_filter_3) %>%
+        dplyr::filter(ER.status %in% input$breast_cancer_ml_ER_filter_3)
+      
+      # Number of samples in the filtered dataset
+      nsamples = c(nsamples, nrow(dataset_3))
+      
+      model_3 = ML[[category_3]][[subcategory_3]]
+      
+      # Predict and create a confusion matrix
+      
+      # Make predictions according to model chosen
+      if(subcategory_3 == "100X Bagging"){
+        predictions_frame_3 = adabag::predict.bagging(model_3, dataset_3)
+        predictions_3 = predictions_frame_3[["class"]]
+        confusion_matrix_3 = table(predictions_3, dataset_3$Response)
+        model_accuracy_3 = 1 - (confusion_matrix_3[1] + confusion_matrix_3[4])/
+          sum(confusion_matrix_3)
+        predicted_probabilities_3 = predictions_frame_3[["prob"]]
+        errs_3 = err_metrics(confusion_matrix_3)
+        colnames(errs_3) = c("Metrics", Legends[[3]])
+      } else if(subcategory_3 == "Boosting") {
+        predictions_frame_3 = predict(model_3, dataset_3)
+        predictions_3 = predictions_frame_3[["class"]]
+        confusion_matrix_3 = predictions_frame_3[["confusion"]]
+        model_accuracy_3 = 1 - (confusion_matrix_3[1] + confusion_matrix_3[4])/
+          sum(confusion_matrix_3)
+        predicted_probabilities_3 = predictions_frame_3[["prob"]]
+        errs_3 = err_metrics(confusion_matrix_3)
+        colnames(errs_3) = c("Metrics", Legends[[3]])
+      } else {
+        predictions_3 = predict(model_3, dataset_3)
+        confusion_matrix_3 = table(predictions_3, dataset_3$Response)
+        model_accuracy_3 = (confusion_matrix_3[1] + confusion_matrix_3[4])/
+          sum(confusion_matrix_3)
+        predicted_probabilities_3 = predict(model_3, dataset_3, type = "prob")
+        errs_3 = err_metrics(confusion_matrix_3)
+        colnames(errs_3) = c("Metrics", Legends[[3]])
+      }
+      
+      # ROC plot generation
+      if(category_3 == "Support Vector Machines"){
+        print("ROC plots not available for Support Vector Machines")
+      } else {
+        join_3 = cbind(predictions_3, predicted_probabilities_3, dataset_3)
+        colnames(join_3)[c(2,3)] = c("Responder", "Non_responder")
+        join_3 = join_3[order(join_3$Responder),]
+        model_roc_3 = roc(predictor = join_3$Responder, 
+                          response = as.character(join_3$Response))
+        auc_values[[3]] = round(auc(model_roc_3), 3)
+        p3 = plot(model_roc_3, col = randomColor(), lwd = 3, 
+                  add = TRUE, cex = 4)
+      }
+      return(list(plot = c(p, p2, p3), conf = c(confusion_matrix,
+                                                confusion_matrix_2, confusion_matrix_3), 
+                  acc = c(model_accuracy, model_accuracy_2, model_accuracy_3),
+                  Legends = Legends, auc_values = auc_values, nsamples = nsamples,
+                  error_metrics = inner_join(inner_join(errs_1, errs_2, by = "Metrics"),
+                                             errs_3, by = "Metrics")))
+    }
     
-    })
-    
+  })
+  
   
   # Plot ROC curve
   output$breast_cancer_ROC_plot <- renderPlot({
@@ -2458,16 +2458,16 @@ server <- function(input, output, session) {
       p = plot_breast_cancer_ROC()
       p$plot
       legend(0.5, 0.25, legend=paste0(p$Legends, ", AUC=", p$auc_values, 
-                                       ", n=", p$nsamples),
+                                      ", n=", p$nsamples),
              col=randomColor(count = length(p$Legends)), lty=1, cex=0.8)
-      })
+    })
   })
   
   # Print error metrics
   output$breast_cancer_error_table <- DT::renderDataTable({
     input$predict_ml_breast_cancer
     isolate({
-    plot_breast_cancer_ROC()$error_metrics})
+      plot_breast_cancer_ROC()$error_metrics})
   })
   
   # Select all button model 1
@@ -2581,7 +2581,7 @@ server <- function(input, output, session) {
                       choices = sort(input$breast_custom_DGEA_adjustments),
                       selected = sort(input$breast_custom_DGEA_adjustments)[1])
   })
-
+  
   observeEvent(input$breast_cancer_custom_DGEA_contrast_selection, {
     updateSelectInput(inputId = "breast_cancer_custom_DGEA_contrast_level1_selection",
                       choices = sort(unique(Pheno_exprs[,input$breast_cancer_custom_DGEA_contrast_selection])),
@@ -2621,8 +2621,8 @@ server <- function(input, output, session) {
     
     design_vars = lapply(adjustments, function(x) {
       paste0("dgea_set$", x)
-      }
-      )
+    }
+    )
     design = model.matrix(as.formula(paste("~0 + ", 
                                            paste(design_vars, collapse = " + "))))
     
@@ -2703,19 +2703,19 @@ server <- function(input, output, session) {
     
     # Main plotly function call
     p = plot_ly(data = topTable, 
-            x = ~logFC, 
-            y = ~-log10(topTable[,input$pval_selector_breast_custom]),
-            color = ~volc_p_status, 
-            marker = list(size = 5), 
-            type = "scatter",
-            mode = "markers",
-            colors = pal, opacity = input$alpha_breast_volcano_custom,
-            hoverinfo = "text",
-            hovertext = paste("</br> Gene Symbol:", topTable$Gene.Symbol,
-                              "</br> p-value:", topTable$P.Value,
-                              "</br> adj.P.Val:", topTable$adj.P.Val,
-                              "</br> Diff.Exp:", round(topTable$logFC,3)),
-            width = 750, height = 500) %>%
+                x = ~logFC, 
+                y = ~-log10(topTable[,input$pval_selector_breast_custom]),
+                color = ~volc_p_status, 
+                marker = list(size = 5), 
+                type = "scatter",
+                mode = "markers",
+                colors = pal, opacity = input$alpha_breast_volcano_custom,
+                hoverinfo = "text",
+                hovertext = paste("</br> Gene Symbol:", topTable$Gene.Symbol,
+                                  "</br> p-value:", topTable$P.Value,
+                                  "</br> adj.P.Val:", topTable$adj.P.Val,
+                                  "</br> Diff.Exp:", round(topTable$logFC,3)),
+                width = 750, height = 500) %>%
       
       # Layout with titles and drawn lines
       layout(title = list(text = paste0("<b>", input$breast_custom_DGEA_title_input),
@@ -2741,8 +2741,8 @@ server <- function(input, output, session) {
                       showarrow = TRUE,
                       arrowhead = 0,
                       clicktoshow = "onoff")
-      
-      return(list(topTable = topTable, volcano = p))
+    
+    return(list(topTable = topTable, volcano = p))
     
   })
   
