@@ -542,7 +542,7 @@ body <- dashboardBody(tabItems(
                 
                 splitLayout(cellWidths = c("180px", "100px", "90px", "90px",
                                            "130px", "130px", "150px", "120px", "200px",
-                                           "80px", "80px", "150px", "80px"),
+                                           "80px", "80px", "200px", "80px"),
                             style = "border:1px;padding:10px;white-space:normal;",
                             
                             # Filter for treatment
@@ -607,7 +607,7 @@ body <- dashboardBody(tabItems(
                                          style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"),
                             
                             # add "Comparison" button
-                            actionButton("multiple_rocs_breast", "Add comparison"),
+                            actionButton("multiple_rocs_breast", "Add/Remove comparison"),
                             
                             # add "Info" button
                             actionButton("info_ml_breast_cancer", "Info"),
@@ -841,6 +841,122 @@ body <- dashboardBody(tabItems(
                   ))
   ),
   
+  # Breast Cancer - Imported unique sample predictor/Dataset predictor #####
+  tabItem(tabName = "breast_cancer_subItem_new_predictions",
+          h2("Predictions on new samples"),
+          fluidRow(
+            box(id = "breast_cancer_new_predictions_panel", title = "Import data and predict",
+                status = "primary", solidHeader = TRUE,
+                width = 12, height = 600, shinyjs::useShinyjs(),
+                splitLayout(cellWidths = c("250px", "250px", "300px", 
+                                           "150px", "150px", "150px", "150px", "150px",
+                                           "80px", "80px"),
+                            style = "border:1px;padding:20px;white-space:normal;",
+                            # Select type of import
+                            radioButtons(inputId = "breast_cancer_new_prediction_type",
+                                         label = "Select new data type",
+                                         choices = c("Random sample (genes only)", 
+                                                     "Random sample (all variables)",
+                                                     "Import unique sample (genes only)",
+                                                     "Import unique sample (pre-annotated)",
+                                                     "Import pre-annotated dataset"), selected = "Import unique (pre-annotated)",
+                                         width = "200px"),
+                            # add "Import" - button that opens a file browser to locate data and import it
+                            fileInput("breast_cancer_new_prediction_file_input", "Choose file",
+                                      multiple = FALSE,
+                                      accept = c(".txt", ".csv", ".xlsx", ".tsv")),
+                            actionButton("import_new_prediction_breast_cancer", "Import!"),
+                            # Choose treatment radio buttons
+                            radioButtons("breast_cancer_new_prediction_treatment",
+                                         "Select treatment",
+                                         choices = c("Chemotherapy", "Endocrine treatment", "Included in input"),
+                                         selected = "Chemotherapy", width = "250px"),
+                            # Annotate/Edit sample
+                            # pam50
+                            selectInput(inputId = "breast_cancer_new_prediction_pam50_annotation",
+                                        "pam50", 
+                                        choices = c("Preset", "Random", sort(c("Luminal A", "Luminal B", "Normal-like",
+                                                         "Basal-like", "HER2+"))),
+                                        selected = "Random"),
+                            # Timepoint
+                            selectInput(inputId = "breast_cancer_new_prediction_timepoint_annotation",
+                                        "Timepoint", 
+                                        choices = c("Preset", "Random", 
+                                                    sort(c("Pre-treatment", "On-treatment"))),
+                                        selected = "Random"),
+                            # iC10
+                            selectInput(inputId = "breast_cancer_new_prediction_ic10_annotation",
+                                        "Integrative Clusters", 
+                                        choices = c("Preset", "Random", c("iC1", "iC2", "iC3", "iC4",
+                                                         "iC5", "iC6", "iC7", "iC8", "iC9",
+                                                         "iC10")),
+                                        selected = "Random"),
+                            # Mammaprint
+                            selectInput(inputId = "breast_cancer_new_prediction_mammaprint_annotation",
+                                        "Mammaprint", 
+                                        choices = c("Preset", "Random", 
+                                                    sort(c("At risk", "No risk"))),
+                                        selected = "Random"),
+                            # rorS
+                            selectInput(inputId = "breast_cancer_new_prediction_rors_annotation",
+                                        "rorS (Risk of relapse)", 
+                                        choices = c("Preset", "Random", 
+                                                    sort(c("High", "Intermediate", "Low"))),
+                                        selected = "Random"),
+                            # ROC plot (if possible: datasets with Response column)
+                            radioButtons("breast_cancer_new_prediction_roc",
+                                         "Produce ROC plot?",
+                                         choices = c("Yes", "No"),
+                                         selected = "No", width = "250px"),
+                            # Filtering radio buttons
+                            radioButtons("breast_cancer_new_prediction_filter_toggle",
+                                         "Filter imported dataset?",
+                                         choices = c("Yes", "No"),
+                                         selected = "No", width = "250px"),
+                            # Filter for timepoint
+                            checkboxGroupInput("breast_cancer_new_prediction_timepoint_filter", "Timepoint filter",
+                                               selected = "All",
+                                               choices = c("All", "Pre-treatment", "On-treatment"),
+                                               inline = FALSE, width = "180px"),
+                            # Filter for pam50
+                            checkboxGroupInput("breast_cancer_new_prediction_pam50_filter", "pam50 filter",
+                                               selected = "All",
+                                               choices = c("All", "Luminal A", "Luminal B",
+                                                           "Normal-like", "Basal-like", "HER2+"),
+                                               inline = FALSE, width = "150px"),
+                            # Filter for rorS risk
+                            checkboxGroupInput("breast_cancer_new_prediction_rorS_filter", "Risk of recurrence",
+                                               selected = "All",
+                                               choices = c("All", "High", "Intermediate", "Low"),
+                                               inline = FALSE, width = "200px"),
+                            # Filter for Mammaprint risk
+                            checkboxGroupInput("breast_cancer_new_prediction_Mammaprint_filter", "Mammaprint risk",
+                                               selected = "All",
+                                               choices = c("All", "At risk", "No risk"),
+                                               inline = FALSE, width = "200px"),
+                            # Filter for iC10
+                            checkboxGroupInput("breast_cancer_new_prediction_ic10_filter", "Mammaprint risk",
+                                               selected = "All",
+                                               choices = c("All", "iC1", "iC2", "iC3", "iC4",
+                                                           "iC5", "iC6", "iC7", "iC8", "iC9",
+                                                           "iC10"),
+                                               inline = FALSE, width = "200px"),
+                            # add "Predict" - button that triggers the prediction model on the selected data
+                            actionButton("predict_new_prediction_breast_cancer", "Predict!",
+                                         style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"),
+                            # Button to reset inputs to default
+                            actionButton(inputId = "reset_input_breast_new_prediction", 
+                                         label = "Reset",
+                                         style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"),
+                            # add "Info" button
+                            actionButton("info_new_prediction_breast_cancer", "Info"),
+                            bsModal("new_prediction_breast_info", "Information", "info_ml_breast_cancer",
+                                    fluidRow(
+                                      htmlOutput("new_prediction_breast_info_text")
+                                    ))
+                            )
+                ))
+          ),
   # Breast Cancer - Custom DGEA #####
   tabItem(tabName = "breast_cancer_subItem_DGEA",
           h2("Customized Differential Gene Expression Analysis"),
