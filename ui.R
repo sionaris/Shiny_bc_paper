@@ -850,22 +850,23 @@ body <- dashboardBody(tabItems(
                 width = 12, height = 600, shinyjs::useShinyjs(),
                 splitLayout(cellWidths = c("250px", "250px", "300px", 
                                            "150px", "150px", "150px", "150px", "150px",
-                                           "80px", "80px"),
+                                           "150px", "150px", "150px", "150px", "150px",
+                                           "150px",
+                                           "80px", "80px", "80px", "80px"),
                             style = "border:1px;padding:20px;white-space:normal;",
                             # Select type of import
                             radioButtons(inputId = "breast_cancer_new_prediction_type",
                                          label = "Select new data type",
-                                         choices = c("Random sample (genes only)", 
-                                                     "Random sample (all variables)",
+                                         choices = c("Random sample",
                                                      "Import unique sample (genes only)",
                                                      "Import unique sample (pre-annotated)",
-                                                     "Import pre-annotated dataset"), selected = "Import unique (pre-annotated)",
+                                                     "Import pre-annotated dataset"), selected = "Import unique sample (pre-annotated)",
                                          width = "200px"),
                             # add "Import" - button that opens a file browser to locate data and import it
                             fileInput("breast_cancer_new_prediction_file_input", "Choose file",
                                       multiple = FALSE,
                                       accept = c(".txt", ".csv", ".xlsx", ".tsv")),
-                            actionButton("import_new_prediction_breast_cancer", "Import!"),
+                            actionButton("import_new_prediction_breast_cancer", "Import"),
                             # Choose treatment radio buttons
                             radioButtons("breast_cancer_new_prediction_treatment",
                                          "Select treatment",
@@ -908,34 +909,29 @@ body <- dashboardBody(tabItems(
                                          "Produce ROC plot?",
                                          choices = c("Yes", "No"),
                                          selected = "No", width = "250px"),
-                            # Filtering radio buttons
-                            radioButtons("breast_cancer_new_prediction_filter_toggle",
-                                         "Filter imported dataset?",
-                                         choices = c("Yes", "No"),
-                                         selected = "No", width = "250px"),
                             # Filter for timepoint
-                            checkboxGroupInput("breast_cancer_new_prediction_timepoint_filter", "Timepoint filter",
+                            radioButtons("breast_cancer_new_prediction_timepoint_filter", "Timepoint filter",
                                                selected = "All",
                                                choices = c("All", "Pre-treatment", "On-treatment"),
                                                inline = FALSE, width = "180px"),
                             # Filter for pam50
-                            checkboxGroupInput("breast_cancer_new_prediction_pam50_filter", "pam50 filter",
+                            radioButtons("breast_cancer_new_prediction_pam50_filter", "pam50 filter",
                                                selected = "All",
                                                choices = c("All", "Luminal A", "Luminal B",
                                                            "Normal-like", "Basal-like", "HER2+"),
                                                inline = FALSE, width = "150px"),
                             # Filter for rorS risk
-                            checkboxGroupInput("breast_cancer_new_prediction_rorS_filter", "Risk of recurrence",
+                            radioButtons("breast_cancer_new_prediction_rorS_filter", "Risk of recurrence",
                                                selected = "All",
                                                choices = c("All", "High", "Intermediate", "Low"),
                                                inline = FALSE, width = "200px"),
                             # Filter for Mammaprint risk
-                            checkboxGroupInput("breast_cancer_new_prediction_Mammaprint_filter", "Mammaprint risk",
+                            radioButtons("breast_cancer_new_prediction_Mammaprint_filter", "Mammaprint risk",
                                                selected = "All",
                                                choices = c("All", "At risk", "No risk"),
                                                inline = FALSE, width = "200px"),
                             # Filter for iC10
-                            checkboxGroupInput("breast_cancer_new_prediction_ic10_filter", "Mammaprint risk",
+                            radioButtons("breast_cancer_new_prediction_ic10_filter", "iC10 filter",
                                                selected = "All",
                                                choices = c("All", "iC1", "iC2", "iC3", "iC4",
                                                            "iC5", "iC6", "iC7", "iC8", "iC9",
@@ -944,17 +940,33 @@ body <- dashboardBody(tabItems(
                             # add "Predict" - button that triggers the prediction model on the selected data
                             actionButton("predict_new_prediction_breast_cancer", "Predict!",
                                          style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"),
+                            # add Download button
+                            downloadButton('download_new_prediction_results', 'Download results'),
                             # Button to reset inputs to default
-                            actionButton(inputId = "reset_input_breast_new_prediction", 
+                            actionButton(inputId = "reset_new_prediction_breast_cancer", 
                                          label = "Reset",
                                          style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"),
                             # add "Info" button
-                            actionButton("info_new_prediction_breast_cancer", "Info"),
-                            bsModal("new_prediction_breast_info", "Information", "info_ml_breast_cancer",
-                                    fluidRow(
-                                      htmlOutput("new_prediction_breast_info_text")
-                                    ))
+                            actionButton("info_new_prediction_breast_cancer", "Info")
+                            ),
+                bsModal("new_prediction_breast_info", "Information", "info_ml_breast_cancer",
+                        fluidRow(
+                          htmlOutput("new_prediction_breast_info_text")
+                        )),
+                # ROC plot
+                bsModal("new_prediction_roc", "Output", "newpred_bc_roc",
+                        size = "large", fluidRow(
+                          column(
+                            width = 12,
+                            
+                            # A box to plot the ROC curve
+                            box(
+                              title = "Model performance", id = "newpred_breast_cancer_roc_box",
+                              status = "warning", width = 12, height = 600, solidHeader = TRUE, align = "center",
+                              plotOutput("newpred_ROC_plot", width = 500, height = 500)
                             )
+                          )
+                        ))
                 ))
           ),
   # Breast Cancer - Custom DGEA #####
