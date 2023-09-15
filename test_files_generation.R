@@ -1,6 +1,15 @@
 # Load global data
 source("global.R")
 
+# Prep
+all_correct_columns = colnames(full_ml_set)[3:186]
+all_correct_columns = all_correct_columns[all_correct_columns != "Endo"]
+gene_columns_with_X = colnames(full_ml_set)[which(grepl("X_", colnames(full_ml_set)))]
+gene_columns_without_X = gene_columns_with_X
+str_sub(gene_columns_without_X, 1, 2) = ""
+pheno_columns = setdiff(all_correct_columns, gene_columns_with_X)
+all_correct_columns_without_X = c(gene_columns_without_X, pheno_columns)
+
 # Samples (vectors) #####
 # Wrong genes only example
 wrong_genes_example = rnorm(166, mean = 0, sd = 1)
@@ -152,7 +161,7 @@ check4 = openxlsx::read.xlsx("file_checks/X_wrong_genes_correct_pheno.xlsx", col
 correct_genes_wrong_pheno = c(rnorm(166, mean = 0, sd = 1), 
                               sample(c(0, 1), 18, replace = TRUE))
 names(correct_genes_wrong_pheno) = c(gene_columns_without_X, paste0("RR_", pheno_columns),
-                                     "XX_Endo")
+                                     "RR_Endo")
 correct_genes_wrong_pheno = as.data.frame(t(correct_genes_wrong_pheno))
 write.table(correct_genes_wrong_pheno, "file_checks/correct_genes_wrong_pheno.txt",
             row.names = FALSE)
@@ -172,7 +181,7 @@ check4 = openxlsx::read.xlsx("file_checks/correct_genes_wrong_pheno.xlsx", colNa
 X_correct_genes_wrong_pheno = c(rnorm(166, mean = 0, sd = 1), 
                                 sample(c(0, 1), 18, replace = TRUE))
 names(X_correct_genes_wrong_pheno) = c(gene_columns_with_X, paste0("RR_", pheno_columns),
-                                       "XX_Endo")
+                                       "RR_Endo")
 X_correct_genes_wrong_pheno = as.data.frame(t(X_correct_genes_wrong_pheno))
 write.table(X_correct_genes_wrong_pheno, "file_checks/X_correct_genes_wrong_pheno.txt",
             row.names = FALSE)
@@ -333,7 +342,7 @@ check4 = openxlsx::read.xlsx("file_checks/dataset_X_wrong_genes_correct_pheno.xl
 dataset_correct_genes_wrong_pheno = c(rnorm(166, mean = 0, sd = 1), 
                                       sample(c(0, 1), 18, replace = TRUE))
 names(dataset_correct_genes_wrong_pheno) = c(gene_columns_without_X, paste0("RR_", pheno_columns),
-                                             "XX_Endo")
+                                             "RR_Endo")
 dataset_correct_genes_wrong_pheno = rbind(dataset_correct_genes_wrong_pheno,
                                           dataset_correct_genes_wrong_pheno,
                                           dataset_correct_genes_wrong_pheno)
@@ -356,7 +365,7 @@ check4 = openxlsx::read.xlsx("file_checks/dataset_correct_genes_wrong_pheno.xlsx
 dataset_X_correct_genes_wrong_pheno = c(rnorm(166, mean = 0, sd = 1), 
                                         sample(c(0, 1), 18, replace = TRUE))
 names(dataset_X_correct_genes_wrong_pheno) = c(gene_columns_with_X, paste0("RR_", pheno_columns),
-                                               "XX_Endo")
+                                               "RR_Endo")
 dataset_X_correct_genes_wrong_pheno = rbind(dataset_X_correct_genes_wrong_pheno,
                                             dataset_X_correct_genes_wrong_pheno,
                                             dataset_X_correct_genes_wrong_pheno)

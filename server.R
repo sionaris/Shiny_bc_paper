@@ -1459,6 +1459,7 @@ server <- function(input, output, session) {
                                    col_names = TRUE)
     }
     
+    input_data = as.data.frame(input_data)
     print("Data was loaded successfully")
     # Check if file meets all requirements
     if (is.null(input_data)) {
@@ -1486,7 +1487,8 @@ server <- function(input, output, session) {
           modalDialog(
             title = "Warning", 
             paste0("There are missing markers in the data (assuming format 'X_Entrez'). 166 variables required.",
-                   "\n", "Problem with:", setdiff(gene_columns_with_X, gene_colnames_input_data)), easyClose = TRUE 
+                   "\n", "Problem with:", 
+                   paste(setdiff(gene_columns_with_X, gene_colnames_input_data), collapse = ", ")), easyClose = TRUE 
           )
         )
         return() # exit code for this event
@@ -1495,7 +1497,8 @@ server <- function(input, output, session) {
           modalDialog(
             title = "Warning", 
             paste0("There are missing markers in the data (assuming format: 'Entrez'). 166 variables required.",
-                   "\n", "Problem with:", setdiff(gene_columns_without_X, gene_colnames_input_data)), easyClose = TRUE 
+                   "\n", "Problem with:", paste(setdiff(gene_columns_without_X, gene_colnames_input_data), collapse = ", ")),
+            easyClose = TRUE 
           )
         )
         return() # exit code for this event
@@ -1519,6 +1522,17 @@ server <- function(input, output, session) {
         modalDialog(
           title = "Warning", 
           "There are more than one rows in this sample. Only one-row files permitted.", easyClose = TRUE 
+        )
+      )
+      return() # exit code for this event
+    }
+    
+    if (import_data_type() == "Import pre-annotated dataset" && nrow(input_data) == 1) {
+      showModal(
+        modalDialog(
+          title = "Warning", 
+          "There is only one row in this dataset. 
+          Please switch import type to a unique sample category.", easyClose = TRUE 
         )
       )
       return() # exit code for this event
@@ -1611,13 +1625,29 @@ server <- function(input, output, session) {
     print("Numeric column checks complete")
     # If genes and annotation is chosen check all columns needed are present
     if (import_data_type() %in% c("Import unique sample (pre-annotated)",
-                                  "Import pre-annotated dataset")) {
+                                  "Import pre-annotated dataset") && X_handle == "on") {
       if (length(intersect(colnames(input_data), all_correct_columns)) < 183) {
         showModal(
           modalDialog(
             title = "Warning", 
             paste0("There are missing columns in the data.",
-                   "\n", "Problem with:", setdiff(all_correct_columns, colnames(input_data))), easyClose = TRUE 
+                   "\n", "Problem with:", 
+                   paste(setdiff(all_correct_columns, colnames(input_data)), collapse = ", ")), 
+                   easyClose = TRUE 
+          )
+        )
+        return() # exit code for this event
+      }
+    } else if (import_data_type() %in% c("Import unique sample (pre-annotated)",
+                                         "Import pre-annotated dataset") && X_handle == "off") {
+      if (length(intersect(colnames(input_data), all_correct_columns_without_X)) < 183) {
+        showModal(
+          modalDialog(
+            title = "Warning", 
+            paste0("There are missing columns in the data.",
+                   "\n", "Problem with:", 
+                   paste(setdiff(all_correct_columns_without_X, colnames(input_data)), collapse = ", ")), 
+            easyClose = TRUE 
           )
         )
         return() # exit code for this event
