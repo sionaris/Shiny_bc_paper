@@ -848,7 +848,7 @@ body <- dashboardBody(tabItems(
             box(id = "breast_cancer_new_predictions_panel", title = "Import data and predict",
                 status = "primary", solidHeader = TRUE,
                 width = 12, height = 600, shinyjs::useShinyjs(),
-                splitLayout(cellWidths = c("250px", "250px", 
+                splitLayout(cellWidths = c("250px", "200px", "250px", "150px",
                                            "150px", "150px", "150px", "150px", "150px",
                                            "150px", "150px", "150px", "150px", "150px",
                                            "150px",
@@ -862,15 +862,19 @@ body <- dashboardBody(tabItems(
                                                      "Import unique sample (pre-annotated)",
                                                      "Import pre-annotated dataset"), selected = "Import unique sample (genes only)",
                                          width = "200px"),
+                            # Is there pre-specified treatment in the data?
+                            radioButtons(inputId = "breast_cancer_new_prediction_prespecified_treatment",
+                                         label = "Treatment column ('Endo')",
+                                         choices = c("Yes", "No"), selected = "Yes",
+                                         width = "200px"),
                             # add "Import" - button that opens a file browser to locate data and import it
                             fileInput("breast_cancer_new_prediction_file_input", "Choose file",
                                       multiple = FALSE,
                                       accept = c(".txt", ".csv", ".xlsx", ".tsv")),
-                            # actionButton("import_new_prediction_breast_cancer", "Import"),
                             # Choose treatment radio buttons
                             radioButtons("breast_cancer_new_prediction_treatment",
                                          "Select treatment",
-                                         choices = c("Chemotherapy", "Endocrine treatment", "Included in input"),
+                                         choices = c("Chemotherapy", "Endocrine treatment"),
                                          selected = "Chemotherapy", width = "250px"),
                             # Annotate/Edit sample
                             # pam50

@@ -1340,8 +1340,8 @@ server <- function(input, output, session) {
   # Import data type
   import_data_type = reactive({ input$breast_cancer_new_prediction_type })
   
-  # Desired treatment
-  desired_treatment = reactive({ input$breast_cancer_new_prediction_treatment })
+  # Disable treatment selection by default
+  shinyjs::disable("breast_cancer_new_prediction_treatment")
   
   # File input
   file_input = reactive({ input$breast_cancer_new_prediction_file_input })
@@ -1363,6 +1363,7 @@ server <- function(input, output, session) {
     if (grepl("Random", import_data_type())) {
       shinyjs::hide("breast_cancer_new_prediction_file_input")
       shinyjs::hide("import_new_prediction_breast_cancer")
+      shinyjs::hide("breast_cancer_new_prediction_prespecified_treatment")
       
       # Generate a 166-slot-long vector of normally distributed values
       genes_vector = rnorm(166, mean = 0, sd = 1)
@@ -1406,7 +1407,7 @@ server <- function(input, output, session) {
       names(full_random_vector) = colnames(full_ml_set)[3:186]
       
       # Make reactive
-      imported_data(full_random_vector)
+      imported_data(as.data.frame(full_random_vector))
       
       # Verification message
       showModal(
@@ -1421,6 +1422,7 @@ server <- function(input, output, session) {
     } else {
       shinyjs::show("breast_cancer_new_prediction_file_input")
       shinyjs::show("import_new_prediction_breast_cancer")
+      shinyjs::show("breast_cancer_new_prediction_prespecified_treatment")
     }
   })
   
@@ -1432,16 +1434,25 @@ server <- function(input, output, session) {
       shinyjs::show("breast_cancer_new_prediction_rorS_filter")
       shinyjs::show("breast_cancer_new_prediction_Mammaprint_filter")
       shinyjs::show("breast_cancer_new_prediction_ic10_filter")
+      shinyjs::hide("breast_cancer_new_prediction_pam50_annotation")
+      shinyjs::hide("breast_cancer_new_prediction_timepoint_annotation")
+      shinyjs::hide("breast_cancer_new_prediction_ic10_annotation")
+      shinyjs::hide("breast_cancer_new_prediction_mammaprint_annotation")
+      shinyjs::hide("breast_cancer_new_prediction_rors_annotation")
     } else {
       shinyjs::hide("breast_cancer_new_prediction_timepoint_filter")
       shinyjs::hide("breast_cancer_new_prediction_pam50_filter")
       shinyjs::hide("breast_cancer_new_prediction_rorS_filter")
       shinyjs::hide("breast_cancer_new_prediction_Mammaprint_filter")
       shinyjs::hide("breast_cancer_new_prediction_ic10_filter")
+      shinyjs::show("breast_cancer_new_prediction_pam50_annotation")
+      shinyjs::show("breast_cancer_new_prediction_timepoint_annotation")
+      shinyjs::show("breast_cancer_new_prediction_ic10_annotation")
+      shinyjs::show("breast_cancer_new_prediction_mammaprint_annotation")
+      shinyjs::show("breast_cancer_new_prediction_rors_annotation")
     }
   })
   
-  print("All ok until line 1444")
   # If import is chosen: Load the file
   observeEvent(input$breast_cancer_new_prediction_file_input, {
     req(file_input())
@@ -1721,31 +1732,421 @@ server <- function(input, output, session) {
     # Convert to reactive
     imported_data(as.data.frame(input_data))
     
-    # Add treatment column
-    if (!"Endo" %in% colnames(imported_data())) {
+    # Treatment
+    treatment_toggle = reactive({ input$breast_cancer_new_prediction_prespecified_treatment })
+    observeEvent(treatment_toggle(), {
+      if (treatment_toggle() == "No") {
+        shinyjs::enable("breast_cancer_new_prediction_treatment")
+        desired_treatment = reactive({ input$breast_cancer_new_prediction_treatment })
+        
+        if (desired_treatment() == "Chemotherapy" && "Endo" %in% colnames(imported_data())) {
+          current_data <- imported_data()
+          current_data[["Endo"]] <- 0
+          imported_data(current_data)
+        } else if (desired_treatment() == "Chemotherapy" && !"Endo" %in% colnames(imported_data())) {
+          imported_data(imported_data() %>% dplyr::mutate(Endo = 0))
+        } else if (desired_treatment() == "Endocrine treatment" && "Endo" %in% colnames(imported_data())) {
+          current_data <- imported_data()
+          current_data[["Endo"]] <- 1
+          imported_data(current_data)
+        } else if (desired_treatment() == "Endocrine treatment" && !"Endo" %in% colnames(imported_data())) {
+          imported_data(imported_data() %>% dplyr::mutate(Endo = 1))
+        }
+      } else {
+        shinyjs::disable("breast_cancer_new_prediction_treatment")
+      }
+    })
+  })
+  
+  # Sample pheno editing:
+  # pam50
+  pam50_subtype_edit = reactive({ input$breast_cancer_new_prediction_pam50_annotation })
+  observeEvent(pam50_subtype_edit(), {
+    if (!is.null(imported_data()) && pam50_subtype_edit() != "Preset") {
+      if (pam50_subtype_edit() == "Random") {
+        pam50s = c("Luminal A", "Luminal B", "Normal-like", "Basal-like", "HER2+")
+        new_subtype = pam50s[sample(seq(1, 5), 1)]
+        pam50_subtype_edit(new_subtype)  # Update the reactive expression
+      }
       
+      # Create intermediate variable
+      current_data = imported_data()
+
+      # Edit data
+      if (pam50_subtype_edit() == "Luminal A") {
+        current_data[, c("HER2", "LumB", "LumA", "Normal")] = c(0, 0, 1, 0)
+      } else if (pam50_subtype_edit() == "Luminal B") {
+        current_data[, c("HER2", "LumB", "LumA", "Normal")] = c(0, 1, 0, 0)
+      } else if (pam50_subtype_edit() == "Normal-like") {
+        current_data[, c("HER2", "LumB", "LumA", "Normal")] = c(0, 0, 0, 1)
+      } else if (pam50_subtype_edit() == "HER2+") {
+        current_data[, c("HER2", "LumB", "LumA", "Normal")] = c(1, 0, 0, 0)
+      } else if (pam50_subtype_edit() == "Basal-like") {
+        current_data[, c("HER2", "LumB", "LumA", "Normal")] = c(0, 0, 0, 0)
+      }
+      
+      # Update imported_data()
+      imported_data(current_data)
     }
-    
-    print("Maybe treatment failure?")
-    if (desired_treatment() == "Included in input") {
-      if (unique(grepl("Endo", colnames(imported_data()))) == FALSE) {
+  })
+  
+  # Timepoint
+  timepoint_edit = reactive({ input$breast_cancer_new_prediction_timepoint_annotation })
+  observeEvent(timepoint_edit(), {
+    if (!is.null(imported_data()) && timepoint_edit() != "Preset") {
+      if (timepoint_edit() == "Random") {
+        timepoints = c("Pre-treatment", "On-treatment")
+        new_timepoint = timepoints[sample(seq(1, 2), 1)]
+        timepoint_edit(new_timepoint)
+      }
+      
+      # Create intermediate variable
+      current_data = imported_data()
+      
+      # Edit data
+      if (timepoint_edit() == "Pre-treatment") {
+        current_data[, "T2"] = 0
+      } else {
+        current_data[, "T2"] = 1
+      }
+      
+      # Update imported_data()
+      imported_data(current_data)
+    }
+  })
+  
+  # iC10
+  iC10_edit = reactive({ input$breast_cancer_new_prediction_ic10_annotation })
+  observeEvent(iC10_edit(), {
+    if (!is.null(imported_data()) && iC10_edit() != "Preset") {
+      if (iC10_edit == "Random") {
+        iC10s = c("iC1", "iC2", "iC3", "iC4",
+                  "iC5", "iC6", "iC7", "iC8", "iC9",
+                  "iC10")
+        new_iC10 = iC10s[sample(seq(1, 10), 1)]
+        iC10_edit(new_iC10)
+      }
+      
+      # Create intermediate variable
+      current_data = imported_data()
+      
+      # Edit data
+      if (iC10_edit() == "iC1") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 0, 0, 0, 0, 0, 0)
+      } else if (iC10_edit() == "iC2") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(1, 0, 0, 0, 0, 0, 0, 0, 0)
+      } else if (iC10_edit() == "iC3") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 1, 0, 0, 0, 0, 0, 0, 0)
+      } else if (iC10_edit() == "iC4") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 1, 0, 0, 0, 0, 0, 0)
+      } else if (iC10_edit() == "iC5") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 1, 0, 0, 0, 0, 0)
+      } else if (iC10_edit() == "iC6") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 0, 1, 0, 0, 0, 0)
+      } else if (iC10_edit() == "iC7") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 0, 0, 1, 0, 0, 0)
+      } else if (iC10_edit() == "iC8") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 0, 0, 0, 1, 0, 0)
+      } else if (iC10_edit() == "iC9") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 0, 0, 0, 0, 1, 0)
+      } else if (iC10_edit() == "iC10") {
+        current_data[, c("IC2", "IC3", "IC4",
+                         "IC5", "IC6", "IC7", "IC8", "IC9",
+                         "IC10")] = c(0, 0, 0, 0, 0, 0, 0, 0, 1)
+      }
+      
+      # Update imported_data()
+      imported_data(current_data)
+    }
+  })
+  
+  # Mammaprint
+  mammaprint_edit = reactive({ input$breast_cancer_new_prediction_mammaprint_annotation })
+  observeEvent(mammaprint_edit(), {
+    if (!is.null(imported_data()) && mammaprint_edit() != "Preset") {
+      if (mammaprint_edit() == "Random") {
+        mammaprints = c("At risk", "No risk")
+        new_mammaprint = mammaprints[sample(seq(1, 2), 1)]
+        mammaprint_edit(new_mammaprint)
+      }
+      
+      # Create intermediate variable
+      current_data = imported_data()
+      
+      # Edit data
+      if (mammaprint_edit() == "At risk") {
+        current_data[, "Mammaprint_risk_yes"] = 1
+      } else {
+        current_data[, "Mammaprint_risk_yes"] = 0
+      }
+      
+      # Update imported_data()
+      imported_data(current_data)
+    }
+  })
+  
+  # rorS
+  rorS_edit = reactive({ input$breast_cancer_new_prediction_rors_annotation })
+  observeEvent(rorS_edit(), {
+    if (!is.null(imported_data()) && rorS_edit() != "Preset") {
+      if (rorS_edit == "Random") {
+        rorSs = c("High", "Intermediate", "Low")
+        new_rorS = rorSs[sample(seq(1, 3), 1)]
+        rorS_edit(new_rorS)
+      }
+      
+      # Create intermediate variable
+      current_data = imported_data()
+      
+      # Edit data
+      if (rorS_edit() == "High") {
+        current_data[, c("rorS_risk_interm", "rorS_risk_high")] = c(0, 1)
+      } else if (rorS_edit() == "Intermediate") {
+        current_data[, c("rorS_risk_interm", "rorS_risk_high")] = c(1, 0)
+      } else if (rorS_edit() == "Low") {
+        current_data[, c("rorS_risk_interm", "rorS_risk_high")] = c(0, 0)
+      }
+      
+      # Update imported_data()
+      imported_data(current_data)
+    }
+  })
+  
+  # ROC plot checks ###
+  # Hide ROCplot option if not dataset
+  roc_possibility = reactiveVal()
+  observeEvent(import_data_type(), {
+    if (import_data_type() == "Import pre-annotated dataset") {
+      shinyjs::show("breast_cancer_new_prediction_roc")
+      roc_possibility(TRUE)
+    } else {
+      shinyjs::hide("breast_cancer_new_prediction_roc")
+      roc_possibility(FALSE)
+    }
+  })
+  
+  roc_handle = reactive({ input$breast_cancer_new_prediction_roc })
+  test_passed = reactiveVal()
+  # Check there is a response column with values "Responder", "Non_responder" in the input
+  observeEvent(roc_handle(), {
+    if (roc_handle() == "Yes" && roc_possibility())  {
+      # Check if there is a response column
+      if (!"Response" %in% colnames(imported_data())) {
+        test_passed(FALSE)
         showModal(modalDialog(
           title = "Warning",
-          "'Included in input' is selected in the treatment radio buttons.
-          The uploaded file should contain a column named 'Endo' with a value 
-          0 (Chemotherapy) or 1 (Endocrine treatment).",
+          "The uploaded file should contain a column named 'Response' with levels
+          'Responder', 'Non_responder'.",
           easyClose = TRUE
         ))
-        return() # exit code for this event
       }
-    } else if (desired_treatment() == "Chemotherapy" && !"Endo" %in% colnames(imported_data())) {
-      imported_data(imported_data() %>% dplyr::mutate(Endo = 0))
-    } else if (desired_treatment() == "Chemotherapy" && "Endo" %in% colnames(imported_data())) {
-      imported_data()[, "Endo"] = 0
-    } else if (desired_treatment() == "Endocrine treatment" && !"Endo" %in% colnames(imported_data())) {
-      imported_data(imported_data() %>% dplyr::mutate(Endo = 1))
-    } else if (desired_treatment() == "Endocrine treatment" && "Endo" %in% colnames(imported_data())) {
-      imported_data()[, "Endo"] = 1
+      
+      # If that succeeded, check if it has the desired levels
+      if (all(unique(imported_data()[, "Response"]) %in% c("Non_responder", "Responder")) &&
+          length(unique(imported_data()[, "Response"])) <= 2) {
+        test_passed(TRUE)
+      } else {
+        test_passed(FALSE)
+        showModal(modalDialog(
+          title = "Warning",
+          "The uploaded file should contain a column named 'Response' with levels
+          'Responder', 'Non_responder'.",
+          easyClose = TRUE
+        ))
+      }
+    }
+  })
+  
+  # Filters  
+  filtered_data = reactive({
+    # Only run in the case of datasets
+    if (import_data_type() == "Import pre-annotated dataset") {
+      reactive_filt_data = imported_data()
+      
+      # Filters
+      newpred_timepoint_filter = input$breast_cancer_new_prediction_timepoint_filter
+      newpred_pam50_filter = input$breast_cancer_new_prediction_pam50_filter
+      newpred_rorS_filter = input$breast_cancer_new_prediction_rorS_filter
+      newpred_mammaprint_filter = input$breast_cancer_new_prediction_Mammaprint_filter
+      newpred_iC10_filter = input$breast_cancer_new_prediction_ic10_filter
+      
+      # Filter timepoint
+      if (newpred_timepoint_filter == "All") {
+        # No filtering applied
+      } else if (newpred_timepoint_filter == "Pre-treatment") {
+        reactive_filt_data = reactive_filt_data %>% filter(T2 == 0)
+      } else if (newpred_timepoint_filter == "On-treatment") {
+        reactive_filt_data = reactive_filt_data %>% filter(T2 == 1)
+      }
+      
+      # pam50
+      if (newpred_pam50_filter == "All") {
+        # No filtering applied
+      } else if (newpred_pam50_filter == "Luminal A") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(LumA == 1)
+      } else if (newpred_pam50_filter == "Luminal B") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(LumB == 1)
+      } else if (newpred_pam50_filter == "Normal-like") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(Normal == 1)
+      } else if (newpred_pam50_filter == "HER2+") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(HER2 == 1)
+      } else if (newpred_pam50_filter == "Basal-like") {
+        reactive_filt_data = reactive_filt_data[reactive_filt_data$LumA==0 &
+                                                  reactive_filt_data$LumB==0 &
+                                                  reactive_filt_data$Normal==0 &
+                                                  reactive_filt_data$HER2==0,]
+      }
+      
+      # rorS
+      if (newpred_rorS_filter == "All") {
+        # No filtering applied
+      } else if (newpred_rorS_filter == "High") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(rorS_risk_high == 1)
+      } else if (newpred_rorS_filter == "Intermediate") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(rorS_risk_interm == 1)
+      } else if (newpred_rorS_filter == "Low") {
+        reactive_filt_data = reactive_filt_data[reactive_filt_data$rorS_risk_high==0 &
+                                                  reactive_filt_data$rorS_risk_interm==0,]
+      }
+      
+      # Mammaprint
+      if (newpred_mammaprint_filter == "All") {
+        # No filtering applied
+      } else if (newpred_mammaprint_filter == "At risk") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(Mammaprint_risk_yes == 1)
+      } else if (newpred_mammaprint_filter == "No risk") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(Mammaprint_risk_yes == 0)
+      }
+      
+      # iC10
+      if (newpred_iC10_filter == "All") {
+        # No filtering applied
+      } else if (newpred_iC10_filter == "iC1") {
+        reactive_filt_data = reactive_filt_data[
+          reactive_filt_data$IC2 == 0 &
+            reactive_filt_data$IC3 == 0 &
+            reactive_filt_data$IC4 == 0 &
+            reactive_filt_data$IC5 == 0 &
+            reactive_filt_data$IC6 == 0 &
+            reactive_filt_data$IC7 == 0 &
+            reactive_filt_data$IC8 == 0 &
+            reactive_filt_data$IC9 == 0 &
+            reactive_filt_data$IC10 == 0, ]
+      } else if (newpred_iC10_filter == "iC2") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC2 == 1)
+      } else if (newpred_iC10_filter == "iC3") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC3 == 1)
+      } else if (newpred_iC10_filter == "iC4") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC4 == 1)
+      } else if (newpred_iC10_filter == "iC5") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC5 == 1)
+      } else if (newpred_iC10_filter == "iC6") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC6 == 1)
+      } else if (newpred_iC10_filter == "iC7") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC7 == 1)
+      } else if (newpred_iC10_filter == "iC8") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC8 == 1)
+      } else if (newpred_iC10_filter == "iC9") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC9 == 1)
+      } else if (newpred_iC10_filter == "iC10") {
+        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC10 == 1)
+      }
+      
+      # Warning if no data left
+      if (nrow(reactive_filt_data) == 0) {
+        showModal(modalDialog(
+          title = "Warning",
+          "No samples in the dataset satisfy all selected filters.",
+          easyClose = TRUE
+        ))
+      }
+    }
+    
+    reactive_filt_data
+  })
+  
+  # Make the prediction (+/- produce ROC plot) ###
+  predict_new_data <- reactive({
+    # Unique sample predictions
+    if (import_data_type() %in% c("Random sample",
+                                  "Import unique sample (genes only)",
+                                  "Import unique sample (pre-annotated)")) {
+      # Make prediction
+      prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
+                           imported_data(), 
+                           type = "prob")
+      resp_prob = paste0(round(100*as.numeric(prediction["Responder"]), 2), "%")
+      non_resp_prob = paste0(round(100*as.numeric(prediction["Non_responder"]), 2), "%")
+      
+      # Downloadable content
+      newdata = cbind(imported_data(), cbind(resp_prob, non_resp_prob))
+      names(newdata[, c(ncol(newdata)-1, ncol(newdata))]) = c("Response chance %", "No response chance %")
+      
+      chosen_treatment = ifelse(imported_data()[, "Endo"] == 1, "endocrine treatment",
+                                "chemotherapy")
+      showModal(modalDialog(
+        title = "Result",
+        paste0("The patient has a ", resp_prob, " chance of responding to the chosen
+              treatment type (", chosen_treatment, ")."),
+        downloadButton('download_new_prediction_results', 'Download results'),
+        easyClose = TRUE
+      ))
+      
+      return(list(predictions = newdata, plot = NULL, auc = NULL))
+      
+    } else if (import_data_type() == "Import unique sample (pre-annotated)") {
+      
+      # Make prediction
+      prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
+                           reactive_filt_data(), 
+                           type = "prob")
+      resp_prob = paste0(round(100*as.numeric(prediction[, "Responder"]), 2), "%")
+      non_resp_prob = paste0(round(100*as.numeric(prediction[, "Non_responder"]), 2), "%")
+      
+      # Downloadable content
+      newdata = cbind(reactive_filt_data(), cbind(resp_prob, non_resp_prob))
+      names(newdata[, c(ncol(newdata)-1, ncol(newdata))]) = c("Response chance %", "No response chance %")
+      
+      if (test_passed()) {
+        join = newdata
+        colnames(join)[c(ncol(newdata)-1, ncol(newdata))] = c("Responder", "Non_responder")
+        join = join[order(join$Responder),]
+        model_roc = roc(predictor = join$Responder, 
+                        response = as.character(join$Response))
+        auc_value = round(auc(model_roc), 3)
+        p = plot(model_roc, 
+                 main = "ROC curve",
+                 col = "#2A5674", lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
+                 asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
+        
+        return(list(predictions = newdata, plot = p, auc = auc_value))
+      } else {
+        showModal(modalDialog(
+          title = "Result",
+          "No ROC plot could be generated.",
+          downloadButton('download_new_prediction_results', 'Download results'),
+          easyClose = TRUE
+        ))
+        return(list(predictions = newdata, plot = NULL, auc = NULL))
+      }
     }
   })
 
