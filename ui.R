@@ -849,10 +849,10 @@ body <- dashboardBody(tabItems(
                 status = "primary", solidHeader = TRUE,
                 width = 12, height = 600, shinyjs::useShinyjs(),
                 splitLayout(cellWidths = c("250px", "200px", "250px", "150px",
+                                           "150px", "150px", "150px", "150px", "150px", "150px",
                                            "150px", "150px", "150px", "150px", "150px",
-                                           "150px", "150px", "150px", "150px", "150px",
-                                           "150px",
-                                           "80px", "80px", "80px", "80px"),
+                                           "150px", "150px",
+                                           "80px", "160px", "80px", "80px"),
                             style = "border:1px;padding:20px;white-space:normal;",
                             # Select type of import
                             radioButtons(inputId = "breast_cancer_new_prediction_type",
@@ -882,6 +882,12 @@ body <- dashboardBody(tabItems(
                                         "pam50", 
                                         choices = c("Preset", "Random", sort(c("Luminal A", "Luminal B", "Normal-like",
                                                                                "Basal-like", "HER2+"))),
+                                        selected = "Random"),
+                            # scmod1
+                            selectInput(inputId = "breast_cancer_new_prediction_scmod1_annotation",
+                                        "scmod1", 
+                                        choices = c("Preset", "Random", sort(c("ER-/HER2-", "ER+/HER2- high proliferation",
+                                                                               "ER+/HER2- low proliferation", "HER2+"))),
                                         selected = "Random"),
                             # Timepoint
                             selectInput(inputId = "breast_cancer_new_prediction_timepoint_annotation",
@@ -924,6 +930,12 @@ body <- dashboardBody(tabItems(
                                          choices = c("All", "Luminal A", "Luminal B",
                                                      "Normal-like", "Basal-like", "HER2+"),
                                          inline = FALSE, width = "150px"),
+                            # Filter for scmod1
+                            radioButtons("breast_cancer_new_prediction_scmod1_filter", "scmod1 filter",
+                                         selected = "All",
+                                         choices = c("All", "ER-/HER2-", "ER+/HER2- high proliferation",
+                                                     "ER+/HER2- low proliferation", "HER2+"),
+                                         inline = FALSE, width = "150px"),
                             # Filter for rorS risk
                             radioButtons("breast_cancer_new_prediction_rorS_filter", "Risk of recurrence",
                                          selected = "All",
@@ -953,12 +965,12 @@ body <- dashboardBody(tabItems(
                             # add "Info" button
                             actionButton("info_new_prediction_breast_cancer", "Info")
                 ),
-                bsModal("new_prediction_breast_info", "Information", "info_ml_breast_cancer",
+                bsModal("new_prediction_breast_info", "Information", "info_new_prediction_breast_cancer",
                         fluidRow(
                           htmlOutput("new_prediction_breast_info_text")
                         )),
                 # ROC plot
-                bsModal("new_prediction_roc", "Output", "newpred_bc_roc",
+                bsModal("new_prediction_roc", "Output", "predict_new_prediction_breast_cancer",
                         size = "large", fluidRow(
                           column(
                             width = 12,

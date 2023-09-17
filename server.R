@@ -1347,7 +1347,7 @@ server <- function(input, output, session) {
   file_input = reactive({ input$breast_cancer_new_prediction_file_input })
   
   # Housekeeping
-  all_correct_columns = colnames(full_ml_set)[3:186]
+  all_correct_columns = colnames(full_ml_set)[3:189]
   all_correct_columns = all_correct_columns[all_correct_columns != "Endo"]
   gene_columns_with_X = colnames(full_ml_set)[which(grepl("X_", colnames(full_ml_set)))]
   gene_columns_without_X = gene_columns_with_X
@@ -1401,10 +1401,17 @@ server <- function(input, output, session) {
                                 c(0, 1),
                                 c(1, 0))[[sample(1:3, 1)]]
       
+      # scmod1
+      random_scmod1_vector = list(c(0, 0, 0),
+                                c(0, 0, 1),
+                                c(0, 1, 0),
+                                c(1, 0, 0))[[sample(1:4, 1)]]
+      
       full_random_vector = c(genes_vector, random_pam50_vector, random_timepoint_vector,
                              random_treatment_vector, random_iC10_vector,
-                             random_mammaprint_vector, random_rorS_vector)
-      names(full_random_vector) = colnames(full_ml_set)[3:186]
+                             random_mammaprint_vector, random_rorS_vector,
+                             random_scmod1_vector)
+      names(full_random_vector) = colnames(full_ml_set)[3:189]
       
       # Make reactive
       imported_data(as.data.frame(full_random_vector))
@@ -1413,7 +1420,7 @@ server <- function(input, output, session) {
       showModal(
         modalDialog(
           title = "Success!", "Random file generated successfully. You may now edit
-          annotation (pam50, iC10, timepoint, treatment, Mammaprint or rorS risk) if
+          annotation (pam50, scmod1, iC10, timepoint, treatment, Mammaprint, rorS risk) if
           you wish, before generating a prediction.",
           easyClose = TRUE 
         )
@@ -1434,22 +1441,26 @@ server <- function(input, output, session) {
       shinyjs::show("breast_cancer_new_prediction_rorS_filter")
       shinyjs::show("breast_cancer_new_prediction_Mammaprint_filter")
       shinyjs::show("breast_cancer_new_prediction_ic10_filter")
+      shinyjs::show("breast_cancer_new_prediction_scmod1_filter")
       shinyjs::hide("breast_cancer_new_prediction_pam50_annotation")
       shinyjs::hide("breast_cancer_new_prediction_timepoint_annotation")
       shinyjs::hide("breast_cancer_new_prediction_ic10_annotation")
       shinyjs::hide("breast_cancer_new_prediction_mammaprint_annotation")
       shinyjs::hide("breast_cancer_new_prediction_rors_annotation")
+      shinyjs::hide("breast_cancer_new_prediction_scmod1_annotation")
     } else {
       shinyjs::hide("breast_cancer_new_prediction_timepoint_filter")
       shinyjs::hide("breast_cancer_new_prediction_pam50_filter")
       shinyjs::hide("breast_cancer_new_prediction_rorS_filter")
       shinyjs::hide("breast_cancer_new_prediction_Mammaprint_filter")
       shinyjs::hide("breast_cancer_new_prediction_ic10_filter")
+      shinyjs::hide("breast_cancer_new_prediction_scmod1_filter")
       shinyjs::show("breast_cancer_new_prediction_pam50_annotation")
       shinyjs::show("breast_cancer_new_prediction_timepoint_annotation")
       shinyjs::show("breast_cancer_new_prediction_ic10_annotation")
       shinyjs::show("breast_cancer_new_prediction_mammaprint_annotation")
       shinyjs::show("breast_cancer_new_prediction_rors_annotation")
+      shinyjs::show("breast_cancer_new_prediction_scmod1_annotation")
     }
   })
   
@@ -1742,18 +1753,29 @@ server <- function(input, output, session) {
         if (desired_treatment() == "Chemotherapy" && "Endo" %in% colnames(imported_data())) {
           current_data <- imported_data()
           current_data[["Endo"]] <- 0
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
           imported_data(current_data)
         } else if (desired_treatment() == "Chemotherapy" && !"Endo" %in% colnames(imported_data())) {
-          imported_data(imported_data() %>% dplyr::mutate(Endo = 0))
+          current_data <- imported_data()
+          current_data$Endo = 0
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+          imported_data(current_data)
         } else if (desired_treatment() == "Endocrine treatment" && "Endo" %in% colnames(imported_data())) {
           current_data <- imported_data()
           current_data[["Endo"]] <- 1
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
           imported_data(current_data)
         } else if (desired_treatment() == "Endocrine treatment" && !"Endo" %in% colnames(imported_data())) {
-          imported_data(imported_data() %>% dplyr::mutate(Endo = 1))
+          current_data <- imported_data()
+          current_data$Endo = 1
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+          imported_data(current_data)
         }
       } else {
         shinyjs::disable("breast_cancer_new_prediction_treatment")
+        current_data = imported_data()
+        current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+        imported_data(current_data)
       }
     })
   })
@@ -1790,6 +1812,36 @@ server <- function(input, output, session) {
     }
   })
   
+  # scmod1
+  scmod1_subtype_edit = reactive({ input$breast_cancer_new_prediction_scmod1_annotation })
+  observeEvent(scmod1_subtype_edit(), {
+    if (!is.null(imported_data()) && scmod1_subtype_edit() != "Preset") {
+      if (scmod1_subtype_edit() == "Random") {
+        scmod1s = c("ER-/HER2-", "ER+/HER2- high proliferation",
+                    "ER+/HER2- low proliferation", "HER2+")
+        new_subtype = scmod1s[sample(seq(1, 4), 1)]
+        scmod1_subtype_edit(new_subtype)  # Update the reactive expression
+      }
+      
+      # Create intermediate variable
+      current_data = imported_data()
+      
+      # Edit data
+      if (scmod1_subtype_edit() == "ER-/HER2-") {
+        current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")] = c(0, 0, 0)
+      } else if (scmod1_subtype_edit() == "ER+/HER2- high proliferation") {
+        current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")] = c(1, 0, 0)
+      } else if (scmod1_subtype_edit() == "ER+/HER2- low proliferation") {
+        current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")] = c(0, 1, 0)
+      } else if (scmod1_subtype_edit() == "HER2+") {
+        current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")] = c(0, 0, 1)
+      }
+      
+      # Update imported_data()
+      imported_data(current_data)
+    }
+  })
+  
   # Timepoint
   timepoint_edit = reactive({ input$breast_cancer_new_prediction_timepoint_annotation })
   observeEvent(timepoint_edit(), {
@@ -1819,7 +1871,7 @@ server <- function(input, output, session) {
   iC10_edit = reactive({ input$breast_cancer_new_prediction_ic10_annotation })
   observeEvent(iC10_edit(), {
     if (!is.null(imported_data()) && iC10_edit() != "Preset") {
-      if (iC10_edit == "Random") {
+      if (iC10_edit() == "Random") {
         iC10s = c("iC1", "iC2", "iC3", "iC4",
                   "iC5", "iC6", "iC7", "iC8", "iC9",
                   "iC10")
@@ -1907,7 +1959,7 @@ server <- function(input, output, session) {
   rorS_edit = reactive({ input$breast_cancer_new_prediction_rors_annotation })
   observeEvent(rorS_edit(), {
     if (!is.null(imported_data()) && rorS_edit() != "Preset") {
-      if (rorS_edit == "Random") {
+      if (rorS_edit() == "Random") {
         rorSs = c("High", "Intermediate", "Low")
         new_rorS = rorSs[sample(seq(1, 3), 1)]
         rorS_edit(new_rorS)
@@ -1977,9 +2029,14 @@ server <- function(input, output, session) {
   
   # Filters  
   filtered_data = reactive({
+    reactive_filt_data <- NULL
+    
     # Only run in the case of datasets
     if (import_data_type() == "Import pre-annotated dataset") {
       reactive_filt_data = imported_data()
+      
+      # Create a separate data object to apply filters dynamically
+      temp_data <- reactive_filt_data
       
       # Filters
       newpred_timepoint_filter = input$breast_cancer_new_prediction_timepoint_filter
@@ -1987,100 +2044,118 @@ server <- function(input, output, session) {
       newpred_rorS_filter = input$breast_cancer_new_prediction_rorS_filter
       newpred_mammaprint_filter = input$breast_cancer_new_prediction_Mammaprint_filter
       newpred_iC10_filter = input$breast_cancer_new_prediction_ic10_filter
+      newpred_scmod1_filter = input$breast_cancer_new_prediction_scmod1_filter
       
       # Filter timepoint
       if (newpred_timepoint_filter == "All") {
         # No filtering applied
       } else if (newpred_timepoint_filter == "Pre-treatment") {
-        reactive_filt_data = reactive_filt_data %>% filter(T2 == 0)
+        temp_data = temp_data %>% filter(T2 == 0)
       } else if (newpred_timepoint_filter == "On-treatment") {
-        reactive_filt_data = reactive_filt_data %>% filter(T2 == 1)
+        temp_data = temp_data %>% filter(T2 == 1)
       }
       
       # pam50
       if (newpred_pam50_filter == "All") {
         # No filtering applied
       } else if (newpred_pam50_filter == "Luminal A") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(LumA == 1)
+        temp_data = temp_data %>% dplyr::filter(LumA == 1)
       } else if (newpred_pam50_filter == "Luminal B") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(LumB == 1)
+        temp_data = temp_data %>% dplyr::filter(LumB == 1)
       } else if (newpred_pam50_filter == "Normal-like") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(Normal == 1)
+        temp_data = temp_data %>% dplyr::filter(Normal == 1)
       } else if (newpred_pam50_filter == "HER2+") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(HER2 == 1)
+        temp_data = temp_data %>% dplyr::filter(HER2 == 1)
       } else if (newpred_pam50_filter == "Basal-like") {
-        reactive_filt_data = reactive_filt_data[reactive_filt_data$LumA==0 &
-                                                  reactive_filt_data$LumB==0 &
-                                                  reactive_filt_data$Normal==0 &
-                                                  reactive_filt_data$HER2==0,]
+        temp_data = temp_data[temp_data$LumA==0 &
+                                temp_data$LumB==0 &
+                                temp_data$Normal==0 &
+                                temp_data$HER2==0,]
+      }
+      
+      # scmod1
+      if (newpred_scmod1_filter == "All") {
+        # No filtering applied
+      } else if (newpred_scmod1_filter == "HER2+") {
+        temp_data = temp_data %>% dplyr::filter(HER2_scmod1 == 1)
+      } else if (newpred_scmod1_filter == "ER+/HER2- high proliferation") {
+        temp_data = temp_data %>% dplyr::filter(ER_hp == 1)
+      } else if (newpred_scmod1_filter == "ER+/HER2- low proliferation") {
+        temp_data = temp_data %>% dplyr::filter(ER_lp == 1)
+      } else if (newpred_scmod1_filter == "ER-/HER2-") {
+        temp_data = temp_data[temp_data$HER2_scmod1==0 &
+                                temp_data$ER_hp==0 &
+                                temp_data$ER_lp==0,]
       }
       
       # rorS
       if (newpred_rorS_filter == "All") {
         # No filtering applied
       } else if (newpred_rorS_filter == "High") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(rorS_risk_high == 1)
+        temp_data = temp_data %>% dplyr::filter(rorS_risk_high == 1)
       } else if (newpred_rorS_filter == "Intermediate") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(rorS_risk_interm == 1)
+        temp_data = temp_data %>% dplyr::filter(rorS_risk_interm == 1)
       } else if (newpred_rorS_filter == "Low") {
-        reactive_filt_data = reactive_filt_data[reactive_filt_data$rorS_risk_high==0 &
-                                                  reactive_filt_data$rorS_risk_interm==0,]
+        temp_data = temp_data[temp_data$rorS_risk_high==0 &
+                                temp_data$rorS_risk_interm==0,]
       }
       
       # Mammaprint
       if (newpred_mammaprint_filter == "All") {
         # No filtering applied
       } else if (newpred_mammaprint_filter == "At risk") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(Mammaprint_risk_yes == 1)
+        temp_data = temp_data %>% dplyr::filter(Mammaprint_risk_yes == 1)
       } else if (newpred_mammaprint_filter == "No risk") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(Mammaprint_risk_yes == 0)
+        temp_data = temp_data %>% dplyr::filter(Mammaprint_risk_yes == 0)
       }
       
       # iC10
       if (newpred_iC10_filter == "All") {
         # No filtering applied
       } else if (newpred_iC10_filter == "iC1") {
-        reactive_filt_data = reactive_filt_data[
-          reactive_filt_data$IC2 == 0 &
-            reactive_filt_data$IC3 == 0 &
-            reactive_filt_data$IC4 == 0 &
-            reactive_filt_data$IC5 == 0 &
-            reactive_filt_data$IC6 == 0 &
-            reactive_filt_data$IC7 == 0 &
-            reactive_filt_data$IC8 == 0 &
-            reactive_filt_data$IC9 == 0 &
-            reactive_filt_data$IC10 == 0, ]
+        temp_data = temp_data[
+          temp_data$IC2 == 0 &
+            temp_data$IC3 == 0 &
+            temp_data$IC4 == 0 &
+            temp_data$IC5 == 0 &
+            temp_data$IC6 == 0 &
+            temp_data$IC7 == 0 &
+            temp_data$IC8 == 0 &
+            temp_data$IC9 == 0 &
+            temp_data$IC10 == 0, ]
       } else if (newpred_iC10_filter == "iC2") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC2 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC2 == 1)
       } else if (newpred_iC10_filter == "iC3") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC3 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC3 == 1)
       } else if (newpred_iC10_filter == "iC4") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC4 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC4 == 1)
       } else if (newpred_iC10_filter == "iC5") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC5 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC5 == 1)
       } else if (newpred_iC10_filter == "iC6") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC6 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC6 == 1)
       } else if (newpred_iC10_filter == "iC7") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC7 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC7 == 1)
       } else if (newpred_iC10_filter == "iC8") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC8 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC8 == 1)
       } else if (newpred_iC10_filter == "iC9") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC9 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC9 == 1)
       } else if (newpred_iC10_filter == "iC10") {
-        reactive_filt_data = reactive_filt_data %>% dplyr::filter(IC10 == 1)
+        temp_data = temp_data %>% dplyr::filter(IC10 == 1)
       }
       
       # Warning if no data left
-      if (nrow(reactive_filt_data) == 0) {
+      if (nrow(temp_data) == 0) {
         showModal(modalDialog(
           title = "Warning",
           "No samples in the dataset satisfy all selected filters.",
           easyClose = TRUE
         ))
       }
+      
+      reactive_filt_data <- temp_data
     }
     
-    reactive_filt_data
+    return(reactive_filt_data)
   })
   
   # Make the prediction (+/- produce ROC plot) ###
@@ -2111,23 +2186,33 @@ server <- function(input, output, session) {
       ))
       
       return(list(predictions = newdata, plot = NULL, auc = NULL))
-      
-    } else if (import_data_type() == "Import unique sample (pre-annotated)") {
+
+    } else if (import_data_type() == "Import pre-annotated dataset") {
       
       # Make prediction
       prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
-                           reactive_filt_data(), 
+                           filtered_data(), 
                            type = "prob")
       resp_prob = paste0(round(100*as.numeric(prediction[, "Responder"]), 2), "%")
       non_resp_prob = paste0(round(100*as.numeric(prediction[, "Non_responder"]), 2), "%")
       
-      # Downloadable content
-      newdata = cbind(reactive_filt_data(), cbind(resp_prob, non_resp_prob))
-      names(newdata[, c(ncol(newdata)-1, ncol(newdata))]) = c("Response chance %", "No response chance %")
+      # Create a new data frame for the new variables
+      new_vars <- data.frame(
+        Responder = as.numeric(prediction[, "Responder"]),
+        Non_responder = as.numeric(prediction[, "Non_responder"]),
+        `Response chance %` = resp_prob,
+        `No response chance %` = non_resp_prob
+      )
+      
+      # Bind the new variables to your original data frame
+      newdata <- cbind(filtered_data(), new_vars)
+      
+      # Update the Response column
+      newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
+                                 labels = c("Responder", "Non_responder"))
       
       if (test_passed()) {
         join = newdata
-        colnames(join)[c(ncol(newdata)-1, ncol(newdata))] = c("Responder", "Non_responder")
         join = join[order(join$Responder),]
         model_roc = roc(predictor = join$Responder, 
                         response = as.character(join$Response))
@@ -2149,5 +2234,59 @@ server <- function(input, output, session) {
       }
     }
   })
-
+  
+  # Plot ROC curve
+  output$newpred_ROC_plot <- renderPlot({
+    input$predict_new_prediction_breast_cancer
+    isolate({
+      p = predict_new_data()$plot
+      auc_val = predict_new_data()$auc
+      
+      p
+      # Add legend
+      legend(0.5, 0.25, legend=paste0("AUC = ", auc_val),
+             col="#2A5674", lty=1, cex=0.8)
+    })
+  })
+  
+  # Downloadable output
+  output$download_new_prediction_results <- downloadHandler(
+    filename = "my_response_prediction.csv",
+    content = function(file) {
+      data <- predict_new_data()$predictions
+      write.csv(newdata, file, row.names = FALSE)
+    }
+  )
+  
+  # Reset button
+  observeEvent(input$reset_new_prediction_breast_cancer, {
+    imported_data = NULL
+    shinyjs::reset("breast_cancer_new_prediction_type")
+    shinyjs::reset("breast_cancer_new_prediction_treatment")
+    shinyjs::reset("breast_cancer_new_prediction_pam50_annotation")
+    shinyjs::reset("breast_cancer_new_prediction_timepoint_annotation")
+    shinyjs::reset("breast_cancer_new_prediction_ic10_annotation")
+    shinyjs::reset("breast_cancer_new_prediction_mammaprint_annotation")
+    shinyjs::reset("breast_cancer_new_prediction_rors_annotation")
+    shinyjs::reset("breast_cancer_new_prediction_roc")
+    shinyjs::reset("breast_cancer_new_prediction_timepoint_filter")
+    shinyjs::reset("breast_cancer_new_prediction_pam50_filter")
+    shinyjs::reset("breast_cancer_new_prediction_rorS_filter")
+    shinyjs::reset("breast_cancer_new_prediction_Mammaprint_filter")
+    shinyjs::reset("breast_cancer_new_prediction_ic10_filter")
+  })
+  
+  # Pop-up info message, triggered when the user presses the Info button
+  output$new_prediction_breast_info_text <- renderText({
+    paste0("<br> &#8226 Choose to either generate a random sample, import a sample with gene expression
+           measurements only, import a pre-annotated gene expression sample or import a fully annotated dataset.",
+           "<br> &#8226 You can either prespecify treatment in your imported file or choose it here.",
+           "<br> &#8226 Column names of the genes should be NCBI Entrez ID's 
+           (either as they are or prefixed with 'X_' - both work well).",
+           "<br> &#8226 You can also edit pam50, iC10, timepoint, Mammaprint and rorS risk values for unique samples.",
+           "<br> &#8226 You can subset datasets using filters for pam50, iC10, timepoint, Mammaprint and rorS risk values.",
+           "<br> &#8226 <b>Make sure to choose 'Yes' in the 'Produce ROC plot' buttons if you want a ROC plot.</b>",
+           "<br> &#8226 ROC plots can be generated if a dataset is imported with a Response column with levels
+           'Responder', 'Non_responder'.")
+  })
 }
