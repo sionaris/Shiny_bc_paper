@@ -2248,7 +2248,7 @@ server <- function(input, output, session) {
                            imported_data(), 
                            type = "prob")
       resp_prob = paste0(round(100*as.numeric(prediction["Responder"]), 2), "%")
-      print(resp_prob)
+      # print(resp_prob)
       non_resp_prob = paste0(round(100*as.numeric(prediction["Non_responder"]), 2), "%")
       
       # Create a new data frame for the new variables
