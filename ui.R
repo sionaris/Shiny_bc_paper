@@ -852,7 +852,7 @@ body <- dashboardBody(tabItems(
                                            "150px", "150px", "150px", "150px", "150px", "150px",
                                            "150px", "150px", "150px", "150px", "150px",
                                            "150px", "150px",
-                                           "80px", "160px", "80px", "80px"),
+                                           "80px", "80px", "80px"),
                             style = "border:1px;padding:20px;white-space:normal;",
                             # Select type of import
                             radioButtons(inputId = "breast_cancer_new_prediction_type",
@@ -957,7 +957,7 @@ body <- dashboardBody(tabItems(
                             actionButton("predict_new_prediction_breast_cancer", "Predict!",
                                          style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"),
                             # add Download button
-                            downloadButton('download_new_prediction_results', 'Download results'),
+                            # downloadButton('download_new_prediction_results', 'Download results'),
                             # Button to reset inputs to default
                             actionButton(inputId = "reset_new_prediction_breast_cancer", 
                                          label = "Reset",
@@ -971,7 +971,7 @@ body <- dashboardBody(tabItems(
                         )),
                 # ROC plot
                 bsModal("new_prediction_roc", "Output", "predict_new_prediction_breast_cancer",
-                        size = "large", fluidRow(
+                      size = "large", fluidRow(
                           column(
                             width = 12,
                             
@@ -979,7 +979,9 @@ body <- dashboardBody(tabItems(
                             box(
                               title = "Model performance", id = "newpred_breast_cancer_roc_box",
                               status = "warning", width = 12, height = 600, solidHeader = TRUE, align = "center",
-                              plotOutput("newpred_ROC_plot", width = 500, height = 500)
+                              plotOutput("newpred_ROC_plot", width = 500, height = 500),
+                              verbatimTextOutput("results_text"),  # Additional output for textual information
+                              downloadButton('download_new_prediction_results', 'Download results')
                             )
                           )
                         ))

@@ -2316,33 +2316,36 @@ server <- function(input, output, session) {
   
   # Plot ROC curve
   output$newpred_ROC_plot <- renderPlot({
-    input$predict_new_prediction_breast_cancer
+    req(input$predict_new_prediction_breast_cancer)
     isolate({
       if (import_data_type() != "Import pre-annotated dataset") {
-        showModal(modalDialog(
-          title = "Result",
-          paste0("The patient has a ", predict_new_data()$resp_prob, " chance of responding to the chosen
-              treatment type (", predict_new_data()$chosen_treatment, ")."),
-          downloadButton('download_new_prediction_results', 'Download results'),
-          easyClose = TRUE
-        ))
+        return(NULL)  # Return NULL to not display any plot for this case
       } else {
         p = predict_new_data()$plot
         if (is.null(p)) {
-          showModal(modalDialog(
-            title = "Result",
-            "No ROC plot could be generated.",
-            downloadButton('download_new_prediction_results', 'Download results'),
-            easyClose = TRUE
-          ))
+          return(NULL)  # Return NULL to not display any plot when the plot is NULL
         } else {
           auc_val = predict_new_data()$auc
-          
-          p
+          plot(p)
           # Add legend
-          legend(0.5, 0.25, legend=paste0("AUC = ", auc_val),
-                 col="#2A5674", lty=1, cex=0.8)
-          
+          legend("bottomright", legend=paste0("AUC = ", auc_val), col="#2A5674", lty=1, cex=0.8)
+        }
+      }
+    })
+  })
+  
+  # Text output
+  output$results_text <- renderText({
+    req(input$predict_new_prediction_breast_cancer)
+    isolate({
+      if (import_data_type() != "Import pre-annotated dataset") {
+        paste0("The patient has a ", predict_new_data()$resp_prob, " chance of responding to the chosen treatment type (", predict_new_data()$chosen_treatment, ").")
+      } else {
+        p = predict_new_data()$plot
+        if (is.null(p)) {
+          "No ROC plot could be generated."
+        } else {
+          NULL  # No text information to display when the plot is not NULL
         }
       }
     })
@@ -2350,12 +2353,58 @@ server <- function(input, output, session) {
   
   # Downloadable output
   output$download_new_prediction_results <- downloadHandler(
-    filename = "my_response_prediction.csv",
-    content = function(file) {
-      data <- predict_new_data()$predictions
-      write.csv(newdata, file, row.names = FALSE)
+    filename = function() {
+      paste("results_", Sys.Date(), ".zip", sep = "")
+    },
+    content = function(con) {
+      tmpdir <- tempdir()
+      
+      # Call the predict_new_data function once and store the result
+      prediction_result <- predict_new_data()
+      p <- prediction_result$plot
+      auc_val <- prediction_result$auc
+      
+      # Always save the new data as an excel file
+      newdata <- prediction_result$predictions
+      if (!is.null(newdata)) {
+        xlsx_path <- file.path(tmpdir, "new_data.xlsx")
+        openxlsx::write.xlsx(newdata, xlsx_path)
+      }
+      
+      # If a plot should be included, save it as a png file
+      if (!is.null(p) && !is.null(auc_val)) {
+        png(file.path(tmpdir, "plot.png"))
+        plot(p)
+        legend("bottomright", legend = paste0("AUC = ", auc_val), col = "#2A5674", lty = 1, cex = 0.8)
+        dev.off()
+      }
+      
+      # Save the current working directory
+      owd <- getwd()
+      
+      # Change the working directory to the temporary directory before creating the zip file
+      setwd(tmpdir)
+      
+      # Specify the files to be included in the zip archive by their names
+      file_paths <- c()
+      if (!is.null(newdata)) {
+        file_paths <- c(file_paths, "new_data.xlsx")
+      }
+      if (!is.null(p) && !is.null(auc_val)) {
+        file_paths <- c(file_paths, "plot.png")
+      }
+      
+      # Now let's print the file_paths to the console to debug what is being zipped
+      print(file_paths)
+      
+      # Create a zip file containing all the files (note that we're using relative paths now)
+      zip::zip(zipfile = con, files = file_paths)
+      
+      # Change back to the original working directory after creating the zip file
+      setwd(owd)
     }
   )
+  
   
   # Reset button
   observeEvent(input$reset_new_prediction_breast_cancer, {
