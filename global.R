@@ -23,13 +23,13 @@ library(zip)
 # Load the required data #####
 
 # Breast Cancer ###
-breast_cancer_study_chars = openxlsx::read.xlsx("Study_characteristics.xlsx", sheet = 1)
+breast_cancer_study_chars = openxlsx::read.xlsx("input_data/Study_characteristics.xlsx", sheet = 1)
 breast_cancer_study_chars$Dataset = c("C1", "C2", "C3", "E1_1", "E1_2", "E1_3",
                                       "E2", "E3", "E4_1", "E4_2", "XVC1", "XVC2",
                                       "XVE", "XVC3")
-breast_cancer_Pheno = openxlsx::read.xlsx("Pheno.xlsx", sheet = 1)
-breast_cancer_DGEA = openxlsx::read.xlsx("DGEA.xlsx")
-breast_cancer_extval = openxlsx::read.xlsx("Ext_val.xlsx")
+breast_cancer_Pheno = openxlsx::read.xlsx("input_data/Pheno.xlsx", sheet = 1)
+breast_cancer_DGEA = openxlsx::read.xlsx("input_data/DGEA.xlsx")
+breast_cancer_extval = openxlsx::read.xlsx("input_data/Ext_val.xlsx")
 breast_cancer_full_pheno = rbind(breast_cancer_Pheno, breast_cancer_extval)
 breast_cancer_full_pheno = breast_cancer_full_pheno %>% 
   inner_join(breast_cancer_study_chars %>%
@@ -39,7 +39,7 @@ breast_cancer_full_pheno = breast_cancer_full_pheno %>%
              by = "Dataset")
 
 # Read in consensus data
-breast_cancer_consensus_set = readRDS("annotation_for_heatmap.rds")
+breast_cancer_consensus_set = readRDS("input_data/annotation_for_heatmap.rds")
 
 # Enrich consensus data
 breast_cancer_consensus_set = breast_cancer_consensus_set %>% 
@@ -58,22 +58,22 @@ breast_cancer_full_pheno = breast_cancer_full_pheno %>%
   dplyr::rename(Mammaprint_risk = new_Mamma)
 
 # Read in ML models
-RegLogR = readRDS("Reg_LogR.rds")
-BackLogR = readRDS("Back_LogR.rds")
+RegLogR = readRDS("input_data/Reg_LogR.rds")
+BackLogR = readRDS("input_data/Back_LogR.rds")
 LogR = list(`Lasso-regularised` = RegLogR,
             Backward = BackLogR)
-DT = readRDS("DT.rds")
-SVM = readRDS("SVM.rds")
+DT = readRDS("input_data/DT.rds")
+SVM = readRDS("input_data/SVM.rds")
 ML = list(`Logistic Regression` = c("Lasso-regularised", "Backward"),
           `Decision Trees` = DT,
           `Support Vector Machines` = SVM)
 ML[["Logistic Regression"]] = LogR
 
 # Read in ready-for-predictions data
-train = readRDS("train_set.rds") 
-validation = readRDS("validation_set.rds")
-test = readRDS("test_set.rds")
-extval = readRDS("ext_val_set.rds")
+train = readRDS("input_data/train_set.rds") 
+validation = readRDS("input_data/validation_set.rds")
+test = readRDS("input_data/test_set.rds")
+extval = readRDS("input_data/ext_val_set.rds")
 exprs_samples = c(train$Sample.ID, validation$Sample.ID)
 
 ml_set = rbind(train, validation, test, extval)
@@ -88,7 +88,7 @@ full_ml_set = ml_set %>%
   dplyr::select(-Meno)
 
 # Read in expression matrix of training and validation samples
-z_exprs = readRDS("normalised_expression.rds")
+z_exprs = readRDS("input_data/normalised_expression.rds")
 Pheno_exprs = breast_cancer_full_pheno[breast_cancer_full_pheno$Sample.ID %in% 
                                          exprs_samples,]
 z_exprs = z_exprs[breast_cancer_DGEA$EntrezGene.ID,]
