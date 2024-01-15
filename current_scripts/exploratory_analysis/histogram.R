@@ -29,27 +29,28 @@ prepare_histogram <- reactive({
   
   # Plot
   plot_ly(data = breast_cancer_full_pheno[subset_breast_hist,], 
-          x = breast_cancer_full_pheno[subset_breast_hist,input$histvar_select_breast],
+          x = breast_cancer_full_pheno[subset_breast_hist, input$histvar_select_breast],
           type = "histogram", 
           histnorm = names(hist_types_breast[which(hist_types_breast %in% input$hist_type_breast)]),
           marker = list(color = input$hist_fill_breast,
                         line = list(color = input$hist_color_breast, width = 0.5)),
           autobinx = FALSE, nbinsx = ~input$hist_breast_bins*2, height = 300) %>%
     layout(title = list(text = paste0("<b>Histogram of ", input$histvar_select_breast),
-                        x = 0, y = 0.99, font = list(size  = 10)),
-           annotations = list(x = -0.098, y = 1.065, xref = "paper", yref = "paper",
-                              showarrow = F,
-                              text = paste0("Studies: ",
-                                            c(list(input$hist_dataset_checkbox))),
-                              font = list(size = 8)),
+                        x = 0, y = 0.99, font = list(size  = 14)),
+           # annotations = list(x = -0.062, y = 1.1, xref = "paper", yref = "paper",
+           #                  showarrow = F,
+           #                   text = paste0("Studies: ",
+           #                                  paste(input$hist_dataset_checkbox, collapse = ", ")),
+           #                   font = list(size = 10)),
+           margin = list(t = 50, b = 5),
            xaxis = list(title = list(text = paste0("<b>", input$histvar_select_breast)),
                         linecolor = '#000000',
                         linewidth = 2),
            yaxis = list(title = list(text = y_axis_titles_breast[input$hist_type_breast][[1]]),
                         linecolor = '#000000',
-                        linewidth = 2))
+                        linewidth = 2)
+    )
 })
-
 
 # Plot the breast cancer histogram after the user pressed the "Draw!" button
 output$breast_histogram <- renderPlotly({

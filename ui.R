@@ -205,7 +205,7 @@ body <- dashboardBody(tabItems(
                         # style = "display: flex; margin-right: 3%; margin-top: 3%;",
                         tags$head(tags$link(rel = "stylesheet", type = "text/css",
                                             href = "rgb_button_css.css")),
-                        actionButton(inputId = "draw_breast_barchart", label = "Draw!") %>% 
+                        actionButton(inputId = "draw_breast_hist", label = "Draw!") %>% 
                           tagAppendAttributes(class = 'rgb-button')),
                     
                     # Button to reset inputs to default

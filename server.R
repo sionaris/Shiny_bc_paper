@@ -13,8 +13,8 @@ server <- function(input, output, session) {
   
   # Breast cancer: sunbursts #####
   source("current_scripts/sunburst/sunburst_setup.R", local = TRUE) # general setup
-  source("current_scripts/sunburst/analytical_sunburst.R", local = TRUE) # sunburst for trainval samples
-  source("current_scripts/sunburst/consensus_clustering_sunburst.R", local = TRUE) # sunburts for M3C results
+  source("current_scripts/sunburst/analytical_sunburst.R", local = TRUE) # sunburst for all samples
+  source("current_scripts/sunburst/consensus_clustering_sunburst.R", local = TRUE) # sunburts for M3C results on trainval samples
   
   # Breast Cancer: volcano plot #####
   source("current_scripts/volcano/volcano_plot.R", local = TRUE)
