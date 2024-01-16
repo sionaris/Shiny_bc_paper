@@ -7,7 +7,7 @@ update_subcategory_radios <- function(model_num) {
     
     if(category_input == "Logistic Regression"){
       updateRadioButtons(inputId = subcategory_id,
-                         choices = c("Backward", "Lasso-regularised"),
+                         choices = c("Backward", `Regularised` = "Lasso-regularised"),
                          selected = "Lasso-regularised")
     } else if(category_input == "Decision Trees"){
       updateRadioButtons(inputId = subcategory_id,

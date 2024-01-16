@@ -54,6 +54,30 @@
     background-position: 0 0;
   }
 }
+.rgb-button:hover {
+  color: #E6F6FA;
+}
+
+.rgb-button:focus {
+  color: rgb(255, 255, 255);
+}
+
+.rgb-button:active {
+  display: inline-flex;
+  margin-top: 20%;
+  margin-right: 20%;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
 
 .rgb-button:after {
   z-index: -1;
@@ -65,4 +89,5 @@
   left: 0;
   top: 0;
   border-radius: 10px;
+  color: rgb(255, 255, 255);
 }

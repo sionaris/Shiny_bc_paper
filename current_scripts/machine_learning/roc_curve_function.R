@@ -15,15 +15,15 @@ plot_breast_cancer_ROC <- reactive({
       ER_filter = input$breast_cancer_ml_ER_filter
     )
     
-    results[[1]] <- process_data(input$breast_cancer_ml_model_category, 
-                                 input$breast_cancer_ml_model_subcategory, 
+    results[[1]] <- process_data(input$breast_cancer_ml_model_category_1, 
+                                 input$breast_cancer_ml_model_subcategory_1, 
                                  input_filters_1, 
                                  input$breast_cancer_ml_legend_entry_1, 
                                  ML, 
                                  full_ml_set, 
                                  color = "#2A5674")
     
-    if(input$breast_cancer_ml_model_category == "Support Vector Machines"){
+    if(input$breast_cancer_ml_model_category_1 == "Support Vector Machines"){
       print("ROC plots not available for Support Vector Machines")
     }
     
@@ -40,8 +40,8 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter,
       ER_filter = input$breast_cancer_ml_ER_filter
     )
-    results[[1]] <- process_data(input$breast_cancer_ml_model_category, 
-                                 input$breast_cancer_ml_model_subcategory, 
+    results[[1]] <- process_data(input$breast_cancer_ml_model_category_1, 
+                                 input$breast_cancer_ml_model_subcategory_1, 
                                  input_filters_1, 
                                  input$breast_cancer_ml_legend_entry_1, 
                                  ML, 
@@ -85,8 +85,8 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter,
       ER_filter = input$breast_cancer_ml_ER_filter
     )
-    results[[1]] <- process_data(input$breast_cancer_ml_model_category, 
-                                 input$breast_cancer_ml_model_subcategory, 
+    results[[1]] <- process_data(input$breast_cancer_ml_model_category_1, 
+                                 input$breast_cancer_ml_model_subcategory_1, 
                                  input_filters_1, 
                                  input$breast_cancer_ml_legend_entry_1, 
                                  ML, 

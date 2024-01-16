@@ -64,7 +64,7 @@ LogR = list(`Lasso-regularised` = RegLogR,
             Backward = BackLogR)
 DT = readRDS("input_data/DT.rds")
 SVM = readRDS("input_data/SVM.rds")
-ML = list(`Logistic Regression` = c("Lasso-regularised", "Backward"),
+ML = list(`Logistic Regression` = c("Lasso-egularised", "Backward"),
           `Decision Trees` = DT,
           `Support Vector Machines` = SVM)
 ML[["Logistic Regression"]] = LogR
