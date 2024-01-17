@@ -3,6 +3,20 @@ import_data_type = reactive({ input$breast_cancer_new_prediction_type })
 
 # Disable treatment selection by default
 shinyjs::disable("breast_cancer_new_prediction_treatment")
+# shinyjs::runjs('shinyjs.checkRadioStatus("breast_cancer_new_prediction_treatment")')
+
+# Disable prespecified treatment by default
+observe({
+  # Check the import data type and adjust the radio buttons accordingly
+  if (grepl("Random", import_data_type()) ||
+      import_data_type() == "Import unique sample (genes only)") {
+    shinyjs::disable("breast_cancer_new_prediction_prespecified_treatment")
+  } else {
+    shinyjs::enable("breast_cancer_new_prediction_prespecified_treatment")
+  }
+  # Update the status after enabling/disabling
+  shinyjs::runjs('shinyjs.checkRadioStatus("breast_cancer_new_prediction_prespecified_treatment")')
+})
 
 # File input
 file_input = reactive({ input$breast_cancer_new_prediction_file_input })
@@ -22,9 +36,9 @@ imported_data <- reactiveVal()
 # Hide File input and Import buttons if Random generation is chosen
 observeEvent(import_data_type(), {
   if (grepl("Random", import_data_type())) {
-    shinyjs::hide("breast_cancer_new_prediction_file_input")
-    shinyjs::hide("import_new_prediction_breast_cancer")
-    shinyjs::hide("breast_cancer_new_prediction_prespecified_treatment")
+    shinyjs::disable("breast_cancer_new_prediction_file_input")
+    shinyjs::disable("import_new_prediction_breast_cancer")
+    shinyjs::disable("breast_cancer_new_prediction_prespecified_treatment")
     
     # Generate a 166-slot-long vector of normally distributed values
     genes_vector = rnorm(166, mean = 0, sd = 1)
@@ -89,9 +103,11 @@ observeEvent(import_data_type(), {
     )
     
   } else {
-    shinyjs::show("breast_cancer_new_prediction_file_input")
-    shinyjs::show("import_new_prediction_breast_cancer")
-    shinyjs::show("breast_cancer_new_prediction_prespecified_treatment")
+    shinyjs::enable("breast_cancer_new_prediction_file_input")
+    shinyjs::enable("import_new_prediction_breast_cancer")
+    if (import_data_type() != "Import unique sample (genes only)") {
+      shinyjs::enable("breast_cancer_new_prediction_prespecified_treatment")
+    }
   }
 })
 
@@ -416,6 +432,7 @@ observeEvent(input$breast_cancer_new_prediction_file_input, {
   }
   
   # Treatment
+  #prespecified_treatment_status = input$breast_cancer_new_prediction_prespecified_treatment_status
   treatment_toggle = reactive({ input$breast_cancer_new_prediction_prespecified_treatment })
   observeEvent(treatment_toggle(), {
     if (!is.null(imported_data()) && treatment_toggle() == "No") {

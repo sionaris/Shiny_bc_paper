@@ -109,6 +109,13 @@ train_samples = train$Sample.ID; validation_samples = validation$Sample.ID
 test_samples = test$Sample.ID; extval_samples = extval$Sample.ID
 trainval_samples = c(train_samples, validation_samples)
 
+# JavaScript code to check whether elements are enabled/disabled
+jsCode <- "
+shinyjs.checkRadioStatus = function(id) {
+  var disabled = $('#' + id + ' input').first().is(':disabled');
+  Shiny.setInputValue(id + '_status', disabled);
+};
+"
 rm(breast_cancer_Pheno, breast_cancer_extval, breast_cancer_study_chars,
    RegLogR, BackLogR, DT, SVM, LogR, ml_set, train, validation, test, extval,
    exprs_samples); gc()
