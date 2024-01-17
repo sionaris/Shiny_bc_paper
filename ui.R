@@ -172,7 +172,7 @@ body <- dashboardBody(tabItems
                                 # Button to reset inputs to default
                                 div(
                                   id = "div_default_breast_hist",
-                                  style = "padding-top: 0.5%;",
+                                  style = "padding-top: 0.5%; padding-left: 6.5%;",
                                   tags$head(
                                     tags$link(rel = "stylesheet", type = "text/css",
                                               href = "default_button.css")
@@ -385,7 +385,7 @@ body <- dashboardBody(tabItems
                                     icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                   ) %>%
                                     tagAppendAttributes(class = 'default-button'),
-                                  style = "padding-top: 0.5%;"
+                                  style = "padding-top: 0.5%; padding-left: 6.5%;"
                                 ),
                                 
                                 # Add an info button (pop up with shinyalert())
@@ -599,7 +599,7 @@ body <- dashboardBody(tabItems
                                       icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                     ) %>%
                                       tagAppendAttributes(class = 'default-button'),
-                                    style = "padding-top: 0.5%;"
+                                    style = "padding-top: 0.5%; padding-left: 6.5%;"
                                   ),
                                   
                                   # Add an info button (pop up with shinyalert())
@@ -779,7 +779,7 @@ body <- dashboardBody(tabItems
                                       icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                     ) %>%
                                       tagAppendAttributes(class = 'default-button'),
-                                    style = "padding-top: 0.5%;"
+                                    style = "padding-top: 0.5%; padding-left: 6.5%;"
                                   ),
                                   
                                   # Add an info button (pop up with shinyalert())
@@ -921,7 +921,7 @@ body <- dashboardBody(tabItems
                                     icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                   ) %>%
                                     tagAppendAttributes(class = "default-button"),
-                                  style = "padding-right: 5%;"
+                                  style = "padding-left: 5%;"
                                 ),
                                 
                                 # Add an info button (pop up with shinyalert())
@@ -1134,11 +1134,11 @@ body <- dashboardBody(tabItems
                                       ),
                                       actionButton("multiple_rocs_breast", "Add/Remove comparison") %>%
                                         tagAppendAttributes(class = "comparisons-button"),
-                                      style = "display: flex; justify-content: center; align-items: center;"
+                                      style = "display: flex; justify-content: center; align-items: center; padding-top: 3%;"
                                     ),
                                     div(
                                       id = "div_model1_trigger_buttons",
-                                      style = "display: flex; width: 100%; align-content: center; justify-content: center; height: 100px;",
+                                      style = "display: flex; width: 100%; align-content: center; justify-content: center;",
                                       # add "Predict" - button that triggers the prediction model on the selected data
                                       div(
                                         id = "div_model1_prediction_button",
@@ -1148,7 +1148,7 @@ body <- dashboardBody(tabItems
                                           icon = icon("eye", style = "margin-right: 5px; vertical-align: middle;")
                                         ) %>%
                                           tagAppendAttributes(class = "rgb-button"),
-                                        style = "padding-left: 25%; padding-top: 5%;",
+                                        style = "padding-left: 15%; padding-top: 9%;",
                                       ),
                                       
                                       # Button to reset inputs to default
@@ -1160,7 +1160,7 @@ body <- dashboardBody(tabItems
                                           icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                         ) %>%
                                           tagAppendAttributes(class = "default-button"),
-                                        style = "padding-right: 5%; padding-top: 8%; margin-left: -1.2em;",
+                                        style = "padding-right: 5%; padding-top: 10.5%; padding-left: 5%;",
                                       ),
                                       
                                       # add "Info" button
@@ -1172,7 +1172,7 @@ body <- dashboardBody(tabItems
                                           icon = icon("circle-info", style = "margin-right: 5px; vertical-align: middle;")
                                         ) %>%
                                           tagAppendAttributes(class = "info-button"),
-                                        style = "padding-right: 25%; padding-top: 5%;"
+                                        style = "padding-right: 15%; padding-top: 9%;"
                                       )
                                     )
                                   )
@@ -1374,7 +1374,7 @@ body <- dashboardBody(tabItems
                                                      icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                                    ) %>%
                                                      tagAppendAttributes(class = "default-button"),
-                                                   style = "padding-right: 5%; padding-top: 8%; margin-left: -1.2em;"
+                                                   style = "padding-top: 12%; padding-left: 3%;"
                                                  )
                                                )
                                              )
@@ -1568,7 +1568,7 @@ body <- dashboardBody(tabItems
                                                      icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                                    ) %>%
                                                      tagAppendAttributes(class = "default-button"),
-                                                   style = "padding-right: 5%; padding-top: 8%; margin-left: -1.2em;"
+                                                   style = "padding-top: 12%; padding-left: 3%;"
                                                  )
                                                )
                                              )
@@ -2168,7 +2168,7 @@ body <- dashboardBody(tabItems
                                 ),
                                 div(
                                   id = "div_custom_dgea_reset_button",
-                                  style = "padding-top: 0.4%; padding-right: 1.35%;",
+                                  style = "padding-top: 0.25%; padding-left: 2%;",
                                   actionButton(
                                     "reset_input_breast_custom_DGEA",
                                     "Default settings",
@@ -2214,7 +2214,8 @@ body <- dashboardBody(tabItems
                                   status = "warning",
                                   width = 12,
                                   solidHeader = TRUE,
-                                  DT::dataTableOutput("breast_cancer_custom_toptable")
+                                  DT::dataTableOutput("breast_cancer_custom_toptable"),
+                                  downloadButton("download_data_custom_DGEA", "Download")
                                 )
                               ))
                             )

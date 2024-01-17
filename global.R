@@ -20,6 +20,17 @@ library(limma)
 library(later)
 library(zip)
 
+# In case you want to export plotly output (not used here)
+# library(reticulate)
+
+# If kaleido is not installed, install it:
+# reticulate::install_miniconda(force = TRUE)
+# reticulate::conda_install('r-reticulate', 'python-kaleido')
+# reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
+
+# Remember to untick automatic Python env loading in Tools -> Global Options -> Python
+# reticulate::use_miniconda('r-reticulate')
+
 # Load the required data #####
 
 # Breast Cancer ###
