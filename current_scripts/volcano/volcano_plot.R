@@ -37,7 +37,7 @@ prepare_volcano <- reactive({
                                      breast_cancer_DGEA$logFC<input$logFC_breast*-1] = 
     paste0("DE<-", input$logFC_breast," s.d. & p<", input$pval_breast)
   breast_cancer_DGEA$volc_p_status[breast_cancer_DGEA$adj.P.Val<input$pval_breast &
-                                     abs(breast_cancer_DGEA$logFC)>input$logFC_breast] = 
+                                     breast_cancer_DGEA$logFC>input$logFC_breast] = 
     paste0("DE>", input$logFC_breast," s.d. & p<", input$pval_breast)
   breast_cancer_DGEA$volc_p_status = factor(breast_cancer_DGEA$volc_p_status,
                                             levels = c("Not Significant", 
