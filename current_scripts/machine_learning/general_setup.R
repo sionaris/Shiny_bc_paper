@@ -59,6 +59,13 @@ observeEvent(input$multiple_rocs_breast_2, {
   }
 })
 
+# Additional button to remove the third model
+observeEvent(input$multiple_rocs_breast_3, {
+  if(input$multiple_rocs_breast_3 %% 2 == 1){
+    shinyjs::hide("model_select_breast_3")
+  }
+})
+
 # If the user clicks apply then set the counter to 2
 observeEvent(input$apply_comparison_breast_3, {
   counter$counter = 3

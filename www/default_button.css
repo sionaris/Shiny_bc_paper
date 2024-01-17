@@ -1,9 +1,9 @@
 .default-button {
-  margin-left: 20%;
+  /*margin-left: 20%;
   margin-right: 20%;
   margin-top: 10%;
-  padding-top: 5%;
-  padding-bottom: 5%;
+  margin-right: 20%;
+  padding-bottom: 5%;*/
   /* align-items: center; */
     appearance: none;
   background-image: radial-gradient(100% 100% at 100% 0, #676A67 0, #B2E5ED 100%);

@@ -818,7 +818,7 @@ body <- dashboardBody(tabItems
                               status = "primary",
                               solidHeader = TRUE,
                               collapsible = TRUE,
-                              width = 9,
+                              width = 8,
                               height = 820,
                               plotlyOutput("breast_volcano")
                             ),
@@ -830,7 +830,7 @@ body <- dashboardBody(tabItems
                               status = "warning",
                               solidHeader = TRUE,
                               collapsible = TRUE,
-                              width = 3,
+                              width = 4,
                               height = 820,
                               shinyjs::useShinyjs(),
                               
@@ -921,13 +921,13 @@ body <- dashboardBody(tabItems
                                     icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                   ) %>%
                                     tagAppendAttributes(class = "default-button"),
-                                  style = "padding-top: 0.5%;"
+                                  style = "padding-right: 5%;"
                                 ),
                                 
                                 # Add an info button (pop up with shinyalert())
                                 div(
                                   id = "div_breast_volcano_info_button",
-                                  style = "padding-left: 13%;",
+                                  style = "padding-left: 5%; padding-top: -5%;",
                                   actionButton(
                                     inputId = "volcano_breast_info",
                                     label = "Info",
@@ -1117,7 +1117,7 @@ body <- dashboardBody(tabItems
                                 column(
                                   3,
                                   wellPanel(
-                                    style = "background-color: transparent; align-items:center; justify-content: center; box-shadow: none; margin-top: 2%; padding-right: 5%; padding-left: 2.5%; padding-top:2%; padding-bottom: 2%; border: 3px solid purple; border-radius: 15px; height: 210px;",
+                                    style = "background-color: transparent; align-items:center; justify-content: center; box-shadow: none; margin-top: 2%; padding-top:2%; padding-bottom: 2%; border: 3px solid purple; border-radius: 15px; height: 210px;",
                                     div(
                                       id = "div_model1_legend",
                                       style = "height: 70px; align-items: center; justify-content:center;",
@@ -1132,9 +1132,9 @@ body <- dashboardBody(tabItems
                                         tags$link(rel = "stylesheet", type = "text/css",
                                                   href = "comparisons_button.css")
                                       ),
-                                      style = "padding-left: 25%; padding-right; 25%; padding-top: 10px;",
                                       actionButton("multiple_rocs_breast", "Add/Remove comparison") %>%
-                                        tagAppendAttributes(class = "comparisons-button")
+                                        tagAppendAttributes(class = "comparisons-button"),
+                                      style = "display: flex; justify-content: center; align-items: center;"
                                     ),
                                     div(
                                       id = "div_model1_trigger_buttons",
@@ -1148,7 +1148,7 @@ body <- dashboardBody(tabItems
                                           icon = icon("eye", style = "margin-right: 5px; vertical-align: middle;")
                                         ) %>%
                                           tagAppendAttributes(class = "rgb-button"),
-                                        style = "padding-left: 10%; padding-right: 5%; padding-top: 5%;",
+                                        style = "padding-left: 25%; padding-top: 5%;",
                                       ),
                                       
                                       # Button to reset inputs to default
@@ -1156,11 +1156,11 @@ body <- dashboardBody(tabItems
                                         id = "div_model1_reset_button",
                                         actionButton(
                                           inputId = "reset_input_breast_ml_model1",
-                                          label = "Reset",
+                                          label = "Default filters",
                                           icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                         ) %>%
                                           tagAppendAttributes(class = "default-button"),
-                                        style = "padding-left: 5%; padding-right: 5%; padding-top: 10%;",
+                                        style = "padding-right: 5%; padding-top: 8%; margin-left: -1.2em;",
                                       ),
                                       
                                       # add "Info" button
@@ -1172,7 +1172,7 @@ body <- dashboardBody(tabItems
                                           icon = icon("circle-info", style = "margin-right: 5px; vertical-align: middle;")
                                         ) %>%
                                           tagAppendAttributes(class = "info-button"),
-                                        style = "padding-left: 5%; padding-right: 10%; padding-top: 5%;"
+                                        style = "padding-right: 25%; padding-top: 5%;"
                                       )
                                     )
                                   )
@@ -1334,7 +1334,7 @@ body <- dashboardBody(tabItems
                                            column(
                                              3,
                                              wellPanel(
-                                               style = "background-color: transparent; align-items:center; justify-content: center; box-shadow: none; margin-top: 2%; padding-right: 5%; padding-left: 2.5%; padding-top:2%; padding-bottom: 2%; border: 3px solid purple; border-radius: 15px; height: 210px;",
+                                               style = "background-color: transparent; align-items:center; justify-content: center; box-shadow: none; margin-top: 2%; padding-top:2%; padding-bottom: 2%; border: 3px solid purple; border-radius: 15px; height: 210px;",
                                                div(
                                                  id = "div_model2_legend",
                                                  style = "height: 70px; align-items: center; justify-content:center;",
@@ -1345,7 +1345,7 @@ body <- dashboardBody(tabItems
                                                # add "Comparison" button
                                                div(
                                                  id = "div_model2_add_remove_comparison_button",
-                                                 style = "padding-left: 25%; padding-right; 25%; padding-top: 10px;",
+                                                 style = "display: flex; justify-content: center; align-items: center;",
                                                  actionButton("multiple_rocs_breast_2", "Add/Remove comparison") %>%
                                                    tagAppendAttributes(class = "comparisons-button")
                                                ),
@@ -1370,11 +1370,11 @@ body <- dashboardBody(tabItems
                                                    id = "div_model2_reset_button",
                                                    actionButton(
                                                      inputId = "reset_input_breast_ml_model2",
-                                                     label = "Reset",
+                                                     label = "Default filters",
                                                      icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                                    ) %>%
                                                      tagAppendAttributes(class = "default-button"),
-                                                   style = "padding-left: 5%; padding-right: 5%; padding-top: 10%;",
+                                                   style = "padding-right: 5%; padding-top: 8%; margin-left: -1.2em;"
                                                  )
                                                )
                                              )
@@ -1536,6 +1536,13 @@ body <- dashboardBody(tabItems
                                                  textInput(inputId = "breast_cancer_ml_legend_entry_3",
                                                            "Name for legend", value = "Model 3")
                                                ),
+                                               # add "Comparison" button
+                                               div(
+                                                 id = "div_model3_add_remove_comparison_button",
+                                                 style = "display: flex; justify-content: center; align-items: center;",
+                                                 actionButton("multiple_rocs_breast_3", "Remove comparison") %>%
+                                                   tagAppendAttributes(class = "comparisons-button")
+                                               ),
                                                div(
                                                  id = "div_model3_trigger_buttons",
                                                  style = "display: flex; width: 100%; align-content: center; justify-content: center; height: 100px;",
@@ -1557,11 +1564,11 @@ body <- dashboardBody(tabItems
                                                    id = "div_model3_reset_button",
                                                    actionButton(
                                                      inputId = "reset_input_breast_ml_model3",
-                                                     label = "Reset",
+                                                     label = "Default filters",
                                                      icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                                    ) %>%
                                                      tagAppendAttributes(class = "default-button"),
-                                                   style = "padding-left: 5%; padding-right: 5%; padding-top: 10%;",
+                                                   style = "padding-right: 5%; padding-top: 8%; margin-left: -1.2em;"
                                                  )
                                                )
                                              )
@@ -2161,10 +2168,10 @@ body <- dashboardBody(tabItems
                                 ),
                                 div(
                                   id = "div_custom_dgea_reset_button",
-                                  style = "padding-top: 1%; height: 30px;",
+                                  style = "padding-top: 0.4%; padding-right: 1.35%;",
                                   actionButton(
                                     "reset_input_breast_custom_DGEA",
-                                    "Reset",
+                                    "Default settings",
                                     icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                   ) %>%
                                     tagAppendAttributes(class = "default-button")
@@ -2177,7 +2184,7 @@ body <- dashboardBody(tabItems
                                     icon = icon("circle-info", style = "margin-right: 5px; vertical-align: middle;")
                                   ) %>%
                                     tagAppendAttributes(class = "info-button"),
-                                  style = "padding-left: 0.5%;"
+                                  style = "padding-left: 1.5%;"
                                 )
                               )
                             ),
