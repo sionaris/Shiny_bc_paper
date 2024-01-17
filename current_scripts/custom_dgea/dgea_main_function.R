@@ -80,16 +80,15 @@ analyse <- reactive({
   
   # Create custom variable to aid in color coding and legend labels later
   topTable$volc_p_status = NA
-  topTable$volc_p_status[topTable$adj.P.Val>input$pval_breast_custom &
-                           abs(topTable$logFC)<input$logFC_breast_custom] = "Not Significant"
-  topTable$volc_p_status[topTable$adj.P.Val>input$pval_breast_custom &
-                           abs(topTable$logFC)>input$logFC_breast_custom] = 
+  topTable$volc_p_status[topTable$adj.P.Val>input$pval_breast_custom] = "Not Significant"
+  topTable$volc_p_status[topTable$adj.P.Val<input$pval_breast_custom &
+                           abs(topTable$logFC)<input$logFC_breast_custom] = 
     paste0("|DE|<", input$logFC_breast_custom," s.d. & p<", input$pval_breast_custom)
   topTable$volc_p_status[topTable$adj.P.Val<input$pval_breast_custom &
                            topTable$logFC < abs(input$logFC_breast_custom)*-1] = 
     paste0("DE<-", input$logFC_breast_custom," s.d. & p<", input$pval_breast_custom)
   topTable$volc_p_status[topTable$adj.P.Val<input$pval_breast_custom &
-                           topTable$logFC>input$logFC_breast_custom] = 
+                           topTable$logFC>abs(input$logFC_breast_custom)] = 
     paste0("DE>", input$logFC_breast_custom," s.d. & p<", input$pval_breast_custom)
   topTable$volc_p_status = factor(topTable$volc_p_status,
                                   levels = c("Not Significant", 
