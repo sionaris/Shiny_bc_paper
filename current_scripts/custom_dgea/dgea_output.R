@@ -14,11 +14,20 @@ output$breast_cancer_custom_toptable <- DT::renderDataTable({
     analyse()$topTable})
 }, options = list(scrollX = TRUE))
 
-# Download table data
+# Downloadable output
 output$download_data_custom_DGEA <- downloadHandler(
-  filename = "topTable.csv",
-  content = function(file) {
-    data <- analyse()$topTable
-    write.csv(data, file, row.names = FALSE)
+  filename = function() {
+    paste0("topTable_", Sys.Date(), ".xlsx")
+  },
+  content = function(con) {
+    # Call the predict_new_data function once and store the result
+    result <- analyse()
+    toptable <- result$topTable
+    
+    # Check if the table is not null
+    if (!is.null(toptable)) {
+      # Directly write the table to the Excel file
+      openxlsx::write.xlsx(toptable, con)
+    }
   }
 )
