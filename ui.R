@@ -1590,7 +1590,8 @@ body <- dashboardBody(tabItems
                             size = "large",
                             fluidRow(column(
                               width = 12,
-                              
+                              tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                                  href = "roc_waiter_adjustments.css")),
                               # A box to plot the ROC curve
                               box(
                                 title = "Model performance",
@@ -1600,6 +1601,7 @@ body <- dashboardBody(tabItems
                                 height = 600,
                                 solidHeader = TRUE,
                                 align = "center",
+                                useWaiter(),
                                 plotOutput(
                                   "breast_cancer_ROC_plot",
                                   width = 500,
@@ -1816,7 +1818,7 @@ body <- dashboardBody(tabItems
                                                  )
                                                )))),
                                     fluidRow(style = "padding-left: 1%;",
-                                      wellPanel(style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-right: 1%; padding-left: 1%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; width: 99%; height: 450px; justify-content: center;",
+                                      wellPanel(style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; width: 99%; height: 450px; justify-content: center;",
                                                        tags$h4("Filters and ROC plot (dataset only)", style = "font-weight: bold;"),
                                                        
                                                        # Use fluidRow and nested columns for the layout inside the first column
@@ -1941,7 +1943,6 @@ body <- dashboardBody(tabItems
                                       size = "large",
                                       fluidRow(column(
                                         width = 12,
-                                        
                                         # A box to plot the ROC curve
                                         box(
                                           title = "Model performance",
@@ -1951,10 +1952,12 @@ body <- dashboardBody(tabItems
                                           height = 600,
                                           solidHeader = TRUE,
                                           align = "center",
+                                          useWaiter(),
                                           plotOutput("newpred_ROC_plot", width = 500, height = 500),
                                           verbatimTextOutput("results_text"),
                                           # Additional output for textual information
-                                          downloadButton('download_new_prediction_results', 'Download results')
+                                          div(id="div_newpred_download_button", style = "padding-top: 1%;",
+                                          downloadButton('download_new_prediction_results', 'Download results'))
                                         )
                                       ))
                                     )

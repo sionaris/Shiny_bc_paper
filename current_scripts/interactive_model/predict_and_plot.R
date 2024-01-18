@@ -88,8 +88,12 @@ predict_new_data <- reactive({
   }
 })
 
+# Create a waiter
+w4 <- Waiter$new(id = "newpred_ROC_plot", ml_loading_screen_solar, "#030649")
+
 # Plot ROC curve
 output$newpred_ROC_plot <- renderPlot({
+  w4$show()
   req(input$predict_new_prediction_breast_cancer)
   isolate({
     if (import_data_type() != "Import pre-annotated dataset") {
@@ -110,6 +114,7 @@ output$newpred_ROC_plot <- renderPlot({
 
 # Text output
 output$results_text <- renderText({
+  w3$show()
   req(input$predict_new_prediction_breast_cancer)
   isolate({
     if (import_data_type() != "Import pre-annotated dataset") {

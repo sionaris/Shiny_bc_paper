@@ -13,7 +13,7 @@
 
 .row-flex-dataset-case {
   display: flex; 
-  justify-content: space-around; 
+  justify-content: space-between; 
   /* align-items: center; */
   /*max-height: 300px;*/
 }

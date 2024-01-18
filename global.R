@@ -117,10 +117,21 @@ shinyjs.checkRadioStatus = function(id) {
   Shiny.setInputValue(id + '_status', disabled);
 };
 "
-# Waiter
+# Waiter for volcano
 volcano_loading_screen <- tagList(
   spin_flower(),
   h4("Volcano loading...")
+)
+
+# Waiter for machine learning predictions
+ml_loading_screen_solar <- tagList(
+  spin_solar(),
+  h4("Making predictions...")
+)
+
+ml_loading_screen_orbit <- tagList(
+  spin_orbit(),
+  div(id="div_orbit_h4", h4("Making predictions..."))
 )
 
 rm(breast_cancer_Pheno, breast_cancer_extval, breast_cancer_study_chars,

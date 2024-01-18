@@ -29,7 +29,7 @@ server <- function(input, output, session) {
          local = TRUE)
   source("current_scripts/machine_learning/roc_curve_function.R",
          local = TRUE)
-  source("current_scripts/machine_learning/roc_observers.R",
+  source("current_scripts/machine_learning/roc_output_and_observers.R",
          local = TRUE)
   
   # Breast Cancer: Custom DGEA #####
