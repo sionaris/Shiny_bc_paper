@@ -810,9 +810,13 @@ body <- dashboardBody(tabItems
                         tabItem(
                           tabName = "breast_cancer_subItem_volcano",
                           h2("Neoadjuvant Treatment (NAT) in Breast Cancer"),
+                          tags$head(tags$link(rel = "stylesheet",
+                                              type = "text/css", 
+                                              href = "volcano_waiter_adjustment.css")),
                           fluidRow(
                             # Volcano plot
-                            box(
+                            div(id="div_volcano_plot_box",
+                                box(
                               id = "Volcano_plot_breast",
                               title = "Volcano plot",
                               status = "primary",
@@ -820,8 +824,9 @@ body <- dashboardBody(tabItems
                               collapsible = TRUE,
                               width = 8,
                               height = 820,
+                              useWaiter(),
                               plotlyOutput("breast_volcano")
-                            ),
+                            )),
                             
                             # Interactive switches and tools for plotting the volcano
                             box(
@@ -1629,7 +1634,7 @@ body <- dashboardBody(tabItems
                                     status = "primary",
                                     solidHeader = TRUE,
                                     width = 12,
-                                    height = 800,
+                                    height = 900,
                                     shinyjs::useShinyjs(),
                                     extendShinyjs(text = jsCode, functions = c("checkRadioStatus")),
                                     tags$head(
@@ -1810,7 +1815,8 @@ body <- dashboardBody(tabItems
                                                    )
                                                  )
                                                )))),
-                                    fluidRow(wellPanel(style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-right: 5%; padding-left: 5%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; height: 300px;",
+                                    fluidRow(style = "padding-left: 1%;",
+                                      wellPanel(style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-right: 1%; padding-left: 1%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; width: 99%; height: 450px; justify-content: center;",
                                                        tags$h4("Filters and ROC plot (dataset only)", style = "font-weight: bold;"),
                                                        
                                                        # Use fluidRow and nested columns for the layout inside the first column
@@ -1896,24 +1902,27 @@ body <- dashboardBody(tabItems
                                                                "iC10"
                                                              )
                                                            )),
+                                                           div(id="newpred_action_buttons", class = "vertical-flex",
                                                            # add "Predict" - button that triggers the prediction model on the selected data
-                                                           div(id="div_newpred_predict_button",
-                                                           actionButton("predict_new_prediction_breast_cancer", "Predict!"
+                                                           div(id="div_newpred_predict_button", style = "padding-top: 20%; padding-bottom: 20%;",
+                                                           actionButton("predict_new_prediction_breast_cancer", "Predict!",
                                                                         # style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"
-                                                                        ) %>%
+                                                                        icon = icon("eye", style = "margin-right: 5px; vertical-align: middle;")) %>%
                                                              tagAppendAttributes(class = "rgb-button")),
                                                            # Button to reset inputs to default
-                                                           div(id="div_reset_button_newpred",
+                                                           div(id="div_reset_button_newpred", style = "padding-bottom: 20%;",
                                                            actionButton(
                                                              inputId = "reset_new_prediction_breast_cancer",
-                                                             label = "Reset parameters"
+                                                             label = "Reset parameters",
+                                                             icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
                                                              #style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"
                                                            ) %>%
                                                              tagAppendAttributes(class = "default-button")),
                                                            # add "Info" button
-                                                           div(id="div_info_button_newpred",
-                                                           actionButton("info_new_prediction_breast_cancer", "Info") %>%
-                                                             tagAppendAttributes(class = "info-button"))
+                                                           div(id="div_info_button_newpred", style = "padding-bottom: 20%;",
+                                                           actionButton("info_new_prediction_breast_cancer", "Info",
+                                                                        icon = icon("circle-info", style = "margin-right: 5px; vertical-align: middle;")) %>%
+                                                             tagAppendAttributes(class = "info-button")))
                                                
                                              )
                                     )),
@@ -2257,6 +2266,7 @@ body <- dashboardBody(tabItems
                                   width = 12,
                                   height = 600,
                                   solidHeader = TRUE,
+                                  useWaiter(),
                                   plotlyOutput("breast_cancer_volcano_custom")
                                 ),
                                 box(

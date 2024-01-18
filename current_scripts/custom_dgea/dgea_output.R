@@ -1,5 +1,9 @@
+# Create a waiter
+w2 <- Waiter$new(id = "breast_cancer_volcano_custom", volcano_loading_screen, "black")
+
 # Plot Volcano
 output$breast_cancer_volcano_custom <- renderPlotly({
+  w2$show()
   input$breast_cancer_DGEA_analyse_button
   isolate({
     res = analyse()

@@ -17,6 +17,7 @@ library(randomcoloR)
 library(data.table)
 library(pROC)
 library(limma)
+library(waiter) # placeholder not available in CRAN in Jan 2024, use remotes::install_github("JohnCoene/waiter")
 library(later)
 library(zip)
 
@@ -116,6 +117,12 @@ shinyjs.checkRadioStatus = function(id) {
   Shiny.setInputValue(id + '_status', disabled);
 };
 "
+# Waiter
+volcano_loading_screen <- tagList(
+  spin_flower(),
+  h4("Volcano loading...")
+)
+
 rm(breast_cancer_Pheno, breast_cancer_extval, breast_cancer_study_chars,
    RegLogR, BackLogR, DT, SVM, LogR, ml_set, train, validation, test, extval,
    exprs_samples); gc()

@@ -97,9 +97,12 @@ prepare_volcano <- reactive({
                     clicktoshow = "onoff")
 })
 
+# Create a waiter
+w <- Waiter$new(id = "breast_volcano", volcano_loading_screen, "black")
 
-# Plot the breast cancer volcano after the user pressed the "Draw!" button
+# Output
 output$breast_volcano <- renderPlotly({
+  w$show()
   input$draw_breast_volcano 
   isolate({prepare_volcano()})
 })
