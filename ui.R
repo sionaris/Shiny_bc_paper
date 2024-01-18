@@ -810,23 +810,27 @@ body <- dashboardBody(tabItems
                         tabItem(
                           tabName = "breast_cancer_subItem_volcano",
                           h2("Neoadjuvant Treatment (NAT) in Breast Cancer"),
-                          tags$head(tags$link(rel = "stylesheet",
-                                              type = "text/css", 
-                                              href = "volcano_waiter_adjustment.css")),
+                          tags$head(
+                            tags$link(rel = "stylesheet",
+                                      type = "text/css",
+                                      href = "volcano_waiter_adjustment.css")
+                          ),
                           fluidRow(
                             # Volcano plot
-                            div(id="div_volcano_plot_box",
-                                box(
-                              id = "Volcano_plot_breast",
-                              title = "Volcano plot",
-                              status = "primary",
-                              solidHeader = TRUE,
-                              collapsible = TRUE,
-                              width = 8,
-                              height = 820,
-                              useWaiter(),
-                              plotlyOutput("breast_volcano")
-                            )),
+                            div(
+                              id = "div_volcano_plot_box",
+                              box(
+                                id = "Volcano_plot_breast",
+                                title = "Volcano plot",
+                                status = "primary",
+                                solidHeader = TRUE,
+                                collapsible = TRUE,
+                                width = 8,
+                                height = 820,
+                                useWaiter(),
+                                plotlyOutput("breast_volcano")
+                              )
+                            ),
                             
                             # Interactive switches and tools for plotting the volcano
                             box(
@@ -1137,7 +1141,7 @@ body <- dashboardBody(tabItems
                                         tags$link(rel = "stylesheet", type = "text/css",
                                                   href = "comparisons_button.css")
                                       ),
-                                      actionButton("multiple_rocs_breast", "Add/Remove comparison") %>%
+                                      actionButton("multiple_rocs_breast", "Add comparison") %>%
                                         tagAppendAttributes(class = "comparisons-button"),
                                       style = "display: flex; justify-content: center; align-items: center; padding-top: 3%;"
                                     ),
@@ -1339,6 +1343,8 @@ body <- dashboardBody(tabItems
                                            column(
                                              3,
                                              wellPanel(
+                                               tags$head(tags$link(rel = "stylesheet", type = "text/css",
+                                                                   href = "remove_comparisons_button.css")),
                                                style = "background-color: transparent; align-items:center; justify-content: center; box-shadow: none; margin-top: 2%; padding-top:2%; padding-bottom: 2%; border: 3px solid purple; border-radius: 15px; height: 210px;",
                                                div(
                                                  id = "div_model2_legend",
@@ -1348,12 +1354,19 @@ body <- dashboardBody(tabItems
                                                            "Name for legend", value = "Model 2")
                                                ),
                                                # add "Comparison" button
-                                               div(
-                                                 id = "div_model2_add_remove_comparison_button",
+                                               div(id="div_model2_comparison_buttons", style = "display: flex; justify-content: space-around;",
+                                                   div(
+                                                 id = "div_model2_add_comparison_button",
                                                  style = "display: flex; justify-content: center; align-items: center;",
-                                                 actionButton("multiple_rocs_breast_2", "Add/Remove comparison") %>%
+                                                 actionButton("multiple_rocs_breast_2", "Add new comparison") %>%
                                                    tagAppendAttributes(class = "comparisons-button")
                                                ),
+                                               div(
+                                                 id = "div_model2_remove_comparison_button",
+                                                 style = "display: flex; justify-content: center; align-items: center;",
+                                                 actionButton("multiple_rocs_breast_2_remove", "Remove") %>%
+                                                   tagAppendAttributes(class = "remove-comparisons-button")
+                                               )),
                                                div(
                                                  id = "div_model2_trigger_buttons",
                                                  style = "display: flex; width: 100%; align-content: center; justify-content: center; height: 100px;",
@@ -1590,8 +1603,10 @@ body <- dashboardBody(tabItems
                             size = "large",
                             fluidRow(column(
                               width = 12,
-                              tags$head(tags$link(rel = "stylesheet", type = "text/css",
-                                                  href = "roc_waiter_adjustments.css")),
+                              tags$head(
+                                tags$link(rel = "stylesheet", type = "text/css",
+                                          href = "roc_waiter_adjustments.css")
+                              ),
                               # A box to plot the ROC curve
                               box(
                                 title = "Model performance",
@@ -1642,292 +1657,338 @@ body <- dashboardBody(tabItems
                                     tags$head(
                                       tags$link(rel = "stylesheet", type = "text/css", href = "uniform_select_input.css")
                                     ),
-                                    fluidRow(
-                                      column(
-                                        4,
-                                        wellPanel(
-                                          style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-right: 2.5%; padding-left: 5%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; height: 300px;",
-                                          tags$h4("Import data for prediction", style = "font-weight: bold;"),
-                                          
-                                          # Use fluidRow and nested columns for the layout inside the first column
-                                          fluidRow(
-                                            column(
-                                              6,
-                                              div(id="div_import_radio_buttons",
-                                                  radioButtons(
-                                                    inputId = "breast_cancer_new_prediction_type",
-                                                    label = "Select new data type",
-                                                    choices = c(
-                                                      "Random sample",
-                                                      "Import unique sample (genes only)",
-                                                      "Import unique sample (pre-annotated)",
-                                                      "Import pre-annotated dataset"
-                                                    ),
-                                                    selected = "Import unique sample (genes only)",
-                                                    width = "200px"
-                                                  )
-                                              )
-                                            ),
-                                            column(
-                                              6,
-                                              div(id="div_prespecified_treatment",
-                                                  radioButtons(
-                                                    inputId = "breast_cancer_new_prediction_prespecified_treatment",
-                                                    label = "Treatment column ('Endo')",
-                                                    choices = c("Yes", "No"),
-                                                    selected = "Yes",
-                                                    width = "200px"
-                                                  )
+                                    fluidRow(column(
+                                      4,
+                                      wellPanel(
+                                        style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-right: 2.5%; padding-left: 5%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; height: 300px;",
+                                        tags$h4("Import data for prediction", style = "font-weight: bold;"),
+                                        
+                                        # Use fluidRow and nested columns for the layout inside the first column
+                                        fluidRow(column(
+                                          6,
+                                          div(
+                                            id = "div_import_radio_buttons",
+                                            radioButtons(
+                                              inputId = "breast_cancer_new_prediction_type",
+                                              label = "Select new data type",
+                                              choices = c(
+                                                "Random sample",
+                                                "Import unique sample (genes only)",
+                                                "Import unique sample (pre-annotated)",
+                                                "Import pre-annotated dataset"
                                               ),
-                                              div(id="div_upload_button",
-                                                  fileInput(
-                                                    "breast_cancer_new_prediction_file_input",
-                                                    "Choose file",
-                                                    multiple = FALSE,
-                                                    accept = c(".txt", ".csv", ".xlsx", ".tsv")
-                                                  )
-                                              )
+                                              selected = "Import unique sample (genes only)",
+                                              width = "200px"
+                                            )
+                                          )
+                                        ),
+                                        column(
+                                          6,
+                                          div(
+                                            id = "div_prespecified_treatment",
+                                            radioButtons(
+                                              inputId = "breast_cancer_new_prediction_prespecified_treatment",
+                                              label = "Treatment column ('Endo')",
+                                              choices = c("Yes", "No"),
+                                              selected = "Yes",
+                                              width = "200px"
+                                            )
+                                          ),
+                                          div(
+                                            id = "div_upload_button",
+                                            fileInput(
+                                              "breast_cancer_new_prediction_file_input",
+                                              "Choose file",
+                                              multiple = FALSE,
+                                              accept = c(".txt", ".csv", ".xlsx", ".tsv")
+                                            )
+                                          )
+                                        ))
+                                      )
+                                    ),
+                                    column(
+                                      8,
+                                      wellPanel(
+                                        style = "background-color: transparent; box-shadow: none; margin-top: 1%; padding-right: 1.25%; padding-left: 2.5%; padding-top:1%; padding-bottom: 1%; border: 3px solid #093773; border-radius: 15px; height: 300px;",
+                                        tags$h4("Edit phenotypic variables", style = "font-weight: bold;"),
+                                        fluidRow(
+                                          class = "row-flex",
+                                          # Treatment
+                                          div(
+                                            class = "uniform-select",
+                                            id = "div_choose_treatment_newpred",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_treatment",
+                                              "Select treatment",
+                                              choices = c("Chemotherapy", "Endocrine treatment"),
+                                              selected = "Chemotherapy"#,
+                                              #width = "150px"
+                                            )
+                                          ),
+                                          # pam50
+                                          div(
+                                            id = "div_choose_pam50_newpred",
+                                            class = "uniform-select",
+                                            #style = "padding-left: 2%; padding-right: 2%; width: 180px;",
+                                            selectInput(
+                                              inputId = "breast_cancer_new_prediction_pam50_annotation",
+                                              "pam50",
+                                              choices = c("Preset", "Random", sort(
+                                                c("Luminal A", "Luminal B", "Normal-like",
+                                                  "Basal-like", "HER2+")
+                                              )),
+                                              selected = "Random"
+                                            )
+                                          ),
+                                          # scmod1
+                                          div(
+                                            id = "div_choose_scmod1_newpred",
+                                            class = "uniform-select",
+                                            #style = "padding-right: 2%; width: 180px;",
+                                            selectInput(
+                                              inputId = "breast_cancer_new_prediction_scmod1_annotation",
+                                              "scmod1",
+                                              choices = c("Preset", "Random", sort(
+                                                c(
+                                                  "ER-/HER2-",
+                                                  "ER+/HER2- high proliferation",
+                                                  "ER+/HER2- low proliferation",
+                                                  "HER2+"
+                                                )
+                                              )),
+                                              selected = "Random"
+                                            )
+                                          ),
+                                          # Timepoint
+                                          div(
+                                            id = "div_choose_timepoint_newpred",
+                                            class = "uniform-select",
+                                            #style = "padding-right: 2%; width: 180px;",
+                                            selectInput(
+                                              inputId = "breast_cancer_new_prediction_timepoint_annotation",
+                                              "Timepoint",
+                                              choices = c("Preset", "Random",
+                                                          sort(c(
+                                                            "Pre-treatment", "On-treatment"
+                                                          ))),
+                                              selected = "Random"
+                                            )
+                                          )
+                                        ),
+                                        fluidRow(
+                                          class = "row-flex",
+                                          # iC10
+                                          div(
+                                            id = "div_choose_ic10_newpred",
+                                            class = "uniform-select",
+                                            # style = "padding-right: 2%; width: 180px;",
+                                            selectInput(
+                                              inputId = "breast_cancer_new_prediction_ic10_annotation",
+                                              "Integrative Clusters",
+                                              choices = c(
+                                                "Preset",
+                                                "Random",
+                                                c(
+                                                  "iC1",
+                                                  "iC2",
+                                                  "iC3",
+                                                  "iC4",
+                                                  "iC5",
+                                                  "iC6",
+                                                  "iC7",
+                                                  "iC8",
+                                                  "iC9",
+                                                  "iC10"
+                                                )
+                                              ),
+                                              selected = "Random"
+                                            )
+                                          ),
+                                          # Mammaprint
+                                          div(
+                                            id = "div_choose_mammaprint_newpred",
+                                            class = "uniform-select",
+                                            # style = "padding-right: 2%; width: 180px;",
+                                            selectInput(
+                                              inputId = "breast_cancer_new_prediction_mammaprint_annotation",
+                                              "Mammaprint",
+                                              choices = c("Preset", "Random",
+                                                          sort(c("At risk", "No risk"))),
+                                              selected = "Random"
+                                            )
+                                          ),
+                                          # rorS
+                                          div(
+                                            id = "div_choose_rors_newpred",
+                                            class = "uniform-select",
+                                            # style = "width: 180px;",
+                                            selectInput(
+                                              inputId = "breast_cancer_new_prediction_rors_annotation",
+                                              "rorS (Risk of relapse)",
+                                              choices = c("Preset", "Random",
+                                                          sort(c(
+                                                            "High", "Intermediate", "Low"
+                                                          ))),
+                                              selected = "Random"
                                             )
                                           )
                                         )
-                                      ),
-                                      column(8, 
-                                             wellPanel(
-                                               style = "background-color: transparent; box-shadow: none; margin-top: 1%; padding-right: 1.25%; padding-left: 2.5%; padding-top:1%; padding-bottom: 1%; border: 3px solid #093773; border-radius: 15px; height: 300px;",
-                                               tags$h4("Edit phenotypic variables", style = "font-weight: bold;"),
-                                               fluidRow(
-                                                 class = "row-flex",
-                                                 # Treatment
-                                                 div(
-                                                   class = "uniform-select",
-                                                   id = "div_choose_treatment_newpred",
-                                                   radioButtons(
-                                                     "breast_cancer_new_prediction_treatment",
-                                                     "Select treatment",
-                                                     choices = c("Chemotherapy", "Endocrine treatment"),
-                                                     selected = "Chemotherapy"#,
-                                                     #width = "150px"
-                                                   )
-                                                 ),
-                                                 # pam50
-                                                 div(
-                                                   id = "div_choose_pam50_newpred",
-                                                   class = "uniform-select",
-                                                   #style = "padding-left: 2%; padding-right: 2%; width: 180px;",
-                                                   selectInput(
-                                                     inputId = "breast_cancer_new_prediction_pam50_annotation",
-                                                     "pam50",
-                                                     choices = c("Preset", "Random", sort(
-                                                       c("Luminal A", "Luminal B", "Normal-like",
-                                                         "Basal-like", "HER2+")
-                                                     )),
-                                                     selected = "Random"
-                                                   )
-                                                 ),
-                                                 # scmod1
-                                                 div(
-                                                   id = "div_choose_scmod1_newpred",
-                                                   class = "uniform-select",
-                                                   #style = "padding-right: 2%; width: 180px;",
-                                                   selectInput(
-                                                     inputId = "breast_cancer_new_prediction_scmod1_annotation",
-                                                     "scmod1",
-                                                     choices = c("Preset", "Random", sort(
-                                                       c(
-                                                         "ER-/HER2-",
-                                                         "ER+/HER2- high proliferation",
-                                                         "ER+/HER2- low proliferation",
-                                                         "HER2+"
-                                                       )
-                                                     )),
-                                                     selected = "Random"
-                                                   )
-                                                 ),
-                                                 # Timepoint
-                                                 div(
-                                                   id = "div_choose_timepoint_newpred",
-                                                   class = "uniform-select",
-                                                   #style = "padding-right: 2%; width: 180px;",
-                                                   selectInput(
-                                                     inputId = "breast_cancer_new_prediction_timepoint_annotation",
-                                                     "Timepoint",
-                                                     choices = c("Preset", "Random",
-                                                                 sort(c(
-                                                                   "Pre-treatment", "On-treatment"
-                                                                 ))),
-                                                     selected = "Random"
-                                                   )
-                                                 )
-                                               ),
-                                               fluidRow(
-                                                 class = "row-flex",
-                                                 # iC10
-                                                 div(
-                                                   id = "div_choose_ic10_newpred",
-                                                   class = "uniform-select",
-                                                   # style = "padding-right: 2%; width: 180px;",
-                                                   selectInput(
-                                                     inputId = "breast_cancer_new_prediction_ic10_annotation",
-                                                     "Integrative Clusters",
-                                                     choices = c(
-                                                       "Preset",
-                                                       "Random",
-                                                       c(
-                                                         "iC1",
-                                                         "iC2",
-                                                         "iC3",
-                                                         "iC4",
-                                                         "iC5",
-                                                         "iC6",
-                                                         "iC7",
-                                                         "iC8",
-                                                         "iC9",
-                                                         "iC10"
-                                                       )
-                                                     ),
-                                                     selected = "Random"
-                                                   )
-                                                 ),
-                                                 # Mammaprint
-                                                 div(
-                                                   id = "div_choose_mammaprint_newpred",
-                                                   class = "uniform-select",
-                                                   # style = "padding-right: 2%; width: 180px;",
-                                                   selectInput(
-                                                     inputId = "breast_cancer_new_prediction_mammaprint_annotation",
-                                                     "Mammaprint",
-                                                     choices = c("Preset", "Random",
-                                                                 sort(c("At risk", "No risk"))),
-                                                     selected = "Random"
-                                                   )
-                                                 ),
-                                                 # rorS
-                                                 div(
-                                                   id = "div_choose_rors_newpred",
-                                                   class = "uniform-select",
-                                                   # style = "width: 180px;",
-                                                   selectInput(
-                                                     inputId = "breast_cancer_new_prediction_rors_annotation",
-                                                     "rorS (Risk of relapse)",
-                                                     choices = c("Preset", "Random",
-                                                                 sort(c(
-                                                                   "High", "Intermediate", "Low"
-                                                                 ))),
-                                                     selected = "Random"
-                                                   )
-                                                 )
-                                               )))),
-                                    fluidRow(style = "padding-left: 1%;",
-                                      wellPanel(style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; width: 99%; height: 450px; justify-content: center;",
-                                                       tags$h4("Filters and ROC plot (dataset only)", style = "font-weight: bold;"),
-                                                       
-                                                       # Use fluidRow and nested columns for the layout inside the first column
-                                                       fluidRow(class = "row-flex-dataset-case",
-                                                           # ROC plot (if possible: datasets with Response column)
-                                                           div(id="div_roc_plot_radio_buttons_newpred", class = "uniform-select-dataset-case",
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_roc",
-                                                             "Produce ROC plot?",
-                                                             choices = c("Yes", "No"),
-                                                             selected = "No"
-                                                           )),
-                                                           # Filter for timepoint
-                                                           div(id="div_timepoint_filter_newpred", class = "uniform-select-dataset-case",
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_timepoint_filter",
-                                                             "Timepoint filter",
-                                                             selected = "All",
-                                                             choices = c("All", "Pre-treatment", "On-treatment")
-                                                           )),
-                                                           # Filter for pam50
-                                                           div(id="div_pam50_filter_newpred", class = "uniform-select-dataset-case",
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_pam50_filter",
-                                                             "pam50 filter",
-                                                             selected = "All",
-                                                             choices = c(
-                                                               "All",
-                                                               "Luminal A",
-                                                               "Luminal B",
-                                                               "Normal-like",
-                                                               "Basal-like",
-                                                               "HER2+"
-                                                             )
-                                                           )),
-                                                           # Filter for scmod1
-                                                           div(id="div_scmod1_filter_newpred", class = "uniform-select-dataset-case",
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_scmod1_filter",
-                                                             "scmod1 filter",
-                                                             selected = "All",
-                                                             choices = c(
-                                                               "All",
-                                                               "ER-/HER2-",
-                                                               "ER+/HER2- high proliferation",
-                                                               "ER+/HER2- low proliferation",
-                                                               "HER2+"
-                                                             )
-                                                           )),
-                                                           # Filter for rorS risk
-                                                           div(id="div_rors_filter_newpred", class = "uniform-select-dataset-case",
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_rorS_filter",
-                                                             "Risk of recurrence",
-                                                             selected = "All",
-                                                             choices = c("All", "High", "Intermediate", "Low")
-                                                           )),
-                                                           # Filter for Mammaprint risk
-                                                           div(id="div_mammaprint_filter_newpred", class = "uniform-select-dataset-case",
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_Mammaprint_filter",
-                                                             "Mammaprint risk",
-                                                             selected = "All",
-                                                             choices = c("All", "At risk", "No risk")
-                                                           )),
-                                                           # Filter for iC10
-                                                           div(id="div_ic10_filter_newpred", class = "uniform-select-dataset-case", 
-                                                           radioButtons(
-                                                             "breast_cancer_new_prediction_ic10_filter",
-                                                             "iC10 filter",
-                                                             selected = "All",
-                                                             choices = c(
-                                                               "All",
-                                                               "iC1",
-                                                               "iC2",
-                                                               "iC3",
-                                                               "iC4",
-                                                               "iC5",
-                                                               "iC6",
-                                                               "iC7",
-                                                               "iC8",
-                                                               "iC9",
-                                                               "iC10"
-                                                             )
-                                                           )),
-                                                           div(id="newpred_action_buttons", class = "vertical-flex",
-                                                           # add "Predict" - button that triggers the prediction model on the selected data
-                                                           div(id="div_newpred_predict_button", style = "padding-top: 20%; padding-bottom: 20%;",
-                                                           actionButton("predict_new_prediction_breast_cancer", "Predict!",
-                                                                        # style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"
-                                                                        icon = icon("eye", style = "margin-right: 5px; vertical-align: middle;")) %>%
-                                                             tagAppendAttributes(class = "rgb-button")),
-                                                           # Button to reset inputs to default
-                                                           div(id="div_reset_button_newpred", style = "padding-bottom: 20%;",
-                                                           actionButton(
-                                                             inputId = "reset_new_prediction_breast_cancer",
-                                                             label = "Reset parameters",
-                                                             icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
-                                                             #style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"
-                                                           ) %>%
-                                                             tagAppendAttributes(class = "default-button")),
-                                                           # add "Info" button
-                                                           div(id="div_info_button_newpred", style = "padding-bottom: 20%;",
-                                                           actionButton("info_new_prediction_breast_cancer", "Info",
-                                                                        icon = icon("circle-info", style = "margin-right: 5px; vertical-align: middle;")) %>%
-                                                             tagAppendAttributes(class = "info-button")))
-                                               
-                                             )
+                                      )
                                     )),
+                                    fluidRow(
+                                      style = "padding-left: 1%;",
+                                      wellPanel(
+                                        style = "background-color: transparent; box-shadow: none; margin-top: 2%; padding-top:2%; padding-bottom: 2%; border: 3px solid #093773; border-radius: 15px; width: 99%; height: 450px; justify-content: center;",
+                                        tags$h4("Filters and ROC plot (dataset only)", style = "font-weight: bold;"),
+                                        
+                                        # Use fluidRow and nested columns for the layout inside the first column
+                                        fluidRow(
+                                          class = "row-flex-dataset-case",
+                                          # ROC plot (if possible: datasets with Response column)
+                                          div(
+                                            id = "div_roc_plot_radio_buttons_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_roc",
+                                              "Produce ROC plot?",
+                                              choices = c("Yes", "No"),
+                                              selected = "No"
+                                            )
+                                          ),
+                                          # Filter for timepoint
+                                          div(
+                                            id = "div_timepoint_filter_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_timepoint_filter",
+                                              "Timepoint filter",
+                                              selected = "All",
+                                              choices = c("All", "Pre-treatment", "On-treatment")
+                                            )
+                                          ),
+                                          # Filter for pam50
+                                          div(
+                                            id = "div_pam50_filter_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_pam50_filter",
+                                              "pam50 filter",
+                                              selected = "All",
+                                              choices = c(
+                                                "All",
+                                                "Luminal A",
+                                                "Luminal B",
+                                                "Normal-like",
+                                                "Basal-like",
+                                                "HER2+"
+                                              )
+                                            )
+                                          ),
+                                          # Filter for scmod1
+                                          div(
+                                            id = "div_scmod1_filter_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_scmod1_filter",
+                                              "scmod1 filter",
+                                              selected = "All",
+                                              choices = c(
+                                                "All",
+                                                "ER-/HER2-",
+                                                "ER+/HER2- high proliferation",
+                                                "ER+/HER2- low proliferation",
+                                                "HER2+"
+                                              )
+                                            )
+                                          ),
+                                          # Filter for rorS risk
+                                          div(
+                                            id = "div_rors_filter_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_rorS_filter",
+                                              "Risk of recurrence",
+                                              selected = "All",
+                                              choices = c("All", "High", "Intermediate", "Low")
+                                            )
+                                          ),
+                                          # Filter for Mammaprint risk
+                                          div(
+                                            id = "div_mammaprint_filter_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_Mammaprint_filter",
+                                              "Mammaprint risk",
+                                              selected = "All",
+                                              choices = c("All", "At risk", "No risk")
+                                            )
+                                          ),
+                                          # Filter for iC10
+                                          div(
+                                            id = "div_ic10_filter_newpred",
+                                            class = "uniform-select-dataset-case",
+                                            radioButtons(
+                                              "breast_cancer_new_prediction_ic10_filter",
+                                              "iC10 filter",
+                                              selected = "All",
+                                              choices = c(
+                                                "All",
+                                                "iC1",
+                                                "iC2",
+                                                "iC3",
+                                                "iC4",
+                                                "iC5",
+                                                "iC6",
+                                                "iC7",
+                                                "iC8",
+                                                "iC9",
+                                                "iC10"
+                                              )
+                                            )
+                                          ),
+                                          div(
+                                            id = "newpred_action_buttons",
+                                            class = "vertical-flex",
+                                            # add "Predict" - button that triggers the prediction model on the selected data
+                                            div(
+                                              id = "div_newpred_predict_button",
+                                              style = "padding-top: 20%; padding-bottom: 20%;",
+                                              actionButton(
+                                                "predict_new_prediction_breast_cancer",
+                                                "Predict!",
+                                                # style = "color: #FFFFFF; background-color: #1986B2; border-color: #2e6da4"
+                                                icon = icon("eye", style = "margin-right: 5px; vertical-align: middle;")
+                                              ) %>%
+                                                tagAppendAttributes(class = "rgb-button")
+                                            ),
+                                            # Button to reset inputs to default
+                                            div(
+                                              id = "div_reset_button_newpred",
+                                              style = "padding-bottom: 20%;",
+                                              actionButton(
+                                                inputId = "reset_new_prediction_breast_cancer",
+                                                label = "Reset parameters",
+                                                icon = icon("repeat", style = "margin-right: 5px; vertical-align: middle;")
+                                                #style = "color: #FFFFFF; background-color: #000000; border-color: #2e6da4"
+                                              ) %>%
+                                                tagAppendAttributes(class = "default-button")
+                                            ),
+                                            # add "Info" button
+                                            div(
+                                              id = "div_info_button_newpred",
+                                              style = "padding-bottom: 20%;",
+                                              actionButton(
+                                                "info_new_prediction_breast_cancer",
+                                                "Info",
+                                                icon = icon("circle-info", style = "margin-right: 5px; vertical-align: middle;")
+                                              ) %>%
+                                                tagAppendAttributes(class = "info-button")
+                                            )
+                                          )
+                                          
+                                        )
+                                      )
+                                    ),
                                     bsModal(
                                       "new_prediction_breast_info",
                                       "Information",
@@ -1956,8 +2017,11 @@ body <- dashboardBody(tabItems
                                           plotOutput("newpred_ROC_plot", width = 500, height = 500),
                                           verbatimTextOutput("results_text"),
                                           # Additional output for textual information
-                                          div(id="div_newpred_download_button", style = "padding-top: 1%;",
-                                          downloadButton('download_new_prediction_results', 'Download results'))
+                                          div(
+                                            id = "div_newpred_download_button",
+                                            style = "padding-top: 1%;",
+                                            downloadButton('download_new_prediction_results', 'Download results')
+                                          )
                                         )
                                       ))
                                     )

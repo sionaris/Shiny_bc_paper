@@ -40,8 +40,6 @@ counter = reactiveValues(counter = 1)
 observeEvent(input$multiple_rocs_breast, {
   if(input$multiple_rocs_breast %% 2 == 1){
     shinyjs::show("model_select_breast_2")
-  } else {
-    shinyjs::hide("model_select_breast_2")
   }
 })
 
@@ -54,8 +52,14 @@ observeEvent(input$apply_comparison_breast_2, {
 observeEvent(input$multiple_rocs_breast_2, {
   if(input$multiple_rocs_breast_2 %% 2 == 1){
     shinyjs::show("model_select_breast_3")
-  } else {
-    shinyjs::hide("model_select_breast_3")
+    shinyjs::disable("multiple_rocs_breast_2_remove")
+  }
+})
+
+# Additional button to remove the second model
+observeEvent(input$multiple_rocs_breast_2_remove, {
+  if(input$multiple_rocs_breast_2_remove %% 2 == 1){
+    shinyjs::hide("model_select_breast_2")
   }
 })
 
@@ -63,6 +67,7 @@ observeEvent(input$multiple_rocs_breast_2, {
 observeEvent(input$multiple_rocs_breast_3, {
   if(input$multiple_rocs_breast_3 %% 2 == 1){
     shinyjs::hide("model_select_breast_3")
+    shinyjs::enable("multiple_rocs_breast_2_remove")
   }
 })
 
