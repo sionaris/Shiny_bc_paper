@@ -142,6 +142,7 @@ observeEvent(import_data_type(), {
     shinyjs::enable("breast_cancer_new_prediction_rors_annotation")
     shinyjs::enable("breast_cancer_new_prediction_scmod1_annotation")
     shinyjs::enable("breast_cancer_new_prediction_scmod1_annotation")
+    shinyjs::enable("newpred_title")
   }
 })
 
