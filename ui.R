@@ -1859,7 +1859,7 @@ body <- dashboardBody(tabItems
                                               "breast_cancer_new_prediction_roc",
                                               "Produce ROC plot?",
                                               choices = c("Yes", "No"),
-                                              selected = "No"
+                                              selected = "Yes"
                                             )
                                           ),
                                           # Filter for timepoint

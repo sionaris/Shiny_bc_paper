@@ -3,7 +3,18 @@ pam50_subtype_edit = reactive({ input$breast_cancer_new_prediction_pam50_annotat
 observeEvent(pam50_subtype_edit(), {
   # Create intermediate variable
   current_data = imported_data()
-  if (!is.null(imported_data()) && pam50_subtype_edit() != "Preset") {
+
+  # Create the columns in the unique sample (genes only) case
+  if (import_data_type() == "Import unique sample (genes only)") {
+    current_data$HER2 = NA
+    current_data$LumB = NA
+    current_data$LumA = NA
+    current_data$Normal = NA
+  }
+  
+  if (!is.null(imported_data()) && pam50_subtype_edit() != "Preset" &&
+                                    pam50_subtype_edit() != "None selected") {
+    # Proceed with editing
     if (pam50_subtype_edit() == "Random") {
       pam50s = c(`Luminal A` = c(0, 0, 1, 0), 
                  `Luminal B` = c(0, 1, 0, 0), 
@@ -28,8 +39,9 @@ observeEvent(pam50_subtype_edit(), {
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && pam50_subtype_edit() == "Preset" &&
-             import_data_type() != "Import unique sample (genes-only)") {
+  } else if (!is.null(imported_data()) &&
+             import_data_type() != "Import unique sample (genes only)"
+             && pam50_subtype_edit() == "Preset") {
     # Update imported_data()
     current_data[, c("HER2", "LumB", "LumA", "Normal")] <- 
       lapply(current_data[, c("HER2", "LumB", "LumA", "Normal")], function(x) 
@@ -37,15 +49,15 @@ observeEvent(pam50_subtype_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && pam50_subtype_edit() == "Preset" &&
-             import_data_type() == "Import unique sample (genes-only)") {
+             import_data_type() == "Import unique sample (genes only)") {
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
-  }
+  } 
 })
 
 # scmod1
@@ -53,7 +65,18 @@ scmod1_subtype_edit = reactive({ input$breast_cancer_new_prediction_scmod1_annot
 observeEvent(scmod1_subtype_edit(), {
   # Create intermediate variable
   current_data = imported_data()
-  if (!is.null(imported_data()) && scmod1_subtype_edit() != "Preset") {
+  
+  # Create the columns in the unique sample (genes only) case
+  if (import_data_type() == "Import unique sample (genes only)") {
+    current_data$ER_hp = NA
+    current_data$ER_lp = NA
+    current_data$HER2_scmod1 = NA
+  }
+  
+  if (!is.null(imported_data()) && scmod1_subtype_edit() != "Preset" &&
+      scmod1_subtype_edit() != "None selected") {
+    
+    # Proceed with editing
     if (scmod1_subtype_edit() == "Random") {
       scmod1s = c(`ER-/HER2-` = c(0, 0, 0), 
                   `ER+/HER2- high proliferation` = c(1, 0, 0),
@@ -76,7 +99,7 @@ observeEvent(scmod1_subtype_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && scmod1_subtype_edit() == "Preset" &&
-             import_data_type() != "Import unique sample (genes-only)") {
+             import_data_type() != "Import unique sample (genes only)") {
     # Update imported_data()
     current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")] <- 
       lapply(current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")], function(x) 
@@ -84,11 +107,11 @@ observeEvent(scmod1_subtype_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && scmod1_subtype_edit() == "Preset" &&
-             import_data_type() == "Import unique sample (genes-only)") {
+             import_data_type() == "Import unique sample (genes only)") {
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
@@ -100,7 +123,16 @@ timepoint_edit = reactive({ input$breast_cancer_new_prediction_timepoint_annotat
 observeEvent(timepoint_edit(), {
   # Create intermediate variable
   current_data = imported_data()
-  if (!is.null(imported_data()) && timepoint_edit() != "Preset") {
+  
+  # Create the columns in the unique sample (genes only) case
+  if (import_data_type() == "Import unique sample (genes only)") {
+    current_data$T2 = NA
+  }
+  
+  if (!is.null(imported_data()) && timepoint_edit() != "Preset" &&
+      timepoint_edit() != "None selected") {
+    
+    # Proceed with editing
     if (timepoint_edit() == "Random") {
       timepoints = c(`Pre-treatment` = 0, `On-treatment` = 1)
       current_data[, "T2"] = timepoints[[sample(seq(1, 2), 1)]]
@@ -116,7 +148,7 @@ observeEvent(timepoint_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && timepoint_edit() == "Preset" &&
-             import_data_type() != "Import unique sample (genes-only)") {
+             import_data_type() != "Import unique sample (genes only)") {
     # Update imported_data()
     current_data[, "T2"] <- 
       lapply(current_data[, "T2"], function(x) 
@@ -124,11 +156,11 @@ observeEvent(timepoint_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && timepoint_edit() == "Preset" &&
-             import_data_type() == "Import unique sample (genes-only)") {
+             import_data_type() == "Import unique sample (genes only)") {
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
@@ -140,7 +172,24 @@ iC10_edit = reactive({ input$breast_cancer_new_prediction_ic10_annotation })
 observeEvent(iC10_edit(), {
   # Create intermediate variable
   current_data = imported_data()
-  if (!is.null(imported_data()) && iC10_edit() != "Preset") {
+  
+  # Create the columns in the unique sample (genes only) case
+  if (import_data_type() == "Import unique sample (genes only)") {
+    current_data$IC2 = NA
+    current_data$IC3 = NA
+    current_data$IC4 = NA
+    current_data$IC5 = NA
+    current_data$IC6 = NA
+    current_data$IC7 = NA
+    current_data$IC8 = NA
+    current_data$IC9 = NA
+    current_data$IC10 = NA
+  }
+  
+  if (!is.null(imported_data()) && iC10_edit() != "Preset" &&
+      iC10_edit() != "None selected") {
+    
+    # Proceed with editing
     if (iC10_edit() == "Random") {
       iC10s = c(`iC1` = c(0, 0, 0, 0, 0, 0, 0, 0, 0), 
                 `iC2` = c(1, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -207,7 +256,7 @@ observeEvent(iC10_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && iC10_edit() == "Preset" &&
-             import_data_type() != "Import unique sample (genes-only)") {
+             import_data_type() != "Import unique sample (genes only)") {
     # Update imported_data()
     current_data[, c("IC2", "IC3", "IC4",
                      "IC5", "IC6", "IC7", "IC8", "IC9",
@@ -219,11 +268,11 @@ observeEvent(iC10_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && iC10_edit() == "Preset" &&
-             import_data_type() == "Import unique sample (genes-only)") {
+             import_data_type() == "Import unique sample (genes only)") {
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
@@ -235,10 +284,19 @@ mammaprint_edit = reactive({ input$breast_cancer_new_prediction_mammaprint_annot
 observeEvent(mammaprint_edit(), {
   # Create intermediate variable
   current_data = imported_data()
-  if (!is.null(imported_data()) && mammaprint_edit() != "Preset") {
+  
+  # Create the columns in the unique sample (genes only) case
+  if (import_data_type() == "Import unique sample (genes only)") {
+    current_data$Mammaprint_risk_yes = NA
+  }
+  
+  if (!is.null(imported_data()) && mammaprint_edit() != "Preset" &&
+      mammaprint_edit() != "None selected") {
+   
+    # Proceed with editing
     if (mammaprint_edit() == "Random") {
       mammaprints = c(`At risk` = 1, `No risk` = 0)
-      current_data[, "At risk"] = mammaprints[[sample(seq(1, 2), 1)]]
+      current_data[, "Mammaprint_risk_yes"] = mammaprints[[sample(seq(1, 2), 1)]]
     } else if (mammaprint_edit() == "At risk") {
       current_data[, "Mammaprint_risk_yes"] = 1
     } else {
@@ -251,7 +309,7 @@ observeEvent(mammaprint_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && mammaprint_edit() == "Preset" &&
-             import_data_type() != "Import unique sample (genes-only)") {
+             import_data_type() != "Import unique sample (genes only)") {
     # Update imported_data()
     current_data[, "Mammaprint_risk_yes"] <- 
       lapply(current_data[, "Mammaprint_risk_yes"], function(x) 
@@ -259,11 +317,11 @@ observeEvent(mammaprint_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && mammaprint_edit() == "Preset" &&
-             import_data_type() == "Import unique sample (genes-only)") {
+             import_data_type() == "Import unique sample (genes only)") {
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
@@ -275,7 +333,17 @@ rorS_edit = reactive({ input$breast_cancer_new_prediction_rors_annotation })
 observeEvent(rorS_edit(), {
   # Create intermediate variable
   current_data = imported_data()
-  if (!is.null(imported_data()) && rorS_edit() != "Preset") {
+  
+  # Create the columns in the unique sample (genes only) case
+  if (import_data_type() == "Import unique sample (genes only)") {
+    current_data$rorS_risk_interm = NA
+    current_data$rorS_risk_high = NA
+  }
+  
+  if (!is.null(imported_data()) && rorS_edit() != "Preset" &&
+      rorS_edit() != "None selected") {
+    
+    # Proceed with editing
     if (rorS_edit() == "Random") {
       rorSs = c(High= c(0, 1), Intermediate = c(1, 0), Low = c(0, 0))
       current_data[, c("rorS_risk_interm", "rorS_risk_high")] = rorSs[[sample(seq(1, 3), 1)]]
@@ -293,7 +361,7 @@ observeEvent(rorS_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && rorS_edit() == "Preset" &&
-             import_data_type() != "Import unique sample (genes-only)") {
+             import_data_type() != "Import unique sample (genes only)") {
     # Update imported_data()
     current_data[, c("rorS_risk_interm", "rorS_risk_high")] <- 
       lapply(current_data[, c("rorS_risk_interm", "rorS_risk_high")], function(x) 
@@ -301,11 +369,11 @@ observeEvent(rorS_edit(), {
       )
     imported_data(current_data)
   } else if (!is.null(imported_data()) && rorS_edit() == "Preset" &&
-             import_data_type() == "Import unique sample (genes-only)") {
+             import_data_type() == "Import unique sample (genes only)") {
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
