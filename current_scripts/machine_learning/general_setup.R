@@ -13,7 +13,7 @@ update_subcategory_radios <- function(model_num) {
       updateRadioButtons(inputId = subcategory_id,
                          choices = sort(c(`C5.0 (tuned with Cohen's k)` = "C5.0 - k",
                                           `Bagging (100 iterations)` = "100X Bagging",
-                                          `AdaBoost` = "Boosting",
+                                          `Boosting (adabag)` = "Boosting",
                                           `Random Forest (tuned with Cohen's k)` = "RForest - k",
                                           `Random Forest (tuned with ROC)` = "RForest - ROC",
                                           `C5.0 (tuned with ROC)` = "C5.0 - ROC")),

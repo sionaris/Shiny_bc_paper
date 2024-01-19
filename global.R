@@ -1,25 +1,42 @@
-# Libraries
-library(shiny)
-library(shinydashboard)
-library(plotly)
+# Libraries #####
+
+# General
 library(openxlsx)
 library(readr)
 library(data.table)
-library(colourpicker)
-library(shinyBS)
-library(shinyjs)
-library(shinyalert)
-library(shinyWidgets)
 library(dplyr)
 library(rlang)
 library(stringr)
 library(randomcoloR)
-library(data.table)
-library(pROC)
-library(limma)
-library(waiter) # placeholder not available in CRAN in Jan 2024, use remotes::install_github("JohnCoene/waiter")
+library(colourpicker)
+library(waiter) # use remotes::install_github("JohnCoene/waiter") for full functionalities
 library(later)
 library(zip)
+
+# Shiny
+library(shiny)
+library(shinydashboard)
+library(shinyBS)
+library(shinyjs)
+library(shinyalert)
+library(shinyWidgets)
+
+# Plotting
+library(plotly)
+library(ggplto2)
+library(pROC)
+
+# Statistical modelling
+library(limma)
+library(statmod)
+
+# Machine learning
+library(C50)
+library(glmnet)
+library(adabag)
+library(randomForest)
+library(kernlab)
+library(LiblineaR)
 
 # In case you want to export plotly output (not used here)
 # library(reticulate)

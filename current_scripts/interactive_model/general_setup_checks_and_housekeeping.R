@@ -127,7 +127,7 @@ observeEvent(import_data_type(), {
     shinyjs::disable("breast_cancer_new_prediction_mammaprint_annotation")
     shinyjs::disable("breast_cancer_new_prediction_rors_annotation")
     shinyjs::disable("breast_cancer_new_prediction_scmod1_annotation")
-    shinyjs::disable("newpred_title")
+    shinyjs::enable("newpred_title")
   } else {
     shinyjs::disable("breast_cancer_new_prediction_timepoint_filter")
     shinyjs::disable("breast_cancer_new_prediction_pam50_filter")
@@ -142,7 +142,7 @@ observeEvent(import_data_type(), {
     shinyjs::enable("breast_cancer_new_prediction_rors_annotation")
     shinyjs::enable("breast_cancer_new_prediction_scmod1_annotation")
     shinyjs::enable("breast_cancer_new_prediction_scmod1_annotation")
-    shinyjs::enable("newpred_title")
+    shinyjs::disable("newpred_title")
   }
 })
 
