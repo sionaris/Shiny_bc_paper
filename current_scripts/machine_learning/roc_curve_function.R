@@ -15,12 +15,12 @@ plot_breast_cancer_ROC <- reactive({
       ER_filter = input$breast_cancer_ml_ER_filter
     )
     
-    results[[1]] <- process_data(input$breast_cancer_ml_model_category_1, 
-                                 input$breast_cancer_ml_model_subcategory_1, 
-                                 input_filters_1, 
-                                 input$breast_cancer_ml_legend_entry_1, 
-                                 ML, 
-                                 full_ml_set, 
+    results[[1]] <- process_data(category = input$breast_cancer_ml_model_category_1, 
+                                 subcategory = input$breast_cancer_ml_model_subcategory_1, 
+                                 input_filters= input_filters_1, 
+                                 legend_entry = input$breast_cancer_ml_legend_entry_1, 
+                                 ML = ML, 
+                                 full_ml_set = full_ml_set,
                                  color = "#2A5674")
     
     if(input$breast_cancer_ml_model_category_1 == "Support Vector Machines"){
@@ -40,12 +40,12 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter,
       ER_filter = input$breast_cancer_ml_ER_filter
     )
-    results[[1]] <- process_data(input$breast_cancer_ml_model_category_1, 
-                                 input$breast_cancer_ml_model_subcategory_1, 
-                                 input_filters_1, 
-                                 input$breast_cancer_ml_legend_entry_1, 
-                                 ML, 
-                                 full_ml_set, 
+    results[[1]] <- process_data(category = input$breast_cancer_ml_model_category_1, 
+                                 subcategory = input$breast_cancer_ml_model_subcategory_1, 
+                                 input_filters= input_filters_1, 
+                                 legend_entry = input$breast_cancer_ml_legend_entry_1, 
+                                 ML = ML, 
+                                 full_ml_set = full_ml_set,
                                  color = "#2A5674")
     
     # Process the second dataset
@@ -60,12 +60,12 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter_2,
       ER_filter = input$breast_cancer_ml_ER_filter_2
     )
-    results[[2]] <- process_data(input$breast_cancer_ml_model_category_2, 
-                                 input$breast_cancer_ml_model_subcategory_2, 
-                                 input_filters_2, 
-                                 input$breast_cancer_ml_legend_entry_2, 
-                                 ML, 
-                                 full_ml_set, 
+    results[[2]] <- process_data(category = input$breast_cancer_ml_model_category_2, 
+                                 subcategory = input$breast_cancer_ml_model_subcategory_2, 
+                                 input_filters= input_filters_2, 
+                                 legend_entry = input$breast_cancer_ml_legend_entry_2, 
+                                 ML = ML, 
+                                 full_ml_set = full_ml_set,
                                  color = "#E34F6F")
     
     if(input$breast_cancer_ml_model_category_2 == "Support Vector Machines"){
@@ -85,12 +85,12 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter,
       ER_filter = input$breast_cancer_ml_ER_filter
     )
-    results[[1]] <- process_data(input$breast_cancer_ml_model_category_1, 
-                                 input$breast_cancer_ml_model_subcategory_1, 
-                                 input_filters_1, 
-                                 input$breast_cancer_ml_legend_entry_1, 
-                                 ML, 
-                                 full_ml_set,
+    results[[1]] <- process_data(category = input$breast_cancer_ml_model_category_1, 
+                                 subcategory = input$breast_cancer_ml_model_subcategory_1, 
+                                 input_filters= input_filters_1, 
+                                 legend_entry = input$breast_cancer_ml_legend_entry_1, 
+                                 ML = ML, 
+                                 full_ml_set = full_ml_set,
                                  color = "#2A5674")
     
     # Process the second dataset
@@ -105,12 +105,12 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter_2,
       ER_filter = input$breast_cancer_ml_ER_filter_2
     )
-    results[[2]] <- process_data(input$breast_cancer_ml_model_category_2, 
-                                 input$breast_cancer_ml_model_subcategory_2, 
-                                 input_filters_2, 
-                                 input$breast_cancer_ml_legend_entry_2, 
-                                 ML, 
-                                 full_ml_set,
+    results[[2]] <- process_data(category = input$breast_cancer_ml_model_category_2, 
+                                 subcategory = input$breast_cancer_ml_model_subcategory_2, 
+                                 input_filters= input_filters_2, 
+                                 legend_entry = input$breast_cancer_ml_legend_entry_2, 
+                                 ML = ML, 
+                                 full_ml_set = full_ml_set,
                                  color = "#E34F6F")
     
     # Process the third dataset
@@ -125,12 +125,12 @@ plot_breast_cancer_ROC <- reactive({
       Meno_filter = input$breast_cancer_ml_Meno_filter_3,
       ER_filter = input$breast_cancer_ml_ER_filter_3
     )
-    results[[3]] <- process_data(input$breast_cancer_ml_model_category_3, 
-                                 input$breast_cancer_ml_model_subcategory_3, 
-                                 input_filters_3, 
-                                 input$breast_cancer_ml_legend_entry_3, 
-                                 ML, 
-                                 full_ml_set,
+    results[[3]] <- process_data(category = input$breast_cancer_ml_model_category_3, 
+                                 subcategory = input$breast_cancer_ml_model_subcategory_3, 
+                                 input_filters= input_filters_3, 
+                                 legend_entry = input$breast_cancer_ml_legend_entry_3, 
+                                 ML = ML, 
+                                 full_ml_set = full_ml_set,
                                  color = "#6C2167")
     
     if(input$breast_cancer_ml_model_category_3 == "Support Vector Machines"){

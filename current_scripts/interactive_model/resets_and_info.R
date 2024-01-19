@@ -1,6 +1,10 @@
 # Reset button
 observeEvent(input$reset_new_prediction_breast_cancer, {
-  imported_data = NULL
+  # Delete data
+  imported_data(NULL)
+  
+  # Reset elements
+  shinyjs::reset("breast_cancer_new_prediction_file_input")
   shinyjs::reset("breast_cancer_new_prediction_type")
   shinyjs::reset("breast_cancer_new_prediction_treatment")
   shinyjs::reset("breast_cancer_new_prediction_pam50_annotation")
@@ -15,6 +19,8 @@ observeEvent(input$reset_new_prediction_breast_cancer, {
   shinyjs::reset("breast_cancer_new_prediction_rorS_filter")
   shinyjs::reset("breast_cancer_new_prediction_Mammaprint_filter")
   shinyjs::reset("breast_cancer_new_prediction_ic10_filter")
+  
+  shinyjs::disable("breast_cancer_new_prediction_treatment")
 })
 
 # Pop-up info message, triggered when the user presses the Info button

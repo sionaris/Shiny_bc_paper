@@ -80,8 +80,7 @@ observeEvent(input$breast_cancer_ROC_plot, {
   counter$counter = 1
 })
 
-err_metrics = function(CM)
-{
+err_metrics = function(CM) {
   TN =CM[1,1]
   TP =CM[2,2]
   FP =CM[1,2]

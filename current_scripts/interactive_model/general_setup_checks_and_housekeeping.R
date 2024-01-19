@@ -2,7 +2,7 @@
 import_data_type = reactive({ input$breast_cancer_new_prediction_type })
 
 # Disable treatment selection by default
-shinyjs::disable("breast_cancer_new_prediction_treatment")
+# shinyjs::disable("breast_cancer_new_prediction_treatment")
 # shinyjs::runjs('shinyjs.checkRadioStatus("breast_cancer_new_prediction_treatment")')
 
 # Disable prespecified treatment by default
@@ -39,6 +39,7 @@ observeEvent(import_data_type(), {
     shinyjs::disable("breast_cancer_new_prediction_file_input")
     shinyjs::disable("import_new_prediction_breast_cancer")
     shinyjs::disable("breast_cancer_new_prediction_prespecified_treatment")
+    shinyjs::disable("breast_cancer_new_prediction_treatment")
     
     # Generate a 166-slot-long vector of normally distributed values
     genes_vector = rnorm(166, mean = 0, sd = 1)
@@ -114,31 +115,33 @@ observeEvent(import_data_type(), {
 # Hide filters if not dataset
 observeEvent(import_data_type(), {
   if (import_data_type() == "Import pre-annotated dataset") {
-    shinyjs::show("breast_cancer_new_prediction_timepoint_filter")
-    shinyjs::show("breast_cancer_new_prediction_pam50_filter")
-    shinyjs::show("breast_cancer_new_prediction_rorS_filter")
-    shinyjs::show("breast_cancer_new_prediction_Mammaprint_filter")
-    shinyjs::show("breast_cancer_new_prediction_ic10_filter")
-    shinyjs::show("breast_cancer_new_prediction_scmod1_filter")
-    shinyjs::hide("breast_cancer_new_prediction_pam50_annotation")
-    shinyjs::hide("breast_cancer_new_prediction_timepoint_annotation")
-    shinyjs::hide("breast_cancer_new_prediction_ic10_annotation")
-    shinyjs::hide("breast_cancer_new_prediction_mammaprint_annotation")
-    shinyjs::hide("breast_cancer_new_prediction_rors_annotation")
-    shinyjs::hide("breast_cancer_new_prediction_scmod1_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_timepoint_filter")
+    shinyjs::enable("breast_cancer_new_prediction_pam50_filter")
+    shinyjs::enable("breast_cancer_new_prediction_rorS_filter")
+    shinyjs::enable("breast_cancer_new_prediction_Mammaprint_filter")
+    shinyjs::enable("breast_cancer_new_prediction_ic10_filter")
+    shinyjs::enable("breast_cancer_new_prediction_scmod1_filter")
+    shinyjs::disable("breast_cancer_new_prediction_pam50_annotation")
+    shinyjs::disable("breast_cancer_new_prediction_timepoint_annotation")
+    shinyjs::disable("breast_cancer_new_prediction_ic10_annotation")
+    shinyjs::disable("breast_cancer_new_prediction_mammaprint_annotation")
+    shinyjs::disable("breast_cancer_new_prediction_rors_annotation")
+    shinyjs::disable("breast_cancer_new_prediction_scmod1_annotation")
+    shinyjs::disable("newpred_title")
   } else {
-    shinyjs::hide("breast_cancer_new_prediction_timepoint_filter")
-    shinyjs::hide("breast_cancer_new_prediction_pam50_filter")
-    shinyjs::hide("breast_cancer_new_prediction_rorS_filter")
-    shinyjs::hide("breast_cancer_new_prediction_Mammaprint_filter")
-    shinyjs::hide("breast_cancer_new_prediction_ic10_filter")
-    shinyjs::hide("breast_cancer_new_prediction_scmod1_filter")
-    shinyjs::show("breast_cancer_new_prediction_pam50_annotation")
-    shinyjs::show("breast_cancer_new_prediction_timepoint_annotation")
-    shinyjs::show("breast_cancer_new_prediction_ic10_annotation")
-    shinyjs::show("breast_cancer_new_prediction_mammaprint_annotation")
-    shinyjs::show("breast_cancer_new_prediction_rors_annotation")
-    shinyjs::show("breast_cancer_new_prediction_scmod1_annotation")
+    shinyjs::disable("breast_cancer_new_prediction_timepoint_filter")
+    shinyjs::disable("breast_cancer_new_prediction_pam50_filter")
+    shinyjs::disable("breast_cancer_new_prediction_rorS_filter")
+    shinyjs::disable("breast_cancer_new_prediction_Mammaprint_filter")
+    shinyjs::disable("breast_cancer_new_prediction_ic10_filter")
+    shinyjs::disable("breast_cancer_new_prediction_scmod1_filter")
+    shinyjs::enable("breast_cancer_new_prediction_pam50_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_timepoint_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_ic10_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_mammaprint_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_rors_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_scmod1_annotation")
+    shinyjs::enable("breast_cancer_new_prediction_scmod1_annotation")
   }
 })
 
@@ -432,13 +435,55 @@ observeEvent(input$breast_cancer_new_prediction_file_input, {
   }
   
   # Treatment
-  #prespecified_treatment_status = input$breast_cancer_new_prediction_prespecified_treatment_status
   treatment_toggle = reactive({ input$breast_cancer_new_prediction_prespecified_treatment })
+  desired_treatment = reactive({ input$breast_cancer_new_prediction_treatment })
+  
+  # Observe prespecified treatment
   observeEvent(treatment_toggle(), {
-    if (!is.null(imported_data()) && treatment_toggle() == "No") {
+    if (treatment_toggle() == "No") {
       shinyjs::enable("breast_cancer_new_prediction_treatment")
-      desired_treatment = reactive({ input$breast_cancer_new_prediction_treatment })
-      
+    } else if (treatment_toggle() == "Yes" && import_data_type() == "Import unique sample (genes only)"){
+      # In that case is automatically selected because it's the default option and the toggle is disabled
+      shinyjs::enable("breast_cancer_new_prediction_treatment")
+    } else {
+      shinyjs::disable("breast_cancer_new_prediction_treatment")
+    }
+  })
+  
+  # Observe treatment selection radio buttons
+  observeEvent(desired_treatment(), {
+    if (!is.null(imported_data()) && treatment_toggle() == "No") {
+      if (desired_treatment() != "Preset") {
+        if (desired_treatment() == "Chemotherapy" && "Endo" %in% colnames(imported_data())) {
+          current_data <- imported_data()
+          current_data[["Endo"]] <- 0
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+          imported_data(current_data)
+        } else if (desired_treatment() == "Chemotherapy" && !"Endo" %in% colnames(imported_data())) {
+          current_data <- imported_data()
+          current_data$Endo = 0
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+          imported_data(current_data)
+        } else if (desired_treatment() == "Endocrine treatment" && "Endo" %in% colnames(imported_data())) {
+          current_data <- imported_data()
+          current_data[["Endo"]] <- 1
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+          imported_data(current_data)
+        } else if (desired_treatment() == "Endocrine treatment" && !"Endo" %in% colnames(imported_data())) {
+          current_data <- imported_data()
+          current_data$Endo = 1
+          current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+          imported_data(current_data)
+        }
+      }
+    } else if (!is.null(imported_data()) && treatment_toggle() == "Yes" && 
+               import_data_type() != "Import unique sample (genes only)")  {
+      shinyjs::disable("breast_cancer_new_prediction_treatment")
+      current_data = imported_data()
+      current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
+      imported_data(current_data)
+    } else if (!is.null(imported_data()) && treatment_toggle() == "Yes" && 
+               import_data_type() == "Import unique sample (genes only)")  {
       if (desired_treatment() == "Chemotherapy" && "Endo" %in% colnames(imported_data())) {
         current_data <- imported_data()
         current_data[["Endo"]] <- 0
@@ -460,13 +505,9 @@ observeEvent(input$breast_cancer_new_prediction_file_input, {
         current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
         imported_data(current_data)
       }
-    } else if(!is.null(imported_data()) && treatment_toggle() == "Yes")  {
-      shinyjs::disable("breast_cancer_new_prediction_treatment")
-      current_data = imported_data()
-      current_data$Endo = factor(current_data$Endo, levels = c(0, 1), labels = c(0, 1))
-      imported_data(current_data)
     }
+    
+    print("We passed treatment")
   })
-  print("We passed treatment")
 })
 print("We passed the first check")

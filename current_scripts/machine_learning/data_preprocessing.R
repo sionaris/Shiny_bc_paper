@@ -54,6 +54,7 @@ process_data <- function(category, subcategory, input_filters, legend_entry, ML,
     print("ROC plots not available for Support Vector Machines")
     p = NULL
     auc_value = NULL
+    model_roc = NULL
   } else {
     join = cbind(predictions, predicted_probabilities, dataset)
     colnames(join)[c(2,3)] = c("Responder", "Non_responder")
@@ -64,10 +65,10 @@ process_data <- function(category, subcategory, input_filters, legend_entry, ML,
     p = plot(model_roc, 
              main = "ROC curve",
              col = color, lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
-             asp = 0.92, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
+             asp = 1, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900)
   }
   
   return(list(plot = p, conf = confusion_matrix, acc = model_accuracy, 
               Legends = legend_entry, auc_values = auc_value, nsamples = nsamples, 
-              error_metrics = errs))
+              error_metrics = errs, model_roc = model_roc))
 }

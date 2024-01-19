@@ -49,42 +49,162 @@ w3 <- Waiter$new(id = "breast_cancer_ROC_plot", ml_loading_screen_orbit, "#010D1
 output$breast_cancer_ROC_plot <- renderPlot({
   w3$show()
   input$predict_ml_breast_cancer
-  isolate({
-    results = plot_breast_cancer_ROC()
+  results <- plot_breast_cancer_ROC()
+  
+  # Create an empty data frame for all plot data
+  all_plot_data <- data.frame(sensitivities = numeric(),
+                              specificities = numeric(),
+                              model = factor(),
+                              stringsAsFactors = FALSE)
+  
+  # Create a data frame for legend labels
+  legend_data <- data.frame(model = factor(), label = character())
+  name_inputs = c(input$breast_cancer_ml_legend_entry_1,
+                  input$breast_cancer_ml_legend_entry_2,
+                  input$breast_cancer_ml_legend_entry_3)
+  model_names = c()
+
+  for (i in 1:length(results)) {
+    res <- results[[i]]
+    df <- as.data.frame(cbind(res$model_roc$sensitivities, res$model_roc$specificities))
+    colnames(df) <- c("sensitivities", "specificities")
+    model_names <- c(model_names, res$Legends)
+    df$model <- as.factor(model_names[i])
+    all_plot_data <- rbind(all_plot_data, df)
     
-    # Predefined colors
-    predefined_colors = c("#2A5674", "#E34F6F", "#6C2167")
-    
-    # Initialize an empty plot
-    plot(1, type="n", xlim=c(1,0), ylim=c(0,1), xlab="False Positive Rate", ylab="True Positive Rate", main="ROC curve")
-    
-    # Store legends
-    legends = vector("character", length(results))
-    
-    # Iterate over results and add each ROC curve to the plot
-    for(i in 1:length(results)) {
-      res = results[[i]]
-      if(!is.null(res$plot)) {
-        # Store legend
-        legends[i] = paste0(res$Legends, ", AUC=", res$auc_values, ", n=", res$nsamples)
-        
-        # Add ROC curve to the plot using predefined color
-        lines(res$plot, col=predefined_colors[i], lwd=3)
-      }
-    }
-    
-    # Add legend
-    legend(0.5, 0.25, legend=legends, col=predefined_colors[1:length(results)], lty=1, cex=0.8)
-  })
+    # Prepare legend label
+    auc_value <- res$auc_values
+    nsamples <- res$nsamples
+    legend_label <- paste(paste0(model_names[i], ":"), "AUC =", paste0(auc_value, ","), 
+                          "N =", nsamples, sep = " ")
+    legend_data <- rbind(legend_data, data.frame(model = model_names[i], label = legend_label))
+  }
+  
+  legend_data$model = as.factor(legend_data$model)
+  # Predefined colors
+  predefined_colors <- c("#2A5674", "#E34F6F", "#6C2167")
+  
+  # Initialize ggplot
+  p <- ggplot(all_plot_data, aes(x = 1 - specificities, y = sensitivities)) +
+    geom_line(aes(color = model), size = 1) +
+    geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype = "dashed", color = "black") +
+    scale_color_manual(values = predefined_colors, labels = legend_data$label, breaks = levels(legend_data$model)) +
+    labs(x = "False Positive Rate (1 - Specificity)", y = "True Positive Rate (Sensitivity)", title = "ROC curve") +
+    scale_x_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+    scale_y_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+    theme_classic() +
+    theme(
+      axis.title = element_text(face = "bold", size = 15),
+      axis.title.x = element_text(face = "bold", size = 15, margin = margin(t = 10, unit = "pt")),
+      axis.title.y = element_text(face = "bold", size = 15, margin = margin(r = 10, unit = "pt")),
+      axis.text = element_text(face = "bold", size = 10),
+      plot.title = element_text(face = "bold", size = 20),
+      axis.line = element_line(colour = "black"),
+      legend.position = "bottom",
+      legend.text = element_text(size = 12)
+    )+
+    #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
+    guides(color = guide_legend(nrow = length(results), byrow = TRUE))
+  
+  p
 })
 
+# Downloadable output
+output$download_plot_roc <- downloadHandler(
+  filename = function() {
+    paste("ROC-plot", Sys.Date(), ".png", sep = "")
+  },
+  content = function(file) {
+    # Set up PNG device
+    png(file, width = 600, height = 600)
+    
+    # Plotting code (same as in renderPlot)
+    results <- plot_breast_cancer_ROC()
+    
+    # Create an empty data frame for all plot data
+    all_plot_data <- data.frame(sensitivities = numeric(),
+                                specificities = numeric(),
+                                model = factor(),
+                                stringsAsFactors = FALSE)
+    
+    # Create a data frame for legend labels
+    legend_data <- data.frame(model = factor(), label = character())
+    name_inputs = c(input$breast_cancer_ml_legend_entry_1,
+                    input$breast_cancer_ml_legend_entry_2,
+                    input$breast_cancer_ml_legend_entry_3)
+    model_names = c()
+    
+    for (i in 1:length(results)) {
+      res <- results[[i]]
+      df <- as.data.frame(cbind(res$model_roc$sensitivities, res$model_roc$specificities))
+      colnames(df) <- c("sensitivities", "specificities")
+      model_names <- c(model_names, res$Legends)
+      df$model <- as.factor(model_names[i])
+      all_plot_data <- rbind(all_plot_data, df)
+      
+      # Prepare legend label
+      auc_value <- res$auc_values
+      nsamples <- res$nsamples
+      legend_label <- paste(paste0(model_names[i], ","), "AUC =", paste0(auc_value, ","), 
+                            "N =", nsamples, sep = " ")
+      legend_data <- rbind(legend_data, data.frame(model = model_names[i], label = legend_label))
+    }
+    
+    legend_data$model = as.factor(legend_data$model)
+    # Predefined colors
+    predefined_colors <- c("#2A5674", "#E34F6F", "#6C2167")
+    
+    # Initialize ggplot
+    p <- ggplot(all_plot_data, aes(x = 1 - specificities, y = sensitivities)) +
+      geom_line(aes(color = model), size = 1) +
+      geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype = "dashed", color = "black") +
+      scale_color_manual(values = predefined_colors, labels = legend_data$label, breaks = levels(legend_data$model)) +
+      labs(x = "False Positive Rate (1 - Specificity)", y = "True Positive Rate (Sensitivity)", title = "ROC curve") +
+      scale_x_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+      scale_y_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+      theme_classic() +
+      theme(
+        axis.title = element_text(face = "bold", size = 15),
+        axis.title.x = element_text(face = "bold", size = 15, margin = margin(t = 10, unit = "pt")),
+        axis.title.y = element_text(face = "bold", size = 15, margin = margin(r = 10, unit = "pt")),
+        axis.text = element_text(face = "bold", size = 10),
+        plot.title = element_text(face = "bold", size = 20),
+        axis.line = element_line(colour = "black"),
+        legend.position = "bottom",
+        legend.text = element_text(size = 12)
+      )+
+      #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
+      guides(color = guide_legend(nrow = length(results), byrow = TRUE))
+    
+    p
+    print(p)
+    
+    # Turn off the device
+    dev.off()
+  }
+)
 
 # Print error metrics
 output$breast_cancer_error_table <- DT::renderDataTable({
   w3$show()
   input$predict_ml_breast_cancer
   isolate({
-    plot_breast_cancer_ROC()$error_metrics})
+    outputs = plot_breast_cancer_ROC()
+    if (length(outputs) == 1) {
+      outputs[[1]]$error_metrics
+    } else if (length(outputs) == 2) {
+      comb = cbind(outputs[[1]]$error_metrics, outputs[[2]]$error_metrics[, 2])
+      colnames(comb) = c("Metric", input$breast_cancer_ml_legend_entry_1, 
+                         input$breast_cancer_ml_legend_entry_2)
+      comb
+    } else {
+      comb = cbind(outputs[[1]]$error_metrics, outputs[[2]]$error_metrics[, 2],
+            outputs[[3]]$error_metrics[, 2])
+      colnames(comb) = c("Metric", input$breast_cancer_ml_legend_entry_1, 
+                         input$breast_cancer_ml_legend_entry_2, 
+                         input$breast_cancer_ml_legend_entry_3)
+      comb
+    }})
 })
 
 # Pop-up info message, triggered when the user presses the Info button

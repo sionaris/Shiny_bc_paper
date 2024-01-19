@@ -28,13 +28,23 @@ observeEvent(pam50_subtype_edit(), {
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && pam50_subtype_edit() == "Preset") {
+  } else if (!is.null(imported_data()) && pam50_subtype_edit() == "Preset" &&
+             import_data_type() != "Import unique sample (genes-only)") {
     # Update imported_data()
     current_data[, c("HER2", "LumB", "LumA", "Normal")] <- 
       lapply(current_data[, c("HER2", "LumB", "LumA", "Normal")], function(x) 
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
+  } else if (!is.null(imported_data()) && pam50_subtype_edit() == "Preset" &&
+             import_data_type() == "Import unique sample (genes-only)") {
+    showModal(
+      modalDialog(
+        title = "Warning", 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+      )
+    )
+    return() # exit code for this event
   }
 })
 
@@ -65,13 +75,23 @@ observeEvent(scmod1_subtype_edit(), {
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && smod1_subtype_edit() == "Preset") {
+  } else if (!is.null(imported_data()) && scmod1_subtype_edit() == "Preset" &&
+             import_data_type() != "Import unique sample (genes-only)") {
     # Update imported_data()
     current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")] <- 
       lapply(current_data[, c("ER_hp", "ER_lp", "HER2_scmod1")], function(x) 
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
+  } else if (!is.null(imported_data()) && scmod1_subtype_edit() == "Preset" &&
+             import_data_type() == "Import unique sample (genes-only)") {
+    showModal(
+      modalDialog(
+        title = "Warning", 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+      )
+    )
+    return() # exit code for this event
   }
 })
 
@@ -95,13 +115,23 @@ observeEvent(timepoint_edit(), {
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && timepoint_edit() == "Preset") {
+  } else if (!is.null(imported_data()) && timepoint_edit() == "Preset" &&
+             import_data_type() != "Import unique sample (genes-only)") {
     # Update imported_data()
     current_data[, "T2"] <- 
       lapply(current_data[, "T2"], function(x) 
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
+  } else if (!is.null(imported_data()) && timepoint_edit() == "Preset" &&
+             import_data_type() == "Import unique sample (genes-only)") {
+    showModal(
+      modalDialog(
+        title = "Warning", 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+      )
+    )
+    return() # exit code for this event
   }
 })
 
@@ -176,7 +206,8 @@ observeEvent(iC10_edit(), {
                                 factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && iC10_edit() == "Preset") {
+  } else if (!is.null(imported_data()) && iC10_edit() == "Preset" &&
+             import_data_type() != "Import unique sample (genes-only)") {
     # Update imported_data()
     current_data[, c("IC2", "IC3", "IC4",
                      "IC5", "IC6", "IC7", "IC8", "IC9",
@@ -187,6 +218,15 @@ observeEvent(iC10_edit(), {
                                 factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
+  } else if (!is.null(imported_data()) && iC10_edit() == "Preset" &&
+             import_data_type() == "Import unique sample (genes-only)") {
+    showModal(
+      modalDialog(
+        title = "Warning", 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+      )
+    )
+    return() # exit code for this event
   }
 })
 
@@ -210,13 +250,23 @@ observeEvent(mammaprint_edit(), {
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && mammaprint_edit() == "Preset") {
+  } else if (!is.null(imported_data()) && mammaprint_edit() == "Preset" &&
+             import_data_type() != "Import unique sample (genes-only)") {
     # Update imported_data()
     current_data[, "Mammaprint_risk_yes"] <- 
       lapply(current_data[, "Mammaprint_risk_yes"], function(x) 
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
+  } else if (!is.null(imported_data()) && mammaprint_edit() == "Preset" &&
+             import_data_type() == "Import unique sample (genes-only)") {
+    showModal(
+      modalDialog(
+        title = "Warning", 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+      )
+    )
+    return() # exit code for this event
   }
 })
 
@@ -242,12 +292,22 @@ observeEvent(rorS_edit(), {
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
-  } else if (!is.null(imported_data()) && rorS_edit() == "Preset") {
+  } else if (!is.null(imported_data()) && rorS_edit() == "Preset" &&
+             import_data_type() != "Import unique sample (genes-only)") {
     # Update imported_data()
     current_data[, c("rorS_risk_interm", "rorS_risk_high")] <- 
       lapply(current_data[, c("rorS_risk_interm", "rorS_risk_high")], function(x) 
         factor(x, levels = c(0, 1), labels = c(0, 1))
       )
     imported_data(current_data)
+  } else if (!is.null(imported_data()) && rorS_edit() == "Preset" &&
+             import_data_type() == "Import unique sample (genes-only)") {
+    showModal(
+      modalDialog(
+        title = "Warning", 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+      )
+    )
+    return() # exit code for this event
   }
 })

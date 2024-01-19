@@ -3,10 +3,10 @@
 roc_possibility = reactiveVal()
 observeEvent(import_data_type(), {
   if (import_data_type() == "Import pre-annotated dataset") {
-    shinyjs::show("breast_cancer_new_prediction_roc")
+    shinyjs::enable("breast_cancer_new_prediction_roc")
     roc_possibility(TRUE)
   } else {
-    shinyjs::hide("breast_cancer_new_prediction_roc")
+    shinyjs::disable("breast_cancer_new_prediction_roc")
     roc_possibility(FALSE)
   }
 })

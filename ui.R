@@ -1559,7 +1559,7 @@ body <- dashboardBody(tabItems
                                                  id = "div_model3_add_remove_comparison_button",
                                                  style = "display: flex; justify-content: center; align-items: center;",
                                                  actionButton("multiple_rocs_breast_3", "Remove comparison") %>%
-                                                   tagAppendAttributes(class = "comparisons-button")
+                                                   tagAppendAttributes(class = "remove-comparisons-button")
                                                ),
                                                div(
                                                  id = "div_model3_trigger_buttons",
@@ -1621,6 +1621,11 @@ body <- dashboardBody(tabItems
                                   "breast_cancer_ROC_plot",
                                   width = 500,
                                   height = 500
+                                ),
+                                div(
+                                  id = "div_roc_plot_download_button",
+                                  style = "padding-top: 1%;",
+                                  downloadButton('download_plot_roc', 'Download plot')
                                 )
                               )
                             ),
@@ -1632,6 +1637,7 @@ body <- dashboardBody(tabItems
                               box(
                                 title = "Error Metrics",
                                 width = 12,
+                                height = 500,
                                 solidHeader = TRUE,
                                 status = "warning",
                                 id = "breast_cancer_error_metrics",
@@ -1710,7 +1716,7 @@ body <- dashboardBody(tabItems
                                       8,
                                       wellPanel(
                                         style = "background-color: transparent; box-shadow: none; margin-top: 1%; padding-right: 1.25%; padding-left: 2.5%; padding-top:1%; padding-bottom: 1%; border: 3px solid #093773; border-radius: 15px; height: 300px;",
-                                        tags$h4("Edit phenotypic variables", style = "font-weight: bold;"),
+                                        tags$h4("Edit phenotypic variables (unique sample only)", style = "font-weight: bold;"),
                                         fluidRow(
                                           class = "row-flex",
                                           # Treatment
@@ -1720,8 +1726,8 @@ body <- dashboardBody(tabItems
                                             radioButtons(
                                               "breast_cancer_new_prediction_treatment",
                                               "Select treatment",
-                                              choices = c("Chemotherapy", "Endocrine treatment"),
-                                              selected = "Chemotherapy"#,
+                                              choices = c("Preset", "Chemotherapy", "Endocrine treatment"),
+                                              selected = "Preset"#,
                                               #width = "150px"
                                             )
                                           ),
@@ -1733,11 +1739,11 @@ body <- dashboardBody(tabItems
                                             selectInput(
                                               inputId = "breast_cancer_new_prediction_pam50_annotation",
                                               "pam50",
-                                              choices = c("Preset", "Random", sort(
+                                              choices = c("None selected", "Preset", "Random", sort(
                                                 c("Luminal A", "Luminal B", "Normal-like",
                                                   "Basal-like", "HER2+")
                                               )),
-                                              selected = "Random"
+                                              selected = "None selected"
                                             )
                                           ),
                                           # scmod1
@@ -1748,7 +1754,7 @@ body <- dashboardBody(tabItems
                                             selectInput(
                                               inputId = "breast_cancer_new_prediction_scmod1_annotation",
                                               "scmod1",
-                                              choices = c("Preset", "Random", sort(
+                                              choices = c("None selected", "Preset", "Random", sort(
                                                 c(
                                                   "ER-/HER2-",
                                                   "ER+/HER2- high proliferation",
@@ -1756,7 +1762,7 @@ body <- dashboardBody(tabItems
                                                   "HER2+"
                                                 )
                                               )),
-                                              selected = "Random"
+                                              selected = "None selected"
                                             )
                                           ),
                                           # Timepoint
@@ -1767,11 +1773,11 @@ body <- dashboardBody(tabItems
                                             selectInput(
                                               inputId = "breast_cancer_new_prediction_timepoint_annotation",
                                               "Timepoint",
-                                              choices = c("Preset", "Random",
+                                              choices = c("None selected", "Preset", "Random",
                                                           sort(c(
                                                             "Pre-treatment", "On-treatment"
                                                           ))),
-                                              selected = "Random"
+                                              selected = "None selected"
                                             )
                                           )
                                         ),
@@ -1786,6 +1792,7 @@ body <- dashboardBody(tabItems
                                               inputId = "breast_cancer_new_prediction_ic10_annotation",
                                               "Integrative Clusters",
                                               choices = c(
+                                                "None selected",
                                                 "Preset",
                                                 "Random",
                                                 c(
@@ -1801,7 +1808,7 @@ body <- dashboardBody(tabItems
                                                   "iC10"
                                                 )
                                               ),
-                                              selected = "Random"
+                                              selected = "None selected"
                                             )
                                           ),
                                           # Mammaprint
@@ -1812,9 +1819,9 @@ body <- dashboardBody(tabItems
                                             selectInput(
                                               inputId = "breast_cancer_new_prediction_mammaprint_annotation",
                                               "Mammaprint",
-                                              choices = c("Preset", "Random",
+                                              choices = c("None selected", "Preset", "Random",
                                                           sort(c("At risk", "No risk"))),
-                                              selected = "Random"
+                                              selected = "None selected"
                                             )
                                           ),
                                           # rorS
@@ -1825,11 +1832,11 @@ body <- dashboardBody(tabItems
                                             selectInput(
                                               inputId = "breast_cancer_new_prediction_rors_annotation",
                                               "rorS (Risk of relapse)",
-                                              choices = c("Preset", "Random",
+                                              choices = c("None selected", "Preset", "Random",
                                                           sort(c(
                                                             "High", "Intermediate", "Low"
                                                           ))),
-                                              selected = "Random"
+                                              selected = "None selected"
                                             )
                                           )
                                         )
@@ -1946,6 +1953,10 @@ body <- dashboardBody(tabItems
                                               )
                                             )
                                           ),
+                                          div(id="div_newpred_title", class = "uniform-select-dataset-case",
+                                              style = "margin-right: 5%",
+                                              textInput(inputId = "newpred_title", label = "Plot title",
+                                                        value = "ROC curve")),
                                           div(
                                             id = "newpred_action_buttons",
                                             class = "vertical-flex",
