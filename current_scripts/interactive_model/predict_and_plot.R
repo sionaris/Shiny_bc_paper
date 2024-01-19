@@ -21,130 +21,155 @@ predict_new_data <- reactive({
       )
     )
     return() # exit code for this event
-  }
-  # print(paste("Colnames of object:", paste(colnames(imported_data()), collapse = ", ")))
-  current_data = imported_data()
-
-  current_data[, c("HER2", "LumA", "LumB", "Normal", "T2", "Endo", "IC2", "IC3", "IC4",
-                   "IC5", "IC6", "IC7", "IC8", "IC9",
-                   "IC10", "Mammaprint_risk_yes", "rorS_risk_interm", "rorS_risk_high",
-                   "ER_hp", "ER_lp", "HER2_scmod1")] <- 
-    lapply(current_data[, c("HER2", "LumA", "LumB", "Normal", "T2", "Endo", "IC2", "IC3", "IC4",
-                            "IC5", "IC6", "IC7", "IC8", "IC9",
-                            "IC10", "Mammaprint_risk_yes", "rorS_risk_interm", "rorS_risk_high",
-                            "ER_hp", "ER_lp", "HER2_scmod1")], function(x) 
-                              factor(x, levels = c(0, 1), labels = c(0, 1))
-    )
-
-  imported_data(current_data)
-  # Unique sample predictions
-  if (import_data_type() %in% c("Random sample",
-                                "Import unique sample (genes only)",
-                                "Import unique sample (pre-annotated)")) {
-    # Make prediction
-    prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
-                         imported_data(), 
-                         type = "prob")
-    resp_prob = paste0(round(100*as.numeric(prediction["Responder"]), 2), "%")
-    # print(resp_prob)
-    non_resp_prob = paste0(round(100*as.numeric(prediction["Non_responder"]), 2), "%")
+  } else {
+    # print(paste("Colnames of object:", paste(colnames(imported_data()), collapse = ", ")))
+    current_data = imported_data()
     
-    # Create a new data frame for the new variables
-    new_vars <- data.frame(
-      Responder = as.numeric(prediction[, "Responder"]),
-      Non_responder = as.numeric(prediction[, "Non_responder"]),
-      `Response chance %` = resp_prob,
-      `No response chance %` = non_resp_prob
-    )
+    current_data[, c("HER2", "LumA", "LumB", "Normal", "T2", "Endo", "IC2", "IC3", "IC4",
+                     "IC5", "IC6", "IC7", "IC8", "IC9",
+                     "IC10", "Mammaprint_risk_yes", "rorS_risk_interm", "rorS_risk_high",
+                     "ER_hp", "ER_lp", "HER2_scmod1")] <- 
+      lapply(current_data[, c("HER2", "LumA", "LumB", "Normal", "T2", "Endo", "IC2", "IC3", "IC4",
+                              "IC5", "IC6", "IC7", "IC8", "IC9",
+                              "IC10", "Mammaprint_risk_yes", "rorS_risk_interm", "rorS_risk_high",
+                              "ER_hp", "ER_lp", "HER2_scmod1")], function(x) 
+                                factor(x, levels = c(0, 1), labels = c(0, 1))
+      )
     
-    # Bind the new variables to your original data frame
-    newdata <- cbind(imported_data(), new_vars)
-    
-    # Update the Response column
-    newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
-                               labels = c("Responder", "Non_responder"))
-    
-    chosen_treatment = ifelse(imported_data()[, "Endo"] == 1, "endocrine treatment",
-                              "chemotherapy")
-    
-    return(list(predictions = newdata, resp_prob = resp_prob, plot = NULL, auc = NULL, 
-                chosen_treatment = chosen_treatment, model_roc = NULL))
-    
-  } else if (import_data_type() == "Import pre-annotated dataset") {
-    
-    # Make prediction
-    prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
-                         filtered_data(), 
-                         type = "prob")
-    resp_prob = paste0(round(100*as.numeric(prediction[, "Responder"]), 2), "%")
-    non_resp_prob = paste0(round(100*as.numeric(prediction[, "Non_responder"]), 2), "%")
-    
-    # Create a new data frame for the new variables
-    new_vars <- data.frame(
-      Responder = as.numeric(prediction[, "Responder"]),
-      Non_responder = as.numeric(prediction[, "Non_responder"]),
-      `Response chance %` = resp_prob,
-      `No response chance %` = non_resp_prob
-    )
-    
-    # Bind the new variables to your original data frame
-    newdata <- cbind(filtered_data(), new_vars)
-    
-    # Update the Response column
-    newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
-                               labels = c("Responder", "Non_responder"))
-    
-    if (test_passed()) {
-      join = newdata
-      join = join[order(join$Responder),]
-      model_roc = roc(predictor = join$Responder, 
-                      response = as.character(join$Response))
-      auc_value = round(auc(model_roc), 3)
+    imported_data(current_data)
+    # Unique sample predictions
+    if (import_data_type() %in% c("Random sample",
+                                  "Import unique sample (genes only)",
+                                  "Import unique sample (pre-annotated)")) {
+      newdata = imported_data()
       
-      # Prepare data for plotting with ggplot2
-      df = as.data.frame(cbind(model_roc$sensitivities, model_roc$specificities))
-      colnames(df) <- c("sensitivities", "specificities")
-      df$Model = "NAT Response prediction model"
-      nsamples = nrow(df)
-      df$legend_label = paste("NAT Response prediction model:", "AUC =", paste0(auc_value, ","), 
-                           "N =", nsamples, sep = " ")
+      # Update the Response column
+      newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
+                                 labels = c("Responder", "Non_responder"))
       
-      # Initialize ggplot
-      p <- ggplot(df, aes(x = 1 - specificities, y = sensitivities, color = Model)) +
-        geom_line(size = 1) +
-        geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype = "dashed", color = "black") +
-        scale_color_manual(values = "#2A5674", 
-                           labels = df$legend_label, breaks = df$Model) +
-        labs(x = "False Positive Rate (1 - Specificity)", 
-             y = "True Positive Rate (Sensitivity)", 
-             title = input$newpred_title) +
-        scale_x_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
-        scale_y_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
-        theme_classic() +
-        theme(
-          axis.title = element_text(face = "bold", size = 15),
-          axis.title.x = element_text(face = "bold", size = 15, margin = margin(t = 10, unit = "pt")),
-          axis.title.y = element_text(face = "bold", size = 15, margin = margin(r = 10, unit = "pt")),
-          axis.text = element_text(face = "bold", size = 10),
-          plot.title = element_text(face = "bold", size = 20),
-          axis.line = element_line(colour = "black"),
-          legend.position = "bottom",
-          legend.text = element_text(size = 12)
-        )+
-        #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
-        guides(color = guide_legend(nrow = 1, byrow = TRUE))
+      # Make prediction
+      prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
+                           newdata, 
+                           type = "prob")
+      resp_prob = paste0(round(100*as.numeric(prediction["Responder"]), 2), "%")
+      # print(resp_prob)
+      non_resp_prob = paste0(round(100*as.numeric(prediction["Non_responder"]), 2), "%")
       
-      #p
-      #
-      #p = plot(model_roc, 
-      #         main = "ROC curve",
-      #         col = "#2A5674", lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
-      #         asp = 1, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900,
-      #         xlab = "False Positive Rate (1 - Specificity)", ylab = "True Positive Rate (Sensitivity)")
+      # Create a new data frame for the new variables
+      new_vars <- data.frame(
+        Responder = as.numeric(prediction[, "Responder"]),
+        Non_responder = as.numeric(prediction[, "Non_responder"]),
+        `Response chance %` = resp_prob,
+        `No response chance %` = non_resp_prob
+      )
       
-      return(list(predictions = newdata, plot = p, auc = auc_value, model_roc = model_roc))
-    } else {
-      return(list(predictions = newdata, plot = NULL, auc = NULL, model_roc = NULL))
+      # Bind the new variables to your original data frame
+      newdata <- cbind(newdata, new_vars)
+      
+      chosen_treatment = ifelse(imported_data()[, "Endo"] == 1, "endocrine treatment",
+                                "chemotherapy")
+      
+      return(list(predictions = newdata, resp_prob = resp_prob, plot = NULL, auc = NULL, 
+                  chosen_treatment = chosen_treatment, model_roc = NULL))
+      
+    } else if (import_data_type() == "Import pre-annotated dataset") {
+      newdata = filtered_data()
+      
+      # Update the Response column
+      newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
+                                 labels = c("Responder", "Non_responder"))
+      # Make prediction
+      prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
+                           newdata, 
+                           type = "prob")
+      resp_prob = paste0(round(100*as.numeric(prediction[, "Responder"]), 2), "%")
+      non_resp_prob = paste0(round(100*as.numeric(prediction[, "Non_responder"]), 2), "%")
+      
+      # Error metrics
+      preds = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
+                      newdata)
+      confusion_matrix = table(preds, newdata$Response)
+      errs = err_metrics(confusion_matrix)
+      colnames(errs) = c("Metrics", "C5.0-ROC model performance")
+      
+      # Create a new data frame for the new variables
+      new_vars <- data.frame(
+        Responder = as.numeric(prediction[, "Responder"]),
+        Non_responder = as.numeric(prediction[, "Non_responder"]),
+        `Response chance %` = resp_prob,
+        `No response chance %` = non_resp_prob
+      )
+      
+      # Bind the new variables to your original data frame
+      newdata <- cbind(newdata, new_vars)
+      
+      print(test_passed())
+      if (test_passed()) {
+        join = newdata
+        join = join[order(join$Responder),]
+        model_roc = roc(predictor = join$Responder, 
+                        response = as.character(join$Response))
+        auc_value = round(auc(model_roc), 3)
+        
+        # Prepare data for plotting with ggplot2
+        df = as.data.frame(cbind(model_roc$sensitivities, model_roc$specificities))
+        colnames(df) <- c("sensitivities", "specificities")
+        df$Model = "NAT Response prediction model"
+        nsamples = nrow(newdata)
+        df$legend_label = paste("NAT Response prediction model:", "AUC =", paste0(auc_value, ","), 
+                                "N =", nsamples, sep = " ")
+        
+        # Initialize ggplot
+        p <- ggplot(df, aes(x = 1 - specificities, y = sensitivities, color = Model)) +
+          geom_line(linewidth = 1) +
+          geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype = "dashed", color = "black") +
+          scale_color_manual(values = "#2A5674", 
+                             labels = df$legend_label, breaks = df$Model) +
+          labs(x = "False Positive Rate (1 - Specificity)", 
+               y = "True Positive Rate (Sensitivity)", 
+               title = input$newpred_title) +
+          scale_x_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+          scale_y_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+          theme_classic() +
+          theme(
+            axis.title = element_text(face = "bold", size = 15),
+            axis.title.x = element_text(face = "bold", size = 15, margin = ggplot2::margin(t = 10, unit = "pt")),
+            axis.title.y = element_text(face = "bold", size = 15, margin = ggplot2::margin(r = 10, unit = "pt")),
+            axis.text = element_text(face = "bold", size = 10),
+            plot.title = element_text(face = "bold", size = 20),
+            axis.line = element_line(colour = "black"),
+            legend.position = "bottom",
+            legend.text = element_text(size = 12)
+          )+
+          #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
+          guides(color = guide_legend(nrow = 1, byrow = TRUE))
+        
+        #p
+        #
+        #p = plot(model_roc, 
+        #         main = "ROC curve",
+        #         col = "#2A5674", lwd = 3, legacy.axes = TRUE, xlim = c(1,0), ylim = c(0,1), 
+        #         asp = 1, cex = 4, xaxs = "i", yaxs = "i", width = 900, height = 900,
+        #         xlab = "False Positive Rate (1 - Specificity)", ylab = "True Positive Rate (Sensitivity)")
+        
+        return(list(predictions = newdata, plot = p, auc = auc_value, model_roc = model_roc,
+                    error_metrics = errs))
+      } else {
+        newdata = filtered_data()
+        
+        # Update the Response column
+        newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
+                                   labels = c("Responder", "Non_responder"))
+        
+        # Error metrics
+        preds = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
+                        newdata)
+        confusion_matrix = table(preds, newdata$Response)
+        errs = err_metrics(confusion_matrix)
+        colnames(errs) = c("Metrics", "C5.0-ROC model performance")
+        return(list(predictions = newdata, plot = NULL, auc = NULL, model_roc = NULL, 
+                    error_metrics = errs))
+      }
     }
   }
 })
@@ -168,6 +193,15 @@ output$newpred_ROC_plot <- renderPlot({
       }
     }
   })
+})
+
+# Print error metrics
+output$newpred_error_table <- DT::renderDataTable({
+  w4$show()
+  input$predict_new_prediction_breast_cancer
+  isolate({
+    outputs = predict_new_data()
+    outputs$error_metrics})
 })
 
 # Text output

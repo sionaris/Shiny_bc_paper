@@ -10,9 +10,14 @@ plot_analytical_sunburst <- reactive({
                      input$sunburst_var3_select_breast, input$sunburst_var4_select_breast)
   selected_vars <- selected_vars[selected_vars != "None"]
   
+  prepheno = breast_cancer_full_pheno
+  prepheno$Menopause.status = gsub("Post-menopausal",
+                                   "Post-meno",
+                                   prepheno$Menopause.status)
+  
   # Prepare and summarize data based on selected variables
   if (length(selected_vars) > 0) {
-    Pheno_sunburst <- breast_cancer_full_pheno[subset_breast_analytical_sunburst,] %>%
+    Pheno_sunburst <- prepheno[subset_breast_analytical_sunburst,] %>%
       dplyr::select(all_of(selected_vars)) %>%
       group_by(across(all_of(selected_vars))) %>%
       summarise(Counts = n()) %>%

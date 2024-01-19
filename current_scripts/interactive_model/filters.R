@@ -20,6 +20,7 @@ filtered_data = reactive({
     # Filter timepoint
     if (newpred_timepoint_filter == "All") {
       # No filtering applied
+      temp_data = temp_data
     } else if (newpred_timepoint_filter == "Pre-treatment") {
       temp_data = temp_data %>% filter(T2 == 0)
     } else if (newpred_timepoint_filter == "On-treatment") {
@@ -29,6 +30,7 @@ filtered_data = reactive({
     # pam50
     if (newpred_pam50_filter == "All") {
       # No filtering applied
+      temp_data = temp_data
     } else if (newpred_pam50_filter == "Luminal A") {
       temp_data = temp_data %>% dplyr::filter(LumA == 1)
     } else if (newpred_pam50_filter == "Luminal B") {
@@ -47,6 +49,7 @@ filtered_data = reactive({
     # scmod1
     if (newpred_scmod1_filter == "All") {
       # No filtering applied
+      temp_data = temp_data
     } else if (newpred_scmod1_filter == "HER2+") {
       temp_data = temp_data %>% dplyr::filter(HER2_scmod1 == 1)
     } else if (newpred_scmod1_filter == "ER+/HER2- high proliferation") {
@@ -62,6 +65,7 @@ filtered_data = reactive({
     # rorS
     if (newpred_rorS_filter == "All") {
       # No filtering applied
+      temp_data = temp_data
     } else if (newpred_rorS_filter == "High") {
       temp_data = temp_data %>% dplyr::filter(rorS_risk_high == 1)
     } else if (newpred_rorS_filter == "Intermediate") {
@@ -74,6 +78,7 @@ filtered_data = reactive({
     # Mammaprint
     if (newpred_mammaprint_filter == "All") {
       # No filtering applied
+      temp_data = temp_data
     } else if (newpred_mammaprint_filter == "At risk") {
       temp_data = temp_data %>% dplyr::filter(Mammaprint_risk_yes == 1)
     } else if (newpred_mammaprint_filter == "No risk") {
@@ -83,6 +88,7 @@ filtered_data = reactive({
     # iC10
     if (newpred_iC10_filter == "All") {
       # No filtering applied
+      temp_data = temp_data
     } else if (newpred_iC10_filter == "iC1") {
       temp_data = temp_data[
         temp_data$IC2 == 0 &

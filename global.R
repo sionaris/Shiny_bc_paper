@@ -23,7 +23,7 @@ library(shinyWidgets)
 
 # Plotting
 library(plotly)
-library(ggplto2)
+library(ggplot2)
 library(pROC)
 
 # Statistical modelling
@@ -77,6 +77,8 @@ breast_cancer_consensus_set = breast_cancer_consensus_set %>%
                                          setdiff(colnames(breast_cancer_full_pheno), 
                                                  colnames(breast_cancer_consensus_set)))],
              by = "Sample.ID")
+# breast_cancer_consensus_set$Menopause.status = gsub("PM", "Post-menopausal", 
+#                                                 breast_cancer_full_pheno$Menopause.status)
 
 # Fix Mammaprint column
 breast_cancer_full_pheno$new_Mamma = NA
@@ -85,6 +87,8 @@ breast_cancer_full_pheno$new_Mamma[breast_cancer_full_pheno$Mammaprint_risk == 0
 breast_cancer_full_pheno = breast_cancer_full_pheno %>%
   dplyr::select(-Mammaprint_risk) %>%
   dplyr::rename(Mammaprint_risk = new_Mamma)
+breast_cancer_full_pheno$Menopause.status = gsub("PM", "Post-menopausal", 
+                                                 breast_cancer_full_pheno$Menopause.status)
 
 # Read in ML models
 RegLogR = readRDS("input_data/Reg_LogR.rds")
@@ -120,6 +124,7 @@ full_ml_set = ml_set %>%
 z_exprs = readRDS("input_data/normalised_expression.rds")
 Pheno_exprs = breast_cancer_full_pheno[breast_cancer_full_pheno$Sample.ID %in% 
                                          exprs_samples,]
+
 z_exprs = z_exprs[breast_cancer_DGEA$EntrezGene.ID,]
 rownames(z_exprs) = breast_cancer_DGEA$Gene.Symbol
 

@@ -81,6 +81,19 @@ coloring = data.frame(stringsAsFactors = FALSE,
                                  "Others", "Claudin",
                                  "HER2+", "ER-/HER2-", "ER+/HER2- High Prolif", "ER+/HER2- Low Prolif",
                                  "UK", "USA", "Korea",
-                                 "Mixed", "PM", # Mixed is used for both ER and Meno status here
+                                 "Mixed", "Post-meno", # Mixed is used for both ER and Meno status here
                                  "ER+",
                                  "Cluster 1", "Cluster 2"))
+
+# Synchronize tabs
+observeEvent(input$sunburst_tabs_breast, {
+  # This will trigger whenever the selected tab in the first tabBox changes
+  # Update the selected tab in the second tabBox
+  updateTabsetPanel(session, "sunburst_tuning_breast", selected = input$sunburst_tabs_breast)
+})
+
+observeEvent(input$sunburst_tuning_breast, {
+  # This will trigger whenever the selected tab in the second tabBox changes
+  # Update the selected tab in the first tabBox
+  updateTabsetPanel(session, "sunburst_tabs_breast", selected = input$sunburst_tuning_breast)
+})

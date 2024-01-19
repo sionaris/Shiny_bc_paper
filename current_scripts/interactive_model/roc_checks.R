@@ -16,8 +16,10 @@ test_passed = reactiveVal()
 # Check there is a response column with values "Responder", "Non_responder" in the input
 observeEvent(roc_handle(), {
   if (roc_handle() == "Yes" && roc_possibility())  {
+    print("we entered the if")
     # Check if there is a response column
     if (!"Response" %in% colnames(imported_data())) {
+      print("line 22 is printed")
       test_passed(FALSE)
       showModal(modalDialog(
         title = "Warning",
@@ -30,9 +32,11 @@ observeEvent(roc_handle(), {
     # If that succeeded, check if it has the desired levels
     if (all(unique(imported_data()[, "Response"]) %in% c("Non_responder", "Responder")) &&
         length(unique(imported_data()[, "Response"])) <= 2) {
+      print("true phase ok")
       test_passed(TRUE)
     } else {
       test_passed(FALSE)
+      print("we shouldn't be in line 39")
       showModal(modalDialog(
         title = "Warning",
         "The uploaded file should contain a column named 'Response' with levels

@@ -39,6 +39,13 @@ process_data <- function(category, subcategory, input_filters, legend_entry, ML,
     predicted_probabilities = predictions_frame[["prob"]]
     errs = err_metrics(confusion_matrix)
     colnames(errs) = c("Metrics", legend_entry)
+  } else if(category == "Support Vector Machines"){
+    predictions = predict(model, dataset)
+    confusion_matrix = table(predictions, dataset$Response)
+    model_accuracy = (confusion_matrix[1] + confusion_matrix[4])/
+      sum(confusion_matrix)
+    errs = err_metrics(confusion_matrix)
+    colnames(errs) = c("Metrics", legend_entry)
   } else {
     predictions = predict(model, dataset)
     confusion_matrix = table(predictions, dataset$Response)
@@ -70,5 +77,6 @@ process_data <- function(category, subcategory, input_filters, legend_entry, ML,
   
   return(list(plot = p, conf = confusion_matrix, acc = model_accuracy, 
               Legends = legend_entry, auc_values = auc_value, nsamples = nsamples, 
-              error_metrics = errs, model_roc = model_roc))
+              error_metrics = errs, model_roc = model_roc, 
+              model_category = category, model_subcategory = subcategory))
 }

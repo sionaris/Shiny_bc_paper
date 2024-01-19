@@ -367,9 +367,9 @@ body <- dashboardBody(tabItems
                                 style = "display: flex; width: 100%; align-content: center; justify-content: center",
                                 # Button to trigger plot generation/update
                                 div(
-                                  id = "div_draw_breast_hist",
+                                  id = "div_draw_breast_barchart",
                                   actionButton(
-                                    inputId = "draw_breast_hist",
+                                    inputId = "draw_breast_barchart",
                                     label = "Draw!",
                                     icon = icon("paintbrush", style = "margin-right: 5px; vertical-align: middle;")
                                   ) %>%
@@ -1859,7 +1859,7 @@ body <- dashboardBody(tabItems
                                               "breast_cancer_new_prediction_roc",
                                               "Produce ROC plot?",
                                               choices = c("Yes", "No"),
-                                              selected = "Yes"
+                                              selected = "No"
                                             )
                                           ),
                                           # Filter for timepoint
@@ -2033,6 +2033,21 @@ body <- dashboardBody(tabItems
                                             style = "padding-top: 1%;",
                                             downloadButton('download_new_prediction_results', 'Download results')
                                           )
+                                        )
+                                      ),
+                                      
+                                      column(
+                                        width = 12,
+                                        
+                                        # Error metrics
+                                        box(
+                                          title = "Error Metrics",
+                                          width = 12,
+                                          height = 500,
+                                          solidHeader = TRUE,
+                                          status = "warning",
+                                          id = "box_newpred_error_table",
+                                          DT::dataTableOutput("newpred_error_table")
                                         )
                                       ))
                                     )
@@ -2402,6 +2417,7 @@ sidebar <- dashboardSidebar(sidebarMenu(
 # UI
 ui <-
   dashboardPage(
+    # skin = "midnight",
     skin = "blue",
     # color of the top of the dashboard page
     header = header,

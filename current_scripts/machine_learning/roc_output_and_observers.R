@@ -51,62 +51,75 @@ output$breast_cancer_ROC_plot <- renderPlot({
   input$predict_ml_breast_cancer
   results <- plot_breast_cancer_ROC()
   
-  # Create an empty data frame for all plot data
-  all_plot_data <- data.frame(sensitivities = numeric(),
-                              specificities = numeric(),
-                              model = factor(),
-                              stringsAsFactors = FALSE)
+  # Account for the presence of SVM models which can be plotted as ROC curves
+  model_categories <- sapply(results, function(x) x[["model_category"]])
   
-  # Create a data frame for legend labels
-  legend_data <- data.frame(model = factor(), label = character())
-  name_inputs = c(input$breast_cancer_ml_legend_entry_1,
-                  input$breast_cancer_ml_legend_entry_2,
-                  input$breast_cancer_ml_legend_entry_3)
-  model_names = c()
-
-  for (i in 1:length(results)) {
-    res <- results[[i]]
-    df <- as.data.frame(cbind(res$model_roc$sensitivities, res$model_roc$specificities))
-    colnames(df) <- c("sensitivities", "specificities")
-    model_names <- c(model_names, res$Legends)
-    df$model <- as.factor(model_names[i])
-    all_plot_data <- rbind(all_plot_data, df)
+  # Locate the index of SVM models (if any) in the results list
+  svm_indices = which(model_categories %in% "Support Vector Machines")
+  model_indices = seq(1:length(results))
+  plot_indices = model_indices[!model_indices %in% svm_indices]
+  
+  # Stop if all models are SVM
+  if (length(plot_indices) == 0) {
+    plot(1, type = "n", xlab = "", ylab = "", xlim = c(0, 2), ylim = c(0, 2), axes = FALSE, ann = FALSE)
+    text(1, 1, "ROC plots cannot be generated\n for Support Vector Machine models.", cex = 1.5)
+    dev.off()
+  } else {
+    # Create an empty data frame for all plot data
+    all_plot_data <- data.frame(sensitivities = numeric(),
+                                specificities = numeric(),
+                                model = factor(),
+                                stringsAsFactors = FALSE)
     
-    # Prepare legend label
-    auc_value <- res$auc_values
-    nsamples <- res$nsamples
-    legend_label <- paste(paste0(model_names[i], ":"), "AUC =", paste0(auc_value, ","), 
-                          "N =", nsamples, sep = " ")
-    legend_data <- rbind(legend_data, data.frame(model = model_names[i], label = legend_label))
+    # Create a data frame for legend labels
+    legend_data <- data.frame(model = factor(), label = character())
+    name_inputs = sapply(results, function(x) x[["Legends"]])
+    model_names = c()
+    
+    for (i in plot_indices) {
+      res <- results[[i]]
+      df <- as.data.frame(cbind(res$model_roc$sensitivities, res$model_roc$specificities))
+      colnames(df) <- c("sensitivities", "specificities")
+      model_names <- c(model_names, res$Legends)
+      df$model <- as.factor(model_names[i])
+      all_plot_data <- rbind(all_plot_data, df)
+      
+      # Prepare legend label
+      auc_value <- res$auc_values
+      nsamples <- res$nsamples
+      legend_label <- paste(paste0(model_names[i], ":"), "AUC =", paste0(auc_value, ","), 
+                            "N =", nsamples, sep = " ")
+      legend_data <- rbind(legend_data, data.frame(model = model_names[i], label = legend_label))
+    }
+    
+    legend_data$model = as.factor(legend_data$model)
+    # Predefined colors
+    predefined_colors <- c("#2A5674", "#E34F6F", "#6C2167")
+    
+    # Initialize ggplot
+    p <- ggplot(all_plot_data, aes(x = 1 - specificities, y = sensitivities)) +
+      geom_line(aes(color = model), linewidth = 1) +
+      geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype = "dashed", color = "black") +
+      scale_color_manual(values = predefined_colors, labels = legend_data$label, breaks = levels(legend_data$model)) +
+      labs(x = "False Positive Rate (1 - Specificity)", y = "True Positive Rate (Sensitivity)", title = "ROC curve") +
+      scale_x_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+      scale_y_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
+      theme_classic() +
+      theme(
+        axis.title = element_text(face = "bold", size = 15),
+        axis.title.x = element_text(face = "bold", size = 15, margin = ggplot2::margin(t = 10, unit = "pt")),
+        axis.title.y = element_text(face = "bold", size = 15, margin = ggplot2::margin(r = 10, unit = "pt")),
+        axis.text = element_text(face = "bold", size = 10),
+        plot.title = element_text(face = "bold", size = 20),
+        axis.line = element_line(colour = "black"),
+        legend.position = "bottom",
+        legend.text = element_text(size = 12)
+      )+
+      #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
+      guides(color = guide_legend(nrow = length(results), byrow = TRUE))
+    
+    p
   }
-  
-  legend_data$model = as.factor(legend_data$model)
-  # Predefined colors
-  predefined_colors <- c("#2A5674", "#E34F6F", "#6C2167")
-  
-  # Initialize ggplot
-  p <- ggplot(all_plot_data, aes(x = 1 - specificities, y = sensitivities)) +
-    geom_line(aes(color = model), size = 1) +
-    geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1), linetype = "dashed", color = "black") +
-    scale_color_manual(values = predefined_colors, labels = legend_data$label, breaks = levels(legend_data$model)) +
-    labs(x = "False Positive Rate (1 - Specificity)", y = "True Positive Rate (Sensitivity)", title = "ROC curve") +
-    scale_x_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
-    scale_y_continuous(limits = c(0, 1.01), breaks = seq(0, 1, 0.1), expand = c(0, 0)) +
-    theme_classic() +
-    theme(
-      axis.title = element_text(face = "bold", size = 15),
-      axis.title.x = element_text(face = "bold", size = 15, margin = margin(t = 10, unit = "pt")),
-      axis.title.y = element_text(face = "bold", size = 15, margin = margin(r = 10, unit = "pt")),
-      axis.text = element_text(face = "bold", size = 10),
-      plot.title = element_text(face = "bold", size = 20),
-      axis.line = element_line(colour = "black"),
-      legend.position = "bottom",
-      legend.text = element_text(size = 12)
-    )+
-    #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
-    guides(color = guide_legend(nrow = length(results), byrow = TRUE))
-  
-  p
 })
 
 # Downloadable output
@@ -165,8 +178,8 @@ output$download_plot_roc <- downloadHandler(
       theme_classic() +
       theme(
         axis.title = element_text(face = "bold", size = 15),
-        axis.title.x = element_text(face = "bold", size = 15, margin = margin(t = 10, unit = "pt")),
-        axis.title.y = element_text(face = "bold", size = 15, margin = margin(r = 10, unit = "pt")),
+        axis.title.x = element_text(face = "bold", size = 15, margin = ggplot2::margin(t = 10, unit = "pt")),
+        axis.title.y = element_text(face = "bold", size = 15, margin = ggplot2::margin(r = 10, unit = "pt")),
         axis.text = element_text(face = "bold", size = 10),
         plot.title = element_text(face = "bold", size = 20),
         axis.line = element_line(colour = "black"),
@@ -176,7 +189,7 @@ output$download_plot_roc <- downloadHandler(
       #coord_cartesian(xlim = c(0, 1), ylim = c(0, 1))+
       guides(color = guide_legend(nrow = length(results), byrow = TRUE))
     
-    p
+    #p
     print(p)
     
     # Turn off the device

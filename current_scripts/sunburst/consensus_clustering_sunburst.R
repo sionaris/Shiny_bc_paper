@@ -10,9 +10,14 @@ plot_consensus_sunburst <- reactive({
                      input$sunburst_var3_select_breast_consensus, input$sunburst_var4_select_breast_consensus)
   selected_vars <- selected_vars[selected_vars != "None"]
   
+  prepheno = breast_cancer_consensus_set
+  prepheno$Menopause.status = gsub("PM",
+                                   "Post-meno",
+                                   prepheno$Menopause.status)
+  
   # Prepare and summarize data based on selected variables
   if (length(selected_vars) > 0) {
-    Pheno_sunburst <- breast_cancer_consensus_set[subset_breast_consensus_sunburst,] %>%
+    Pheno_sunburst <- prepheno[subset_breast_consensus_sunburst,] %>%
       dplyr::select(all_of(selected_vars)) %>%
       group_by(across(all_of(selected_vars))) %>%
       summarise(Counts = n()) %>%
