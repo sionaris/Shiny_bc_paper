@@ -18,6 +18,15 @@ observe({
   }
 })
 
+# Observe secondary variable
+observe({
+  if(input$histvar_select_breast %in% c("Mammaprint_score", "rorS_score")){
+    enable("hist_breast_bins")
+  } else {
+    disable("hist_breast_bins")
+  }
+})
+
 prepare_histogram <- reactive({
   # Dynamic control of histogram types
   hist_types_breast = list(classic = "classic", probability = "probability",

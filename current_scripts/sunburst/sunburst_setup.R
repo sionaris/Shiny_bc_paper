@@ -67,7 +67,7 @@ coloring = data.frame(stringsAsFactors = FALSE,
                                                          "dodgerblue4", "chartreuse4", "violet", 
                                                          "orange", "dodgerblue3", # orange is used for ER/Meno mixed status
                                                          "dodgerblue4",
-                                                         "orange", "skyblue"))),
+                                                         "skyblue", "orange"))),
                       labels = c("Chemotherapy", "Endocrine_treatment", 
                                  "C1", "C2", "C3", 
                                  "E1_1", "E1_2", "E1_3", "E2", 
