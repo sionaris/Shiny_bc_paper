@@ -41,3 +41,4 @@ Use the results from our differential expression analysis, to create customized 
   <summary>❓ What is a volcano plot?</summary>
   A volcano plot is typically used to illustrate results of differential expression analysis. It is a scatter plot, where each point represents a <em>gene</em>. The $y$-axis contains the negative base-10 logarithm of the gene's differential expression $p$-value, i.e. the <em>higher</em> a point is in the plot, the <em>lower</em> its $p$-value. The $x$-axis shows differential expression. It's usually centered at 0 and points right from 0, represent <em>up</em>-regulated genes and points left from 0, represent <em>down</em>-regulated genes.
 </details>
+![](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/volcano_gif.gif)
