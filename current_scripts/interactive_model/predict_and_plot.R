@@ -1,7 +1,7 @@
 # Make the prediction (+/- produce ROC plot) ###
 predict_new_data <- reactive({
-  # Check annotation was provided for genes-only case
-  if (import_data_type() == "Import unique sample (genes-only)" &&
+  # Check annotation was provided for genes only case
+  if (import_data_type() == "Import unique sample (genes only)" &&
       ("None selected" %in% c(input$breast_cancer_new_prediction_pam50_annotation,
                              input$breast_cancer_new_prediction_scmod1_annotation,
                              input$breast_cancer_new_prediction_timepoint_annotation,
@@ -17,7 +17,7 @@ predict_new_data <- reactive({
     showModal(
       modalDialog(
         title = "Warning", 
-        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes-only' sample.", easyClose = TRUE 
+        "No annotation from the top right panel can have the value 'None selected' or 'Preset' when importing a 'genes only' sample.", easyClose = TRUE 
       )
     )
     return() # exit code for this event
@@ -42,11 +42,7 @@ predict_new_data <- reactive({
                                   "Import unique sample (genes only)",
                                   "Import unique sample (pre-annotated)")) {
       newdata = imported_data()
-      
-      # Update the Response column
-      newdata$Response <- factor(newdata$Response, levels = c("Responder", "Non_responder"),
-                                 labels = c("Responder", "Non_responder"))
-      
+
       # Make prediction
       prediction = predict(ML$`Decision Trees`$`C5.0 - ROC`, 
                            newdata, 
