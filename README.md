@@ -39,6 +39,40 @@ These plots can be used to illustrate the distribution of different variables wi
 Use the results from our differential expression analysis, to create customized volcano plots.
 <details>
   <summary>❓ What is a volcano plot?</summary>
-  A volcano plot is typically used to illustrate results of differential expression analysis. It is a scatter plot, where each point represents a <em>gene</em>. The $y$-axis contains the negative base-10 logarithm of the gene's differential expression $p$-value, i.e. the <em>higher</em> a point is in the plot, the <em>lower</em> its $p$-value. The $x$-axis shows differential expression. It's usually centered at 0 and points right from 0, represent <em>up</em>-regulated genes and points left from 0, represent <em>down</em>-regulated genes.
+  A volcano plot is typically used to illustrate results of differential expression analysis. It is a scatter plot, where each point represents a <em>gene</em>. 
+  
+  The $y$-axis contains the negative base-10 logarithm of the gene's differential expression $p$-value ($-\log_{10}p$), i.e. the <em>higher</em> a point is in the plot, the <em>lower</em> its $p$-value. 
+  
+  The $x$-axis shows differential expression (usually log<sub>2</sub>FoldChange). It's usually centered at 0; points right from 0 represent <em>up</em>-regulated genes; points left from 0, represent <em>down</em>-regulated genes.
 </details>
-![](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/volcano_gif.gif)
+
+**Note:** In our case, differential expression analysis was performed on standardized data. Instead of $\log_{}FoldChange$, differential expression here is defined as the numerical difference between the model coefficient responders and the model coefficient for non-responders. The (full) model for each gene used in our case is:
+
+$$
+\begin{align*}
+\hat{y_{g}} &= a_1 \cdot 1_{\{Response = responder\}} + a_2 \cdot 1_{\{Response = non-responder\}} + \\
+&\quad b_1 \cdot 1_{\{pam50 = Luminal A\}} + b_2 \cdot 1_{\{pam50 = Luminal B\}} + \\
+&\quad b_3 \cdot 1_{\{pam50 = HER2+\}} + b_4 \cdot 1_{\{pam50 = Normal-like\}} + \\
+&\quad c_1 \cdot 1_{\{timepoint = T2\}} + d_1 \cdot 1_{\{study = study_2\}} + \dots + \\
+&\quad d_9 \cdot 1_{\{study = study_{10}\}}
+\end{align*}
+$$
+
+The user can pick:
+- 🗒️ which type of $p$-value to plot (adjusted/unadjusted; we suggest the *adjusted* $p$-value)
+- 🛑 a differential expression threshold (DET) which will draw two vertical dashed lines at the positive and negative coordinates of the selected value on the $x$-axis
+- 🛑 a $p$-value threshold (PVT) lower than which a gene's differential expression is considered statistically significant (draws a single horizontal line)
+- 🌈 colors for:
+    - ❌ a) non-significant genes,
+    - 🟠 b) significant genes that don't pass the DET,
+    - 🔵 c) down-regulated genes (pass both DET - left side - and PVT) and
+    - 🔴 d) up-regulated genes (pass both DET - right side - and PVT)
+- 🎚️ opacity for the color of the points
+
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/volcano_gif.gif)
+</details>
