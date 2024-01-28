@@ -46,17 +46,18 @@ Use the results from our differential expression analysis, to create customized 
   The $x$-axis shows differential expression (usually log<sub>2</sub>FoldChange). It's usually centered at 0; points right from 0 represent <em>up</em>-regulated genes; points left from 0, represent <em>down</em>-regulated genes.
 </details>
 
-**Note:** In our case, differential expression analysis was performed on standardized data. Instead of $\log_{}FoldChange$, differential expression here is defined as the numerical difference between the model coefficient responders and the model coefficient for non-responders. The (full) model for each gene used in our case is:
+**Note on x-axis:** In our case, differential expression analysis was performed on standardized data. Instead of $\log_{}FoldChange$, differential expression here is defined as the numerical difference between the model coefficient responders and the model coefficient for non-responders. The (full) model for each gene used in our case is:
 
 $$
 \begin{align*}
 \hat{y_{g}} &= a_1 \cdot 1_{\{Response = responder\}} + a_2 \cdot 1_{\{Response = non-responder\}} + \\
-&\quad b_1 \cdot 1_{\{pam50 = Luminal A\}} + b_2 \cdot 1_{\{pam50 = Luminal B\}} + \\
-&\quad b_3 \cdot 1_{\{pam50 = HER2+\}} + b_4 \cdot 1_{\{pam50 = Normal-like\}} + \\
-&\quad c_1 \cdot 1_{\{timepoint = T2\}} + d_1 \cdot 1_{\{study = study_2\}} + \dots + \\
-&\quad d_9 \cdot 1_{\{study = study_{10}\}}
+&\quad b_1 \cdot 1_{\{pam50 = Luminal A\}} + b_2 \cdot 1_{\{pam50 = Luminal B\}} + b_3 \cdot 1_{\{pam50 = HER2+\}} + b_4 \cdot 1_{\{pam50 = Normal-like\}} + \\
+&\quad c_1 \cdot 1_{\{timepoint = T2\}} + \\
+&\quad d_1 \cdot 1_{\{study = study_2\}} + \dots + d_9 \cdot 1_{\{study = study_{10}\}}
 \end{align*}
 $$
+
+and the differential expression value for each gene is: $$DE = a_1 - a_2$$
 
 The user can pick:
 - 🗒️ which type of $p$-value to plot (adjusted/unadjusted; we suggest the *adjusted* $p$-value)
