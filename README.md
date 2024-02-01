@@ -179,7 +179,7 @@ In this tab, users can upload their own data (assuming appropriate formatting at
 The app will display helpful warning messages if input is not appropriately formatted but here are some quick tips on preparing the input:
 <details>
   <summary>
-    <b>Show tips</b>
+    <b>Show good practice tips</b>
   </summary>
   <ul id="instructions">
     <li>The file must have one of the following extensions: .csv, .tsv, .xlsx, .txt.</li>
