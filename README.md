@@ -1,6 +1,16 @@
 # Shiny app for my PhD's breast cancer project
 This repository that contains all the code for the [interactive Shiny app](https://v9cawl-aristeidis0sionakidis.shinyapps.io/shiny_bc_paper/) of our paper on predicting response to neoadjuvant treatment.
 
+## Contents
+- [Code organization](#code-organization-)
+- [App features](#app-features-)
+  - [Exploratory plot generation](#exploratory-plot-generation-)
+  - [Sunburst plots](#sunburst-plots-)
+  - [Volcano plot](#volcano-plot-)
+  - [Customized Differential Gene Expression Analysis](#customized-differential-gene-expression-analysis-)
+  - [Machine Learning](#machine-learning-)
+  - [New prediction](#new-prediction-)
+
 ## Code organization 💻
 - ```global.R```: A script that loads all required libraries and sets up the environment for the shiny app to run.
 - ```server.R```: A script that sources all server scripts that define the functionality of the app.
@@ -49,7 +59,7 @@ These plots can be used to illustrate the distribution of different variables wi
 - 🟦 *Cluster 1*: NAT-responsive subtype; associated with more favorable profiles.
 - 🟧 *Cluster 2*: NAT-neutral subtype; associated with higher risk scores and subtypes with poor prognosis.
 ---
-<!--><a name="volcano_anchor"></a>
+
 ### Volcano plot 🌋
 Use the results from our differential expression analysis, to create customized volcano plots.
 <details>
@@ -106,7 +116,7 @@ Use the training and validation samples as input to perform customized DGEA. The
    - Pick the contrast variable of interest (the variable whose levels you want to compare)
    - Select the levels of interest (e.g. responder and non-responder). The kdifferential expression results represent the numerical difference between the model coefficients for level 1 and level 2:
      $$DE = coef_{level_{1}} - coef_{level_{2}}$$
-- 🌋 **Plot Settings**: choose colors and text for the volcano plot that will be produced (see the [Volcano plot](#volcano_anchor) section for more details)
+- 🌋 **Plot Settings**: choose colors and text for the volcano plot that will be produced (see the [Volcano plot](#volcano-plot-) section for more details)
 
 🔍 Click *Analyse* to perform the analysis and produce the table of results and the volcano plot. Both are downloadable.
 
