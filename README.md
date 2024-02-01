@@ -2,8 +2,12 @@
 This repository that contains all the code for the [interactive Shiny app](https://v9cawl-aristeidis0sionakidis.shinyapps.io/shiny_bc_paper/) of our paper on predicting response to neoadjuvant treatment.
 
 ## Code organization 💻
-- ```App.R```: A small script that sources the file prep code (```global.R```), the full UI code (```ui.R```) and the full server code (```server.R```), and then runs the app using ```runApp()```.
-- 📂 **current_scripts**: modularized code for the all six different tabs of the app (six folders, with sub-scripts of server code)
+- ```global.R```: A script that loads all required libraries and sets up the environment for the shiny app to run.
+- ```server.R```: A script that sources all server scripts that define the functionality of the app.
+- ```ui.R```: A script that defines the elements of the app's user interface.
+- ```App.R```: A small script that sources the prep code (```global.R```), the full UI code (```ui.R```) and the full server code (```server.R```), and then runs the app using ```runApp()```.
+- ```test_files_generation.R```: A script that generates appropriate and non-appropriate files for the sixth tab of the app (new predictions based on input). The files are used for debugging and error-handling.
+- 📂 **current_scripts**: modularized code for all six different tabs of the app (six folders, with sub-scripts of server code)
 - 📂 **old_scripts**: scripts from older versions
 - 📂 **input_data**: files that are sourced in the ```global.R``` script to build the environment of the app.
 - 📂 **file_checks**: files that are used for testing of the [tab](#-new-prediction) that produces new predictions for uploaded inputs
@@ -250,6 +254,9 @@ When this option is chosen, the user must upload a file with the 166 gene column
 
 When this option is chosen, the user must upload a file with the 166 gene columns and the required phenotypic annotation columns (check out [the good practice tips](#instructions) for more details). The file should contain more than one rows. The user must specify again whether an 'Endo' column is present. Otherwise, they have to select a treatment for the full set of samples. The radio buttons in the bottom panel can be used to filter the data for subsets of interest (by default, all levels are included for each variable). If a binary column named 'Response' is available in the data, the user can produce ROC curves along with predicted probabilities. Click *Predict!* to get the (optional) ROC curve and download it along with the predicted probabilities of response for each sample. An additional table with information on the error metrics of the model is also generated.
 
+*As always*:
+- 🔄 Click *Reset parameters* to restore everything to default and upload a new file
+- ℹ️ Click *Info* for useful tips and instructions
 <details>
   <summary>
     <b>Short demo</b>
