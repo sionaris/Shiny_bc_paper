@@ -1,6 +1,16 @@
 # Shiny app for my PhD's breast cancer project
 This repository that contains all the code for the [interactive Shiny app](https://v9cawl-aristeidis0sionakidis.shinyapps.io/shiny_bc_paper/) of our paper on predicting response to neoadjuvant treatment.
 
+## Code organization 💻
+- ```App.R```: A small script that sources the file prep code (```global.R```), the full UI code (```ui.R```) and the full server code (```server.R```), and then runs the app using ```runApp()```.
+- 📂 **current_scripts**: modularized code for the all six different tabs of the app (six folders, with sub-scripts of server code)
+- 📂 **old_scripts**: scripts from older versions
+- 📂 **input_data**: files that are sourced in the ```global.R``` script to build the environment of the app.
+- 📂 **file_checks**: files that are used for testing of the [tab](#-new-prediction) that produces new predictions for uploaded inputs
+- 📂 **GIFs**: ```.gif``` files that are used for tutorials in each of the different tabs of the app.
+- 📂 **www**: directory of additional ```.css``` files
+- 📂 **rsconnect...**: ```rsconnect``` deployment folder for ```shinyApps.io```.
+
 ## App features 💡
 ### Exploratory plot generation 📊
 The app offers functionality for generating exploratory plots: **histograms** and **bar charts**. In both cases, all data from the project are included by default.
@@ -147,3 +157,104 @@ and a subset of studies of interest (or keep data from all studies - default opt
 **Output**
 - ROC curve(s) for the selected model(s) with info on the record AUC values. Downloadable.
 - Table of error metrics for each model used.
+
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  ![Short demo](insert_gif)
+</details>
+
+---
+
+### New prediction 🧪
+In this tab, users can upload their own data (assuming appropriate formatting at least for gene names) and generate predictions about the probability of response to a selected treatment for a unique patient or a full dataset. In the case of a full dataset with a response column available, ROC curves can also be produced if the user desires so.
+
+**General instructions**
+
+The app will display helpful warning messages if input is not appropriately formatted but here are some quick tips on preparing the input:
+<details>
+  <summary>
+    <b>Show tips</b>
+  </summary>
+  <ul id="instructions">
+    <li>The file must have one of the following extensions: .csv, .tsv, .xlsx, .txt.</li>
+    <li>The model can make a prediction provided all 166 genes identified in the project are present (you can find the list <a href="https://github.com/sionaris/bc_ml_pub/blob/main/Supplementary%20Files/Supplementary%20File%202.xlsx">here: sheet 2, first 166 genes</a>).</li>
+    <li>The order of the columns does not matter, but gene names <em>must be given in NCBI Entrez identifiers</em> or in the format "X_Entrez" (e.g. X_3489).</li>
+    <li>Gene columns must contain numeric values. All other columns must contain either 0 or 1 (binary values).</li>
+    <li>When uploading a unique sample <em>without</em> phenotypic annotation, the top right panel will be enabled and allow the user to annotate the sample, with respect to phenotypic variables (treatment, pam50 subtype, scmod1 subtype, iC10 subtype, rorS risk, Mammaprint risk and timepoint), themselves.</li>
+    <li>When uploading a unique sample <em>with</em> phenotypic annotation, the user must first choose whether an 'Endo' column is presented in the data (name: Endo, values: 0 for chemotherapy, 1 for endocrine treatment). 
+      Then, they can upload the sample data and choose whether the rest of the phenotypic variables are preset (choose the 'Preset' option for all of them) or select them using the drop-down menus for each variable. If 'Preset' is selected, then variables must have the correct names shown here:
+      <table border="1">
+                <tr>
+                    <th>Variable</th>
+                    <th>Dummy column(s)</th>
+                    <th>Example (meaning)</th>
+                </tr>
+                <tr>
+                    <td>Treatment</td>
+                    <td>Endo</td>
+                    <td>0 (Chemotherapy)</td>
+                </tr>
+                <tr>
+                    <td>pam50</td>
+                    <td>LumA, LumB, HER2, Normal</td>
+                    <td>0, 0, 0, 0 (Basal-like)</td>
+                </tr>
+                <tr>
+                    <td>scmod1</td>
+                    <td>ER_hp, ER_lp, HER2_scmod1</td>
+                    <td>0, 0, 0 (ER-/HER2-)</td>
+                </tr>
+                <tr>
+                    <td>timepoint</td>
+                    <td>T2</td>
+                    <td>0 (pre-treatment, T1)</td>
+                </tr>
+                <tr>
+                    <td>rorS</td>
+                    <td>rorS_risk_interm, rorS_risk_high</td>
+                    <td>0, 0 (low rorS risk)</td>
+                </tr>
+                <tr>
+                    <td>Mammaprint</td>
+                    <td>Mammaprint_risk_yes</td>
+                    <td>0 (No Mammaprint risk)</td>
+                </tr>
+                <tr>
+                    <td>iC10</td>
+                    <td>IC2, IC3, IC4, IC5, IC6, IC7, IC8, IC9, IC10</td>
+                    <td>0, 0, 0, 0, 0, 0, 0, 0, 0 (IC1)</td>
+                </tr>
+            </table>
+      The user can also set variables to 'Random' values.</li>
+    <li>When uploading a dataset, the user will again have to specify whether an 'Endo' column is present. If not, then the user can apply a prticular treatment to the full dataset.
+    The top right panel will be disabled and the bottom panel will be enabled.
+    If a response column is present, the user can select whether to produce a ROC curve or not.</li>
+  </ul>
+</details>
+
+❔ **Random sample**
+
+When this option is chosen, the app will generate a sample with random numerical values for all genes. The user can then add phenotypic annotation ('Preset' not allowed), choose a treatment and then get the predicted probability of response to the selected treatment by clicking *Predict!* 🔮.
+
+🧬 **Unique sample (genes only)**
+
+When this option is chosen, the user must upload a file with at least 166 columns which are appropriately named (check out [the good practice tips](#instructions) for more details). Subsqequently, the user must select phenotypic annotation for the sample based on either their knowledge of the sample's characteristics, additional laboratory results they have or *genefu* annotation results. After all variables have been set, the user can proceed with the prediction by clicking *Predict!* 🔮.
+
+✅ **Unique sample (pre-annotated)**
+
+When this option is chosen, the user must upload a file with the 166 gene columns and the required phenotypic annotation columns (check out [the good practice tips](#instructions) for more details). The user is also required to specify whether a treatment column 'Endo' already exists or not. Phenotypic annotation for a unique sample can be modified using the drop-down menus for each variable prior to making a prediction. If no modification is required, all drop-down menus must be set to 'Preset'. Click *Predict!* to get an estimate of the probability of response to the selected treatment 🔮.
+
+🗃️ **Pre-annotated dataset**
+
+When this option is chosen, the user must upload a file with the 166 gene columns and the required phenotypic annotation columns (check out [the good practice tips](#instructions) for more details). The file should contain more than one rows. The user must specify again whether an 'Endo' column is present. Otherwise, they have to select a treatment for the full set of samples. The radio buttons in the bottom panel can be used to filter the data for subsets of interest (by default, all levels are included for each variable). If a binary column named 'Response' is available in the data, the user can produce ROC curves along with predicted probabilities. Click *Predict!* to get the (optional) ROC curve and download it along with the predicted probabilities of response for each sample. An additional table with information on the error metrics of the model is also generated.
+
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  ![Short demo](insert_gif)
+</details>
+
+---
