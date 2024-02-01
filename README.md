@@ -6,11 +6,11 @@ This repository that contains all the code for the [interactive Shiny app](https
 - ```server.R```: A script that sources all server scripts that define the functionality of the app.
 - ```ui.R```: A script that defines the elements of the app's user interface.
 - ```App.R```: A small script that sources the prep code (```global.R```), the full UI code (```ui.R```) and the full server code (```server.R```), and then runs the app using ```runApp()```.
-- ```test_files_generation.R```: A script that generates appropriate and non-appropriate files for the sixth tab of the app (new predictions based on input). The files are used for debugging and error-handling.
+- ```test_files_generation.R```: A script that generates appropriate and non-appropriate files for the [sixth tab](#new-prediction-) of the app (new predictions based on input). The files are used for debugging and error-handling.
 - 📂 **current_scripts**: modularized code for all six different tabs of the app (six folders, with sub-scripts of server code)
 - 📂 **old_scripts**: scripts from older versions
 - 📂 **input_data**: files that are sourced in the ```global.R``` script to build the environment of the app.
-- 📂 **file_checks**: files that are used for testing of the [tab](#-new-prediction) that produces new predictions for uploaded inputs
+- 📂 **file_checks**: files that are used for testing of the [tab](#new-prediction-) that produces new predictions for uploaded inputs
 - 📂 **GIFs**: ```.gif``` files that are used for tutorials in each of the different tabs of the app.
 - 📂 **www**: directory of additional ```.css``` files
 - 📂 **rsconnect...**: ```rsconnect``` deployment folder for ```shinyApps.io```.
