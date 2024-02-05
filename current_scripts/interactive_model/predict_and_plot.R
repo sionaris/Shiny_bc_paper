@@ -191,13 +191,26 @@ output$newpred_ROC_plot <- renderPlot({
   })
 })
 
-# Print error metrics
+# Dynamically render the error metrics box and table
+output$dynamic_error_metrics <- renderUI({
+  if (import_data_type() == "Import pre-annotated dataset") {
+    box(
+      title = "Error Metrics",
+      width = 12,
+      height = 500,
+      solidHeader = TRUE,
+      status = "warning",
+      id = "box_newpred_error_table",
+      DT::dataTableOutput("newpred_error_table")
+    )
+  }
+})
+
+# Render DataTable
 output$newpred_error_table <- DT::renderDataTable({
-  w4$show()
-  input$predict_new_prediction_breast_cancer
-  isolate({
-    outputs = predict_new_data()
-    outputs$error_metrics})
+  req(import_data_type() == "Import pre-annotated dataset")
+  outputs = predict_new_data()
+  outputs$error_metrics
 })
 
 # Text output

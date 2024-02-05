@@ -2038,17 +2038,7 @@ body <- dashboardBody(tabItems
                                       
                                       column(
                                         width = 12,
-                                        
-                                        # Error metrics
-                                        box(
-                                          title = "Error Metrics",
-                                          width = 12,
-                                          height = 500,
-                                          solidHeader = TRUE,
-                                          status = "warning",
-                                          id = "box_newpred_error_table",
-                                          DT::dataTableOutput("newpred_error_table")
-                                        )
+                                        uiOutput("dynamic_error_metrics")
                                       ))
                                     )
                                   )
