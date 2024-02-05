@@ -204,7 +204,7 @@ and a subset of studies of interest (or keep data from all studies - default opt
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/machine_learning_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/machine_learning.gif)
 </details>
 
 ---
