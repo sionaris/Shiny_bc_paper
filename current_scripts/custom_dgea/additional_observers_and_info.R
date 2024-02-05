@@ -44,10 +44,14 @@ observeEvent(input$reset_input_breast_custom_DGEA, {
 
 # Pop-up info message, triggered when the user presses the Info button
 output$custom_dgea_info_text <- renderText({
-  paste0("<br> &#8226 This analysis is run on <b>training</b> and <b>validation</b> samples only.",
+  HTML(paste0("<br> &#8226 This analysis is run on <b>training</b> and <b>validation</b> samples only.",
          "<br> &#8226 You can select how to filter the combined samples based on multiple variables.",
          "<br> &#8226 You must choose at least one variable for adjustment. Results are by default adjusted for dataset.",
          "<br> &#8226 Select level 1 and level 2 for the contrasts, i.e. the groups you want
                            to compare. Results should be interpreted as down-/up-regulated in level 1 compared to level 2.",
-         "<br> &#8226 <b>You must refresh the page after each time you press the 'Analyse' button to produce new results</b>.")
+         "<br> &#8226 <b>You must refresh the page after each time you press the 'Analyse' button to produce new results</b>.",
+         "<br> &#8226 Check out this GIF tutorial for a short demonstration:
+           <ul>
+           <li><a href='GIFs/custom_dgea_gif.gif' target='_blank'>Custom DGEA demo</a></li>
+         </ul>"))
 })

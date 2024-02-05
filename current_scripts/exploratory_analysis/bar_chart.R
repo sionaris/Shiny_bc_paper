@@ -126,8 +126,12 @@ observeEvent(input$reset_input_breast_barchart, {
 
 # Pop-up info message, triggered when the user presses the Info button
 output$barchart_breast_info_text <- renderText({
-  paste0("<br> &#8226 Select variables and parameters to plot in a bar chart.",
+  HTML(paste0("<br> &#8226 Select variables and parameters to plot in a bar chart.",
          "<br> &#8226 You can only select <b>categorical variables</b>.",
          "<br> &#8226 You can also do clustered bar charts by selecting and additional variable.",
          "<br> &#8226 <b>Color can only be selected for single variable plots</b>.",
-         "<br> When using two variables, level colors will be generated automatically.")})
+         "<br> When using two variables, level colors will be generated automatically.",
+         "<br> &#8226 Check out this GIF tutorial for a short demonstration:
+           <ul>
+           <li><a href='GIFs/barchart_gif.gif' target='_blank'>Bar chart demo</a></li>
+         </ul>"))})

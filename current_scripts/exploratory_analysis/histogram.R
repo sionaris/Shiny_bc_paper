@@ -74,7 +74,11 @@ observeEvent(input$reset_input_breast_hist, {
 
 # Pop-up info message, triggered when the user presses the Info button
 output$hist_breast_info_text <- renderText({
-  paste0("<br> &#8226 Select variables and parameters to plot in a histogram.",
+  HTML(paste0("<br> &#8226 Select variables and parameters to plot in a histogram.",
          "<br> &#8226You can toggle the histogram variable, type, color, studies etc.", 
-         "<br> &#8226Number of bins is only for continuous variables.")})
+         "<br> &#8226Number of bins is only for continuous variables.",
+         "<br> &#8226 Check out this GIF tutorial for a short demonstration:
+           <ul>
+           <li><a href='GIFs/histogram_gif.gif' target='_blank'>Histogram demo</a></li>
+         </ul>"))})
 

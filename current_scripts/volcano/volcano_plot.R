@@ -114,7 +114,11 @@ observeEvent(input$reset_input_breast_volcano, {
 
 # Pop-up info message, triggered when the user presses the Info button
 output$volcano_breast_info_text <- renderText({
-  paste0("<br> &#8226 Select parameters for the volcano plot.",
+  HTML(paste0("<br> &#8226 Select parameters for the volcano plot.",
          "<br> &#8226 Default parameters are the ones used in the project.",
          "<br> &#8226 You can overlay gene symbols by clicking on individual data points.",
-         "<br> &#8226 The x-axis shows the numerical difference between the mean expression in group 1 (responders) and group 2 (non-responders) measured in standard deviations from the gene's overall mean expression.")})
+         "<br> &#8226 The x-axis shows the numerical difference between the mean expression in group 1 (responders) and group 2 (non-responders) measured in standard deviations from the gene's overall mean expression.",
+         "<br> &#8226 Check out this GIF tutorial for a short demonstration:
+           <ul>
+           <li><a href='GIFs/volcano_gif.gif' target='_blank'>Volcano plot generation demo</a></li>
+         </ul>"))})

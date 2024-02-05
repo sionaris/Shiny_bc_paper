@@ -222,9 +222,13 @@ output$breast_cancer_error_table <- DT::renderDataTable({
 
 # Pop-up info message, triggered when the user presses the Info button
 output$ml_breast_info_text <- renderText({
-  paste0("<br> &#8226 Support Vector Machines <b>do not produce ROC plots</b>, only error metrics.",
+  HTML(paste0("<br> &#8226 Support Vector Machines <b>do not produce ROC plots</b>, only error metrics.",
          "<br> &#8226 The final model we chose in our project is the <b>C5.0-ROC-optimised decision tree</b>.",
          "<br> &#8226 You can pick the model category and then subcategory you are interested in and then the study subset of interest.", 
          "<br> &#8226 You can also filter by multiple variables, for more specific model predictions. Excessive filtering may result in a NULL set.",
          "<br> &#8226 You can plot up to three ROC curves at the same plot, <b>but you have to click 'Apply' after you have specified your model and data subset and also provide an appropriate legend for each selection of yours</b>.",
-         "<br> &#8226 After pressing 'Predict' and viewing your output, if you want to do multiple models again, you'll have to <b>press Apply</b> in <b>all</b> additional models before plotting.")})
+         "<br> &#8226 After pressing 'Predict' and viewing your output, if you want to do multiple models again, you'll have to <b>press Apply</b> in <b>all</b> additional models before plotting.",
+         "<br> &#8226 Check out this GIF tutorial for a short demonstration:
+           <ul>
+           <li><a href='GIFs/machine_learning.gif' target='_blank'>Machine learning demo</a></li>
+         </ul>"))})

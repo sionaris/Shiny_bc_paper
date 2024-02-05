@@ -80,7 +80,11 @@ observeEvent(input$reset_input_breast_sunburst_consensus, {
 
 # Pop-up info message, triggered when the user presses the Info button
 output$consensus_sunburst_breast_info_text <- renderText({
-  paste0("<br> &#8226 Select parameters for the sunburst plot.",
+  HTML(paste0("<br> &#8226 Select parameters for the sunburst plot.",
          "<br> &#8226 Default parameters are the ones used in the project.",
          "<br> &#8226 You can pick up to <b>four</b> variables for the sunburst.",
-         "<br> &#8226 Colors are pre-selected due to the very large number of combinations and levels.")})
+         "<br> &#8226 Colors are pre-selected due to the very large number of combinations and levels.",
+         "<br> &#8226 Check out this GIF tutorial for a short demonstration:
+           <ul>
+           <li><a href='GIFs/sunburst_gif.gif' target='_blank'>Sunburst plots demo</a></li>
+         </ul>"))})
