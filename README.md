@@ -21,8 +21,8 @@ This repository that contains all the code for the [interactive Shiny app](https
 - 📂 **old_scripts**: scripts from older versions
 - 📂 **input_data**: files that are sourced in the ```global.R``` script to build the environment of the app.
 - 📂 **file_checks**: files that are used for testing of the [tab](#new-prediction-) that produces new predictions for uploaded inputs
-- 📂 **GIFs**: ```.gif``` files that are used for tutorials in each of the different tabs of the app.
 - 📂 **www**: directory of additional ```.css``` files
+- 📂 **www/GIFs**: ```.gif``` files that are used for tutorials in each of the different tabs of the app.
 - 📂 **rsconnect...**: ```rsconnect``` deployment folder for ```shinyApps.io```.
 
 ## App features 💡
@@ -44,7 +44,7 @@ The app offers functionality for generating exploratory plots: **histograms** an
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/histogram_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/histogram_gif.gif)
 </details>
 
 **Bar charts:** the user can select **up to two variables** for the bar charts. If a second variable is selected, then the user can also select the type of bar chart (grouped or stacked).
@@ -55,7 +55,7 @@ The app offers functionality for generating exploratory plots: **histograms** an
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/barchart_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/barchart_gif.gif)
 </details>
 
 ---
@@ -81,7 +81,7 @@ These plots can be used to illustrate the distribution of different variables wi
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/sunburst_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/sunburst_gif.gif)
 </details>
 
 ---
@@ -128,7 +128,7 @@ The user can pick:
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/volcano_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/volcano_gif.gif)
 </details>
 
 ---
@@ -155,7 +155,7 @@ Use the training and validation samples as input to perform customized DGEA. The
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/custom_dgea_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/custom_dgea_gif.gif)
 </details>
 
 ---
@@ -204,7 +204,7 @@ and a subset of studies of interest (or keep data from all studies - default opt
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/machine_learning_gif.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/machine_learning_gif.gif)
 </details>
 
 ---
@@ -289,7 +289,7 @@ When this option is chosen, the user must upload a file with at least 166 column
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/newpred_unique_sample_genes_only.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/newpred_unique_sample_genes_only.gif)
 </details>
 
 ✅ **Unique sample (pre-annotated)**
@@ -301,7 +301,7 @@ When this option is chosen, the user must upload a file with the 166 gene column
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/newpred_unique_sample_pre_annotated.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/newpred_unique_sample_pre_annotated.gif)
 </details>
 
 🗃️ **Pre-annotated dataset**
@@ -313,7 +313,7 @@ When this option is chosen, the user must upload a file with the 166 gene column
     <b>Short demo</b>
   </summary>
   
-  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/newpred_dataset.gif)
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/www/GIFs/newpred_dataset.gif)
 </details>
 
 *As always*:
