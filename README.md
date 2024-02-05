@@ -39,8 +39,25 @@ The app offers functionality for generating exploratory plots: **histograms** an
 - 🌈 The user can also choose the bin fill and bin color, as well as
 - #️⃣ the number of bins (**for continuous variables only**).
 
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/histogram_gif.gif)
+</details>
+
 **Bar charts:** the user can select **up to two variables** for the bar charts. If a second variable is selected, then the user can also select the type of bar chart (grouped or stacked).
 - 🌈 Options for bin fill and outline color are also provided.
+
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/barchart_gif.gif)
+</details>
+
 ---
 ### Sunburst plots 🌞
 Dynamic and interactive plots to illustrate the distribution of **up to four** categorical variables in our data. Colors are preselected. Choose a root variable and add up to three more variables to produce an interactive sunburst plot.
@@ -58,6 +75,15 @@ These plots have access to all the data in our study (training, validation, test
 These plots can be used to illustrate the distribution of different variables within the clusters (Neoadjuvant treatment - NAT response subtypes) we derived.
 - 🟦 *Cluster 1*: NAT-responsive subtype; associated with more favorable profiles.
 - 🟧 *Cluster 2*: NAT-neutral subtype; associated with higher risk scores and subtypes with poor prognosis.
+
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/sunburst_gif.gif)
+</details>
+
 ---
 
 ### Volcano plot 🌋
@@ -128,7 +154,8 @@ Use the training and validation samples as input to perform customized DGEA. The
   <summary>
     <b>Short demo</b>
   </summary>
-  ![Short demo](insert_gif)
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/custom_dgea_gif.gif)
 </details>
 
 ---
@@ -176,7 +203,8 @@ and a subset of studies of interest (or keep data from all studies - default opt
   <summary>
     <b>Short demo</b>
   </summary>
-  ![Short demo](insert_gif)
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/machine_learning_gif.gif)
 </details>
 
 ---
@@ -256,22 +284,40 @@ When this option is chosen, the app will generate a sample with random numerical
 
 When this option is chosen, the user must upload a file with at least 166 columns which are appropriately named (check out [the good practice tips](#instructions) for more details). Subsqequently, the user must select phenotypic annotation for the sample based on either their knowledge of the sample's characteristics, additional laboratory results they have or *genefu* annotation results. After all variables have been set, the user can proceed with the prediction by clicking *Predict!* 🔮.
 
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/newpred_unique_sample_genes_only.gif)
+</details>
+
 ✅ **Unique sample (pre-annotated)**
 
 When this option is chosen, the user must upload a file with the 166 gene columns and the required phenotypic annotation columns (check out [the good practice tips](#instructions) for more details). The user is also required to specify whether a treatment column 'Endo' already exists or not. Phenotypic annotation for a unique sample can be modified using the drop-down menus for each variable prior to making a prediction. If no modification is required, all drop-down menus must be set to 'Preset'. Click *Predict!* to get an estimate of the probability of response to the selected treatment 🔮.
+
+<details>
+  <summary>
+    <b>Short demo</b>
+  </summary>
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/newpred_unique_sample_pre_annotated.gif)
+</details>
 
 🗃️ **Pre-annotated dataset**
 
 When this option is chosen, the user must upload a file with the 166 gene columns and the required phenotypic annotation columns (check out [the good practice tips](#instructions) for more details). The file should contain more than one rows. The user must specify again whether an 'Endo' column is present. Otherwise, they have to select a treatment for the full set of samples. The radio buttons in the bottom panel can be used to filter the data for subsets of interest (by default, all levels are included for each variable). If a binary column named 'Response' is available in the data, the user can produce ROC curves along with predicted probabilities. Click *Predict!* to get the (optional) ROC curve and download it along with the predicted probabilities of response for each sample. An additional table with information on the error metrics of the model is also generated.
 
-*As always*:
-- 🔄 Click *Reset parameters* to restore everything to default and upload a new file
-- ℹ️ Click *Info* for useful tips and instructions
 <details>
   <summary>
     <b>Short demo</b>
   </summary>
-  ![Short demo](insert_gif)
+  
+  ![Short demo](https://github.com/sionaris/Shiny_bc_paper/blob/main/GIFs/newpred_dataset.gif)
 </details>
+
+*As always*:
+- 🔄 Click *Reset parameters* to restore everything to default and upload a new file
+- ℹ️ Click *Info* for useful tips and instructions
 
 ---
