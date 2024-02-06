@@ -17,7 +17,7 @@ This work focused on combining patient gene expression data from chemotherapy an
 - Data from different studies were preprocessed and cleaned separately.
 - The expression values for each gene in each study were standardized.
 - The standardized gene expression matrices were merged using common genes as anchors into a comprehensive expression matrix.
-- This matrix was used as input for differential gene expression analysis (more details [below](#customized-differential-gene-expression-analysis-)) and the identification of markers that distinguish between responders and non-responders.
+- This matrix was used as input for differential gene expression analysis (more details [below](#volcano-plot-)) and the identification of markers that distinguish between responders and non-responders.
 - The identified markers were then used as coordinates for the identification of response subtypes using Monte Carlo Consensus Clustering (see [John et al.](https://www.nature.com/articles/s41598-020-58766-1)).
 - Additionally, the markers were combined with phenotypic/clinical variables of interest in order to train response prediction models.
 
