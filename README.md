@@ -2,6 +2,7 @@
 This repository that contains all the code for the [interactive Shiny app](https://v9cawl-aristeidis0sionakidis.shinyapps.io/shiny_bc_paper/) of our paper on predicting response to neoadjuvant treatment.
 
 ## Contents
+- [Overview](#overview)
 - [Code organization](#code-organization-)
 - [App features](#app-features-)
   - [Exploratory plot generation](#exploratory-plot-generation-)
@@ -10,6 +11,17 @@ This repository that contains all the code for the [interactive Shiny app](https
   - [Customized Differential Gene Expression Analysis](#customized-differential-gene-expression-analysis-)
   - [Machine Learning](#machine-learning-)
   - [New prediction](#new-prediction-)
+
+## Overview
+This work focused on combining patient gene expression data from chemotherapy and endocrine treatment studies in an effort to analyze them in an integrative manner for the discovery of predictors of response to treatment. 
+- Data from different studies were preprocessed and cleaned separately.
+- The expression values for each gene in each study were standardized.
+- The standardized gene expression matrices were merged using common genes as anchors into a comprehensive expression matrix.
+- This matrix was used as input for differential gene expression analysis (more details [below](#customized-differential-gene-expression-analysis-)) and the identification of markers that distinguish between responders and non-responders.
+- The identified markers were then used as coordinates for the identification of response subtypes using Monte Carlo Consensus Clustering (see [John et al.](https://www.nature.com/articles/s41598-020-58766-1)).
+- Additionally, the markers were combined with phenotypic/clinical variables of interest in order to train response prediction models.
+
+You can read more about work in our [preprint](https://www.researchsquare.com/article/rs-2771576/v1).
 
 ## Code organization 💻
 - ```global.R```: A script that loads all required libraries and sets up the environment for the shiny app to run.
