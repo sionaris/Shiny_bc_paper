@@ -1,6 +1,6 @@
 # Quick Installation and Launching instructions
 
-1. Enable Git in RStudio.
+1. Enable Git in RStudio (guidance here: https://docs.posit.co/ide/user/ide/guide/tools/version-control.html).
 2. Use version control from RStudio to clone this repository in your machine (RStudio > File > New Project > Version Control > Git > Repository URL: https://github.com/sionaris/Shiny_bc_paper.git > Create Project).
 3. Open the project (opens automatically after installation).
 4. Open the ``app.R`` file.
