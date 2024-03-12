@@ -1,5 +1,5 @@
 # Shiny app for my PhD's breast cancer project
-This repository that contains all the code for the [interactive Shiny app](https://v9cawl-aristeidis0sionakidis.shinyapps.io/shiny_bc_paper/) of our paper on predicting response to neoadjuvant treatment.
+This repository that contains all the code for the [interactive Shiny app](https://v9cawl-aristeidis0sionakidis.shinyapps.io/shiny_bc_paper/) of our paper on predicting response to neoadjuvant treatment. Due to browser host limits we suggest installing the repo locally and running the app through RStudio; see [Installation.md](https://github.com/sionaris/Shiny_bc_paper/).
 
 ## Contents
 - [Overview](#overview)
